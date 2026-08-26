@@ -1,0 +1,58 @@
+<style type="text/css">
+  .ghContributors {
+    display: flex;
+    flex-flow: wrap;
+    align-content: flex-start;
+  }
+
+  .ghContributors > div {
+    width: 50%;
+    display: inline-flex;
+    margin-bottom: 5px;
+  }
+  .ghContributors > div label {
+    padding-left: 4px;
+  }
+  .ghContributors > div span {
+    font-size: x-small;
+    padding-left: 4px;
+  }
+</style>
+<div class="ghContributors">
+  {{ $url := .Get 0 }}
+  {{ $contributors := slice }}
+
+  {{ with try (resources.GetRemote $url) }}
+    {{ with .Err }}
+      {{ warnf "Không thể tải danh sách GitHub contributors từ %s: %s" $url . }}
+    {{ else with .Value }}
+      {{ $contributors = .Content | transform.Unmarshal }}
+    {{ else }}
+      {{ warnf "GitHub API không trả về dữ liệu từ %s" $url }}
+    {{ end }}
+  {{ end }}
+
+  {{ range $contributors }}
+    <div>
+      <img
+        src="{{ .avatar_url }}"
+        class="inline"
+        width="32"
+        height="32"
+        style="
+          height: 32px;
+          width: 32px;
+          margin-bottom: 0.25em;
+          vertical-align: middle;
+        "
+        alt="{{ .login }}"
+      />
+      <label>
+        <a href="{{ .html_url }}" target="_blank" rel="noopener noreferrer">
+          {{ .login }}
+        </a>
+      </label>
+      <span class="contributions">{{ .contributions }} commits</span>
+    </div>
+  {{ end }}
+</div>
