@@ -1,5 +1,5 @@
 ---
-title: "Worklog Tuần 3"
+title: "Worklog tuần 3"
 date: 2026-08-17
 weight: 3
 chapter: false
@@ -9,31 +9,34 @@ pre: " <b> 1.3. </b> "
 ### Mục tiêu tuần 3:
 
 * Tiếp tục củng cố kiến thức nền tảng về **AWS Cloud Computing**.
-* Tìm hiểu cách bắt đầu sử dụng AWS và những lợi ích của điện toán đám mây.
-* Hiểu cơ bản về **AWS Global Infrastructure** và cách tổ chức hạ tầng trên AWS.
-* Theo dõi và cập nhật thêm các thông tin, tính năng và dịch vụ mới của AWS từ những nguồn chính thức, uy tín.
+* Tìm hiểu các khái niệm cơ bản về Cloud Computing và cách AWS cung cấp các dịch vụ đám mây.
+* Làm quen với nền tảng AWS và các bước bắt đầu sử dụng AWS.
+* Tìm hiểu vai trò của Cloud Computing trong quá trình chuyển đổi số (**Digital Transformation**).
+* Hiểu các lợi ích chính của việc sử dụng dịch vụ Cloud.
+* Theo dõi các nguồn thông tin chính thức từ AWS để cập nhật các dịch vụ, tính năng và thông tin mới.
 
-### Các công việc đã làm trong tuần này:
+### Các công việc đã hoàn thành trong tuần:
 
-| Thứ | Công việc | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
+| Ngày | Nội dung thực hiện | Ngày bắt đầu | Ngày hoàn thành | Tài liệu tham khảo |
 |:---:|---|:---:|:---:|---|
-| 2 | - Tiếp tục theo dõi các video trong khóa **AWS Certified Cloud Practitioner (CLF-C02)**.<br>- Tìm hiểu phần **Getting Started** và cách bắt đầu làm việc với nền tảng AWS.<br>- Tìm hiểu về **Digital Transformation** và vai trò của Cloud Computing trong quá trình chuyển đổi số.<br>- Tìm hiểu những lợi ích chính của Cloud như khả năng mở rộng, tính linh hoạt, triển khai nhanh và tối ưu chi phí.<br>- Củng cố lại các kiến thức nền tảng đã học về AWS và Cloud Computing. | 17/08/2026 | 17/08/2026 | [AWS Certified Cloud Practitioner (CLF-C02)](PLAYLIST_LINK) |
-| 4 | - Tiếp tục học các video trong khóa **AWS Certified Cloud Practitioner (CLF-C02)**.<br>- Tìm hiểu về **AWS Global Infrastructure** và cách AWS tổ chức cơ sở hạ tầng trên toàn cầu.<br>- Tìm hiểu các thành phần như **Region, Availability Zone và Edge Location**.<br>- Hiểu vai trò của việc triển khai tài nguyên trên nhiều Availability Zone nhằm tăng tính sẵn sàng và ổn định của hệ thống.<br>- Tìm hiểu cơ bản về cách lựa chọn Region phù hợp dựa trên vị trí người dùng, dịch vụ, chi phí và yêu cầu của hệ thống. | 19/08/2026 | 19/08/2026 | [AWS Certified Cloud Practitioner (CLF-C02)](PLAYLIST_LINK) |
-| 6 | - Đọc và cập nhật các thông tin mới liên quan đến **Amazon Web Services** từ những nguồn chính thức của AWS.<br>- Theo dõi **AWS Weekly Roundup** để cập nhật các dịch vụ và tính năng AWS mới được công bố.<br>- Đọc về tính năng **Amazon EC2 Application Status Checks**, hỗ trợ phát hiện và theo dõi các vấn đề ở cấp độ ứng dụng chạy trên EC2.<br>- Tìm hiểu cập nhật **Amazon EC2 Auto Scaling Batch Instance Termination**, cho phép kết thúc nhiều EC2 Instance trong Auto Scaling Group trong một lần gọi API.<br>- Đọc thêm các thông tin mới trên **AWS What's New** để theo dõi sự thay đổi và phát triển của các dịch vụ AWS. | 21/08/2026 | 21/08/2026 | [AWS Weekly Roundup](AWS_WEEKLY_LINK)<br>[Amazon EC2 Application Status Checks](EC2_STATUS_LINK)<br>[EC2 Auto Scaling Batch Instance Termination](AUTO_SCALING_LINK) |
+| Thứ 2 | - Tiếp tục học khóa **AWS Certified Cloud Practitioner (CLF-C02)**.<br>- Học phần **Getting Started with AWS**.<br>- Tìm hiểu các khái niệm cơ bản về Cloud Computing và nền tảng AWS.<br>- Tìm hiểu cách người dùng và doanh nghiệp bắt đầu sử dụng các dịch vụ AWS.<br>- Học về khái niệm **Digital Transformation** và vai trò của Cloud Computing trong việc hỗ trợ đổi mới, phát triển doanh nghiệp.<br>- Tìm hiểu các lợi ích chính của Cloud Computing bao gồm khả năng mở rộng (**Scalability**), tính linh hoạt (**Flexibility**), triển khai nhanh (**Agility**) và tối ưu chi phí (**Cost Optimization**).<br>- Ôn tập lại các kiến thức AWS cơ bản đã học trước đó để củng cố nền tảng. | 17/08/2026 | 17/08/2026 | [AWS Certified Cloud Practitioner CLF-C02 Full Course - ExamPro](https://www.youtube.com/watch?v=7HKot-brXFE) |
+| Thứ 4 | - Tiếp tục học khóa **AWS Certified Cloud Practitioner (CLF-C02)**.<br>- Ôn tập các khái niệm về AWS Cloud và các nhóm dịch vụ chính trong AWS.<br>- Tìm hiểu cách các dịch vụ AWS hỗ trợ doanh nghiệp xây dựng, triển khai và quản lý ứng dụng trên nền tảng Cloud.<br>- Học sự khác biệt giữa mô hình Cloud Computing và hạ tầng truyền thống On-premises.<br>- Tìm hiểu các khái niệm quan trọng như Scalability, Elasticity, Availability và mô hình thanh toán **Pay-as-you-go**.<br>- Củng cố kiến thức nền tảng cần thiết trước khi chuyển sang các chủ đề kiến trúc và hạ tầng AWS chuyên sâu hơn. | 19/08/2026 | 19/08/2026 | [AWS Certified Cloud Practitioner CLF-C02 Full Course - ExamPro](https://www.youtube.com/watch?v=7HKot-brXFE) |
+| Thứ 6 | - Theo dõi các thông tin cập nhật chính thức từ AWS để bổ sung kiến thức ngoài nội dung chứng chỉ.<br>- Đọc và cập nhật thông tin từ **AWS Weekly Roundup** và **AWS What's New**.<br>- Tìm hiểu các dịch vụ mới và các tính năng được AWS cập nhật.<br>- Tìm hiểu về **Amazon EC2 Application Status Checks** và cách AWS kiểm tra tình trạng hoạt động của ứng dụng trên EC2 Instance.<br>- Tìm hiểu về **Amazon EC2 Auto Scaling Batch Instance Termination** và cách cải thiện việc quản lý nhiều EC2 Instance trong quá trình Scale Down.<br>- Hình thành thói quen theo dõi các nguồn chính thức của AWS để cập nhật kiến thức Cloud thường xuyên. | 21/08/2026 | 21/08/2026 | [AWS Weekly Roundup](AWS_WEEKLY_LINK)<br>[Amazon EC2 Application Status Checks](EC2_STATUS_LINK)<br>[EC2 Auto Scaling Batch Instance Termination](AUTO_SCALING_LINK) |
 
-### Kết quả đạt được tuần 3:
+### Kết quả đạt được trong tuần 3:
 
 &emsp;◉ Thứ 2:
-<br>&emsp;&emsp;○ Hiểu rõ hơn cách bắt đầu làm việc với nền tảng **AWS** và các kiến thức cơ bản cần thiết khi tiếp cận AWS Cloud.
-<br>&emsp;&emsp;○ Hiểu vai trò của **Cloud Computing** trong chuyển đổi số và các lợi ích về khả năng mở rộng, tính linh hoạt và tối ưu chi phí.
+<br>&emsp;&emsp;○ Hiểu được các khái niệm cơ bản về AWS Cloud Computing và cách bắt đầu làm việc với nền tảng AWS.
+<br>&emsp;&emsp;○ Hiểu được vai trò của Cloud Computing trong quá trình Digital Transformation.
+<br>&emsp;&emsp;○ Nắm được các lợi ích chính của Cloud như khả năng mở rộng, linh hoạt, triển khai nhanh và tối ưu chi phí.
 
 &emsp;◉ Thứ 4:
-<br>&emsp;&emsp;○ Hiểu được cách AWS tổ chức cơ sở hạ tầng toàn cầu thông qua **Region, Availability Zone và Edge Location**.
-<br>&emsp;&emsp;○ Nắm được vai trò của cơ sở hạ tầng phân tán trong việc nâng cao tính sẵn sàng và độ ổn định của hệ thống.
-<br>&emsp;&emsp;○ Biết một số yếu tố cần xem xét khi lựa chọn Region để triển khai tài nguyên AWS.
+<br>&emsp;&emsp;○ Củng cố kiến thức nền tảng về AWS Cloud và các nhóm dịch vụ chính trong AWS.
+<br>&emsp;&emsp;○ Hiểu cách Cloud Computing giúp doanh nghiệp cải thiện tốc độ triển khai, khả năng quản lý tài nguyên và hiệu quả vận hành.
+<br>&emsp;&emsp;○ Nắm được các khái niệm quan trọng làm nền tảng trước khi tìm hiểu sâu hơn về kiến trúc và hạ tầng AWS.
 
 &emsp;◉ Thứ 6:
-<br>&emsp;&emsp;○ Cập nhật thêm kiến thức về các tính năng và thay đổi mới của **Amazon Web Services**.
-<br>&emsp;&emsp;○ Biết thêm về **EC2 Application Status Checks** trong việc theo dõi tình trạng ứng dụng chạy trên EC2.
-<br>&emsp;&emsp;○ Hiểu thêm về cải tiến mới của **EC2 Auto Scaling** trong việc xử lý nhiều Instance khi hệ thống cần scale down.
-<br>&emsp;&emsp;○ Hình thành thói quen theo dõi các nguồn thông tin chính thức của AWS để cập nhật kiến thức ngoài nội dung khóa học.
+<br>&emsp;&emsp;○ Cập nhật kiến thức về các tính năng và dịch vụ mới của AWS thông qua các nguồn chính thức.
+<br>&emsp;&emsp;○ Hiểu thêm về **EC2 Application Status Checks** và vai trò trong việc giám sát tình trạng ứng dụng chạy trên EC2.
+<br>&emsp;&emsp;○ Hiểu được cải tiến trong **EC2 Auto Scaling Batch Instance Termination** nhằm hỗ trợ quản lý Instance hiệu quả hơn.
+<br>&emsp;&emsp;○ Xây dựng thói quen thường xuyên theo dõi các thông báo cập nhật từ AWS để duy trì kiến thức Cloud.
