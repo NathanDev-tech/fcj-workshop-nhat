@@ -11,33 +11,34 @@ pre: " <b> 1.6. </b> "
 ### Các công việc đã làm trong tuần này:
 | Thứ | Công việc | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 |:---:|---|:---:|:---:|---|
-| 2 | - Tiếp tục học khóa **AWS Certified Cloud Practitioner (CLF-C02)** trên ExamPro, tập trung vào **Management and Development Tools** và **Shared Responsibility Model**.<br>- Học và ôn tập các khái niệm liên quan đến **Amazon EC2, AMI, Amazon EBS, Snapshot và Amazon S3**.<br>- Thực hành khởi tạo một Linux EC2 instance, cấu hình **Security Groups, Key Pairs** và kết nối đến EC2 thông qua **SSH**.<br>- Cài đặt Web Server trên EC2 và triển khai một trang web đơn giản.<br>- Học và thực hành sử dụng **User Data** để tự động cài đặt Web Server trong quá trình EC2 khởi tạo.<br>- Tạo **EBS Volume**, attach và mount volume vào EC2 để sử dụng làm Block Storage.<br>- Thực hành tạo **EBS Snapshot** và tìm hiểu cách **AMI** được sử dụng để lưu trữ image và tạo EC2 instance.<br>- Học những kiến thức cơ bản về **Amazon S3**, tạo Bucket, thực hiện upload/download Objects và tìm hiểu **Versioning** và **Block Public Access**.<br>- Tạo **IAM Role** cho EC2 và kiểm tra khả năng truy cập S3 từ EC2 mà không sử dụng Access Key được hard-code.<br>- Làm quen với **AWS CloudShell và AWS CLI**, thực hiện một số lệnh cơ bản để kiểm tra thông tin tài khoản và các AWS resources.<br>- Cuối buổi, tổng hợp mối quan hệ giữa **EC2, EBS, S3 và IAM Role** thông qua một kiến trúc lab đơn giản và kiểm tra các resources đã tạo. | 07/09/2026 | 07/09/2026 | [AWS Certified Cloud Practitioner CLF-C02 - ExamPro](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[AWS Cloud Journey](https://cloudjourney.awsstudygroup.com/vi/)<br>Amazon EC2 Lab<br>Amazon S3 Lab<br>[Amazon EC2 Documentation](https://docs.aws.amazon.com/ec2/)<br>[Amazon S3 Documentation](https://docs.aws.amazon.com/s3/) |
-| 3 | - Tiếp tục học khóa **AWS Certified Cloud Practitioner (CLF-C02)** trên ExamPro, tập trung vào **Compute và Storage**.<br>- Học về **Amazon RDS** và tìm hiểu những kiến thức cơ bản về managed relational database trên AWS.<br>- Thực hành tạo một RDS test database, lựa chọn database engine và tìm hiểu các cấu hình liên quan đến **DB Subnet Group, Security Group và database networking**.<br>- Tìm hiểu cách kết nối ứng dụng chạy trên EC2 với RDS và mô hình kiến trúc **Application → EC2 → RDS**.<br>- Học về **RDS Backup và Restore** và vai trò của chúng trong việc phục hồi database.<br>- Tìm hiểu và phân biệt **Multi-AZ và Read Replica**, trong đó Multi-AZ tập trung vào **High Availability và Failover**, còn Read Replica tập trung vào **Read Scaling**.<br>- Học về **EC2 Auto Scaling**, bao gồm **Launch Template, Auto Scaling Group, Desired Capacity, Minimum Capacity và Maximum Capacity**.<br>- Thực hành cấu hình Auto Scaling Group và tìm hiểu cách Health Check phát hiện EC2 instance không hoạt động bình thường để thực hiện thay thế khi cần thiết.<br>- Tìm hiểu **Dynamic Scaling và Scheduled Scaling** để hiểu cách tự động điều chỉnh số lượng EC2 instance theo workload.<br>- Ôn tập kiến trúc **Application → EC2 Auto Scaling → RDS**, đồng thời củng cố sự khác biệt giữa **Scaling và Failover**.<br>- Làm quiz tổng kết và thực hiện cleanup các AWS resources được tạo trong quá trình thực hành để tránh phát sinh chi phí không cần thiết. | 08/09/2026 | 08/09/2026 | [AWS Certified Cloud Practitioner CLF-C02 - ExamPro](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[AWS Cloud Journey](https://cloudjourney.awsstudygroup.com/vi/)<br>[RDS Lab](https://000005.awsstudygroup.com/vi/)<br>[Auto Scaling Lab](https://000006.awsstudygroup.com/vi/)<br>[AWS RDS Documentation](https://docs.aws.amazon.com/rds/) |
-| 4 |  | 12/08/2026 | 12/08/2026 |  |
-| 5 |  | 13/08/2026 | 13/08/2026 |  |
-| 6 |  | 14/08/2026 | 14/08/2026 |  |
+| 2 | - Thực hành **EC2, EBS, S3, IAM Role, CloudShell và AWS CLI**.<br>- Khởi tạo Linux EC2, cấu hình Security Group/Key Pair, SSH vào EC2 và triển khai web server đơn giản.<br>- Thực hành **User Data, EBS Volume, Snapshot, AMI, S3 Versioning, Block Public Access** và EC2 → S3 thông qua IAM Role.<br>- Ôn lại kiến trúc **Internet → EC2**, EBS và IAM Role/S3, sau đó cleanup tài nguyên test. | 07/09/2026 | 07/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[EC2 Lab](https://000004.awsstudygroup.com/vi/)<br>[S3 Lab](https://000057.awsstudygroup.com/vi/)<br>[Amazon EC2 Docs](https://docs.aws.amazon.com/ec2/)<br>[Amazon S3 Docs](https://docs.aws.amazon.com/s3/) |
+| 3 | - Học về **Amazon RDS** và **EC2 Auto Scaling**.<br>- Ôn lại cách chuyển từ một EC2 đơn lẻ sang kiến trúc **Application + Database + Scaling**.<br>- Thực hành theo RDS Lab và Auto Scaling Lab, sau đó review và cleanup. | 08/09/2026 | 08/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[RDS Lab](https://000005.awsstudygroup.com/vi/)<br>[Auto Scaling Lab](https://000006.awsstudygroup.com/vi/)<br>[Amazon RDS Docs](https://docs.aws.amazon.com/rds/) |
+| 4 | - Học **Elastic Load Balancing, CloudWatch, Route 53 và AWS CLI**.<br>- Tìm hiểu ALB/NLB, Target Group, Listener, Health Check, CloudWatch Metrics/Logs/Alarm/Dashboard và Route 53 DNS/routing.<br>- Ôn kiến trúc **Route 53 → ALB → Target Group → EC2 → RDS**, có CloudWatch giám sát.<br>- Thực hành một số lệnh AWS CLI cơ bản và cleanup tài nguyên test. | 09/09/2026 | 09/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[CloudWatch Lab](https://000008.awsstudygroup.com/vi/)<br>[Route 53 Lab](https://000010.awsstudygroup.com/vi/)<br>[AWS CLI Lab](https://000011.awsstudygroup.com/vi/)<br>[ELB Docs](https://docs.aws.amazon.com/elasticloadbalancing/)<br>[CloudWatch Docs](https://docs.aws.amazon.com/cloudwatch/)<br>[Route 53 Docs](https://docs.aws.amazon.com/route53/) |
+| 5 | - Học **Amazon DynamoDB** và **Amazon ElastiCache**.<br>- Tìm hiểu vai trò cơ bản của **NoSQL** và **in-memory cache** trong kiến trúc AWS.<br>- Tập trung vào cách nhìn AWS như một hệ thống gồm nhiều service kết hợp, sau đó quiz và cleanup. | 10/09/2026 | 10/09/2026 | [DynamoDB Lab](https://000060.awsstudygroup.com/vi/)<br>[ElastiCache Lab](https://000061.awsstudygroup.com/vi/)<br>[DynamoDB Docs](https://docs.aws.amazon.com/dynamodb/) |
+| 6 | - Học các khái niệm về **Windows on AWS** và **Managed Microsoft AD**.<br>- Thực hiện **Highly Available Web Application Capstone** với Route 53, CloudFront, ALB, EC2, Auto Scaling, RDS, CloudWatch, IAM Role và S3.<br>- Tổng hợp kiến thức về **High Availability, Scalability, Fault Tolerance, Monitoring, Security, Cost Optimization** và tư duy AWS Well-Architected.<br>- Final review và cleanup các resource không còn cần thiết. | 11/09/2026 | 11/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[AWS Cloud Journey](https://cloudjourney.awsstudygroup.com/vi/)<br>[Windows on AWS](https://000093.awsstudygroup.com/)<br>[Highly Available Web Application](https://www.youtube.com/watch?v=NhDYbskXRgc) |
 
 ### Kết quả đạt được tuần 6:
 
 &emsp;◉ Thứ 2:
-<br>&emsp;&emsp;○ Hoàn thành nội dung **Management and Development Tools** và **Shared Responsibility Model** trong khóa AWS Certified Cloud Practitioner (CLF-C02) của ExamPro.
-<br>&emsp;&emsp;○ Thực hành khởi tạo và làm việc với Linux EC2 instance, bao gồm cấu hình Security Groups, Key Pairs và kết nối thông qua SSH.
-<br>&emsp;&emsp;○ Cài đặt Web Server trên EC2 và thực hành sử dụng User Data để tự động cấu hình Web Server.
-<br>&emsp;&emsp;○ Thực hành tạo, attach và mount EBS Volume vào EC2, đồng thời tìm hiểu về EBS Snapshot và AMI.
-<br>&emsp;&emsp;○ Thực hành các thao tác cơ bản với S3 Bucket và Objects, đồng thời tìm hiểu Versioning và Block Public Access.
-<br>&emsp;&emsp;○ Tạo và kiểm tra IAM Role cho EC2 để truy cập S3 mà không cần hard-code Access Keys.
-<br>&emsp;&emsp;○ Làm quen với AWS CloudShell và AWS CLI, thực hiện các lệnh cơ bản để kiểm tra thông tin tài khoản và AWS resources.
+<br>&emsp;&emsp;○ Thực hành EC2, EBS, S3, IAM Role, CloudShell và AWS CLI.
+<br>&emsp;&emsp;○ Triển khai web server đơn giản và kiểm tra EC2 → S3 mà không hard-code Access Key.
+<br>&emsp;&emsp;○ Thực hành User Data, EBS, Snapshot, AMI và S3 Versioning.
 
 &emsp;◉ Thứ 3:
-<br>&emsp;&emsp;○ Tiếp tục học các nội dung **Compute và Storage** trong khóa AWS Certified Cloud Practitioner (CLF-C02) của ExamPro.
-<br>&emsp;&emsp;○ Học về **Amazon RDS** và hiểu được vai trò của managed relational database trên AWS.
-<br>&emsp;&emsp;○ Thực hành tạo và cấu hình RDS test database, bao gồm lựa chọn database engine, DB Subnet Group, Security Group và database networking.
-<br>&emsp;&emsp;○ Hiểu cách ứng dụng chạy trên EC2 kết nối với RDS thông qua kiến trúc **Application → EC2 → RDS**.
-<br>&emsp;&emsp;○ Tìm hiểu về RDS Backup và Restore, cũng như vai trò của chúng trong việc phục hồi database.
-<br>&emsp;&emsp;○ Phân biệt rõ **Multi-AZ và Read Replica**: Multi-AZ phục vụ High Availability và Failover, trong khi Read Replica phục vụ Read Scaling.
-<br>&emsp;&emsp;○ Học về **EC2 Auto Scaling**, bao gồm Launch Template và Auto Scaling Group.
-<br>&emsp;&emsp;○ Thực hành cấu hình **Desired Capacity, Minimum Capacity và Maximum Capacity** cho Auto Scaling Group.
-<br>&emsp;&emsp;○ Tìm hiểu cách **Health Check** phát hiện EC2 instance không hoạt động bình thường và hỗ trợ Auto Scaling thay thế instance khi cần thiết.
-<br>&emsp;&emsp;○ Tìm hiểu **Dynamic Scaling và Scheduled Scaling**, qua đó hiểu cách EC2 có thể tự động điều chỉnh capacity theo workload.
-<br>&emsp;&emsp;○ Củng cố kiến thức về kiến trúc **Application → EC2 Auto Scaling → RDS** và phân biệt rõ **Scaling ≠ Failover**.
-<br>&emsp;&emsp;○ Hoàn thành quiz tổng kết và thực hiện cleanup các AWS resources sau khi hoàn thành lab nhằm hạn chế phát sinh chi phí không cần thiết.
+<br>&emsp;&emsp;○ Học Amazon RDS và EC2 Auto Scaling.
+<br>&emsp;&emsp;○ Hiểu cách chuyển từ một EC2 đơn lẻ sang kiến trúc có Database và Scaling.
+
+&emsp;◉ Thứ 4:
+<br>&emsp;&emsp;○ Học ALB/NLB, Target Group, Listener, Health Check, Route 53 và CloudWatch.
+<br>&emsp;&emsp;○ Xây dựng flow **Route 53 → ALB → Target Group → EC2 → RDS** và ôn cách CloudWatch giám sát hệ thống.
+<br>&emsp;&emsp;○ Thực hành các lệnh AWS CLI cơ bản.
+
+&emsp;◉ Thứ 5:
+<br>&emsp;&emsp;○ Học DynamoDB và ElastiCache.
+<br>&emsp;&emsp;○ Hiểu vai trò cơ bản của NoSQL và in-memory cache.
+
+&emsp;◉ Thứ 6:
+<br>&emsp;&emsp;○ Ôn Windows on AWS và Managed Microsoft AD.
+<br>&emsp;&emsp;○ Hoàn thành Highly Available Web Application Capstone.
+<br>&emsp;&emsp;○ Tổng hợp kiến thức trong tuần thành một kiến trúc có High Availability, Scaling, Monitoring, Security và Cost Optimization.
+<br>&emsp;&emsp;○ Final review và cleanup các AWS resources sau khi hoàn thành lab.

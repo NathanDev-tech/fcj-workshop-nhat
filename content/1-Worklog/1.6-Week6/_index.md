@@ -8,36 +8,41 @@ pre: " <b> 1.6. </b> "
 
 ### Week 6 Objectives:
 
+- Strengthen practical knowledge of EC2, storage, databases, networking, monitoring, and IAM.
+- Understand how AWS services work together in a highly available architecture.
+- Practice building, reviewing, monitoring, and cleaning up AWS resources.
+
 ### Tasks completed this week:
 | Day | Task | Start Date | Completion Date | Reference Material |
 |:---:|---|:---:|:---:|---|
-| 2   | - Continued studying the **AWS Certified Cloud Practitioner (CLF-C02)** course from ExamPro, focusing on **Management and Development Tools** and the **Shared Responsibility Model**.<br>- Reviewed and studied concepts related to **Amazon EC2, AMI, Amazon EBS, Snapshots, and Amazon S3**.<br>- Practiced launching a Linux EC2 instance, configuring **Security Groups and Key Pairs**, and connecting to EC2 via **SSH**.<br>- Installed a Web Server on EC2 and deployed a simple web page.<br>- Learned and practiced using **User Data** to automatically install a Web Server during EC2 initialization.<br>- Created an **EBS Volume**, attached and mounted the volume to EC2 for use as Block Storage.<br>- Practiced creating **EBS Snapshots** and learned how **AMIs** can be used to store images and create EC2 instances.<br>- Learned the basics of **Amazon S3**, created a Bucket, performed upload/download operations for Objects, and explored **Versioning** and **Block Public Access**.<br>- Created an **IAM Role** for EC2 and tested EC2 access to S3 without using hard-coded Access Keys.<br>- Became familiar with **AWS CloudShell and AWS CLI** and executed basic commands to inspect account information and AWS resources.<br>- At the end of the session, reviewed the relationship between **EC2, EBS, S3, and IAM Roles** through a simple lab architecture and checked the resources that had been created. | 07/09/2026 | 07/09/2026 | [AWS Certified Cloud Practitioner CLF-C02 - ExamPro](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[AWS Cloud Journey](https://cloudjourney.awsstudygroup.com/vi/)<br>Amazon EC2 Lab<br>Amazon S3 Lab<br>[Amazon EC2 Documentation](https://docs.aws.amazon.com/ec2/)<br>[Amazon S3 Documentation](https://docs.aws.amazon.com/s3/) |
-| 3 | - Continued studying the **AWS Certified Cloud Practitioner (CLF-C02)** course from ExamPro, focusing on **Compute and Storage** concepts.<br>- Studied **Amazon RDS** and learned the fundamentals of managed relational databases on AWS.<br>- Practiced creating a test RDS database, selecting a database engine, and reviewing configurations related to **DB Subnet Groups, Security Groups, and database networking**.<br>- Learned how an application running on EC2 can connect to RDS and reviewed the **Application → EC2 → RDS** architecture.<br>- Studied **RDS Backup and Restore** concepts and their role in database recovery.<br>- Learned and compared **Multi-AZ and Read Replica**, understanding that Multi-AZ focuses on **High Availability and Failover**, while Read Replica focuses on **Read Scaling**.<br>- Studied **EC2 Auto Scaling**, including **Launch Templates, Auto Scaling Groups, Desired Capacity, Minimum Capacity, and Maximum Capacity**.<br>- Practiced configuring an Auto Scaling Group and learned how Health Checks can detect unhealthy EC2 instances and replace them when necessary.<br>- Studied **Dynamic Scaling and Scheduled Scaling** to understand how EC2 capacity can automatically adjust according to workload requirements.<br>- Reviewed the **Application → EC2 Auto Scaling → RDS** architecture and reinforced the difference between **Scaling and Failover**.<br>- Completed a review quiz and cleaned up AWS resources created during the labs to avoid unnecessary costs. | 08/09/2026 | 08/09/2026 | [AWS Certified Cloud Practitioner CLF-C02 - ExamPro](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[AWS Cloud Journey](https://cloudjourney.awsstudygroup.com/vi/)<br>[RDS Lab](https://000005.awsstudygroup.com/vi/)<br>[Auto Scaling Lab](https://000006.awsstudygroup.com/vi/)<br>[AWS RDS Documentation](https://docs.aws.amazon.com/rds/) |
-| 4 |  | 09/09/2026 | 09/09/2026 |  |
-| 5 |  | 10/09/2026 | 10/09/2026 |  |
-| 6 |  | 11/09/2026 | 11/09/2026 |  |
+| 2 | - Practiced **EC2, EBS, S3, IAM Role, CloudShell, and AWS CLI**.<br>- Launched a Linux EC2 instance, configured Security Group/Key Pair, connected by SSH, and deployed a simple web server.<br>- Practiced **User Data, EBS Volume, Snapshot, AMI, S3 Versioning, Block Public Access**, and EC2 → S3 access through IAM Role.<br>- Reviewed the simple architecture **Internet → EC2**, with EBS and IAM Role/S3, then cleaned up test resources. | 07/09/2026 | 07/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[EC2 Lab](https://000004.awsstudygroup.com/vi/)<br>[S3 Lab](https://000057.awsstudygroup.com/vi/)<br>[Amazon EC2 Docs](https://docs.aws.amazon.com/ec2/)<br>[Amazon S3 Docs](https://docs.aws.amazon.com/s3/) |
+| 3 | - Studied **Amazon RDS** and **EC2 Auto Scaling**.<br>- Reviewed the move from a single EC2 instance to an **Application + Database + Scaling** architecture.<br>- Practiced through the RDS and Auto Scaling labs, then completed review and cleanup. | 08/09/2026 | 08/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[RDS Lab](https://000005.awsstudygroup.com/vi/)<br>[Auto Scaling Lab](https://000006.awsstudygroup.com/vi/)<br>[Amazon RDS Docs](https://docs.aws.amazon.com/rds/) |
+| 4 | - Studied **Elastic Load Balancing, CloudWatch, Route 53, and AWS CLI**.<br>- Learned ALB/NLB, Target Group, Listener, Health Check, CloudWatch Metrics/Logs/Alarms/Dashboard, and Route 53 DNS/routing concepts.<br>- Reviewed the architecture **Route 53 → ALB → Target Group → EC2 → RDS**, with CloudWatch monitoring.<br>- Practiced basic AWS CLI commands and cleaned up test resources. | 09/09/2026 | 09/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[CloudWatch Lab](https://000008.awsstudygroup.com/vi/)<br>[Route 53 Lab](https://000010.awsstudygroup.com/vi/)<br>[AWS CLI Lab](https://000011.awsstudygroup.com/vi/)<br>[ELB Docs](https://docs.aws.amazon.com/elasticloadbalancing/)<br>[CloudWatch Docs](https://docs.aws.amazon.com/cloudwatch/)<br>[Route 53 Docs](https://docs.aws.amazon.com/route53/) |
+| 5 | - Studied **Amazon DynamoDB** and **Amazon ElastiCache**.<br>- Reviewed the roles of **NoSQL** databases and **in-memory cache** in AWS architectures.<br>- Focused on seeing AWS as a system made of multiple services, followed by quiz and cleanup. | 10/09/2026 | 10/09/2026 | [DynamoDB Lab](https://000060.awsstudygroup.com/vi/)<br>[ElastiCache Lab](https://000061.awsstudygroup.com/vi/)<br>[DynamoDB Docs](https://docs.aws.amazon.com/dynamodb/) |
+| 6 | - Studied **Windows on AWS** and **Managed Microsoft AD** concepts.<br>- Completed a **Highly Available Web Application Capstone** using Route 53, CloudFront, ALB, EC2, Auto Scaling, RDS, CloudWatch, IAM Role, and S3 concepts.<br>- Reviewed **High Availability, Scalability, Fault Tolerance, Monitoring, Security, Cost Optimization**, and AWS Well-Architected thinking.<br>- Performed final review and cleanup of unnecessary resources. | 11/09/2026 | 11/09/2026 | [ExamPro CLF-C02](https://www.youtube.com/watch?v=NhDYbskXRgc)<br>[Windows on AWS](https://000093.awsstudygroup.com/)<br>[Highly Available Web Application](https://www.youtube.com/watch?v=NhDYbskXRgc) |
 
 ### Week 6 Achievements:
 
 &emsp;◉ Monday:
-<br>&emsp;&emsp;○ Completed the Management and Development Tools and Shared Responsibility Model sections of the ExamPro CLF-C02 course.
-<br>&emsp;&emsp;○ Successfully launched and worked with a Linux EC2 instance, including Security Groups, Key Pairs, and SSH.
-<br>&emsp;&emsp;○ Installed a Web Server on EC2 and practiced using User Data for automated configuration.
-<br>&emsp;&emsp;○ Practiced creating, attaching, and mounting an EBS Volume, as well as learning about Snapshots and AMIs.
-<br>&emsp;&emsp;○ Practiced basic S3 Bucket/Object operations and explored Versioning and Block Public Access.
-<br>&emsp;&emsp;○ Created and tested an IAM Role for EC2 to access S3 without hard-coding Access Keys.
-<br>&emsp;&emsp;○ Became familiar with AWS CloudShell/AWS CLI and executed basic commands for checking AWS resources.
+<br>&emsp;&emsp;○ Practiced EC2, EBS, S3, IAM Role, CloudShell, and AWS CLI.
+<br>&emsp;&emsp;○ Deployed a simple web server and tested EC2 → S3 access without hard-coded Access Keys.
+<br>&emsp;&emsp;○ Practiced User Data, EBS, Snapshot, AMI, and S3 Versioning.
 
 &emsp;◉ Tuesday:
-<br>&emsp;&emsp;○ Continued studying the Compute and Storage sections of the ExamPro CLF-C02 course.
-<br>&emsp;&emsp;○ Studied Amazon RDS and learned how a managed relational database differs from running a database directly on an EC2 instance.
-<br>&emsp;&emsp;○ Practiced creating and configuring a test RDS database, including the database engine, DB Subnet Group, Security Group, and database networking.
-<br>&emsp;&emsp;○ Reviewed the Application → EC2 → RDS architecture and learned how an application can connect to a managed database service.
-<br>&emsp;&emsp;○ Learned about RDS backup and restore concepts for database recovery.
-<br>&emsp;&emsp;○ Clearly understood the difference between Multi-AZ and Read Replica: Multi-AZ is used for High Availability and Failover, while Read Replica is used for Read Scaling.
-<br>&emsp;&emsp;○ Studied EC2 Auto Scaling and learned the purpose of Launch Templates and Auto Scaling Groups.
-<br>&emsp;&emsp;○ Practiced configuring Desired Capacity, Minimum Capacity, and Maximum Capacity for an Auto Scaling Group.
-<br>&emsp;&emsp;○ Learned how Health Checks can detect unhealthy EC2 instances and allow Auto Scaling to replace them.
-<br>&emsp;&emsp;○ Studied Dynamic Scaling and Scheduled Scaling and how they can adjust EC2 capacity according to workload requirements.
-<br>&emsp;&emsp;○ Reviewed the Application → EC2 Auto Scaling → RDS architecture and reinforced that Scaling and Failover solve different problems.
-<br>&emsp;&emsp;○ Completed the review quiz and cleaned up test AWS resources to avoid unnecessary costs.
+<br>&emsp;&emsp;○ Studied Amazon RDS and EC2 Auto Scaling.
+<br>&emsp;&emsp;○ Understood the transition from one EC2 instance to an application with database and scaling.
+
+&emsp;◉ Wednesday:
+<br>&emsp;&emsp;○ Learned ALB/NLB, Target Group, Listener, Health Check, Route 53, and CloudWatch.
+<br>&emsp;&emsp;○ Built the flow **Route 53 → ALB → Target Group → EC2 → RDS** and reviewed monitoring with CloudWatch.
+<br>&emsp;&emsp;○ Practiced basic AWS CLI commands.
+
+&emsp;◉ Thursday:
+<br>&emsp;&emsp;○ Studied DynamoDB and ElastiCache.
+<br>&emsp;&emsp;○ Understood the basic roles of NoSQL and in-memory caching.
+
+&emsp;◉ Friday:
+<br>&emsp;&emsp;○ Reviewed Windows on AWS and Managed Microsoft AD.
+<br>&emsp;&emsp;○ Completed the Highly Available Web Application Capstone.
+<br>&emsp;&emsp;○ Connected the week’s knowledge into one architecture covering High Availability, Scaling, Monitoring, Security, and Cost Optimization.
+<br>&emsp;&emsp;○ Completed final review and cleanup of AWS lab resources.
