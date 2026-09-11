@@ -25,11 +25,11 @@ chapter: false
 
 &emsp; **Thời gian thực tập:** Từ ngày 01/07/2025 đến ngày 31/12/2025
 
-![Ảnh đại diện của bạn](/static/images/avatar.jpeg)
+![Your profile picture](/fcj-workshop-nhat/images/avatar.jpeg)
 
 
 
-### Nội dung báo cáo
+### Nội dung báo cáô
 
 1.  [Nhật ký làm việc](1-Worklog/)
 2.  [Bản đề xuất](2-Proposal/)

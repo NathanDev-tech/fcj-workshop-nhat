@@ -1,6 +1,6 @@
 ---
 title: "Internship Report"
-date: 2024-07-06
+date: 2026-08-03
 weight: 1
 chapter: false
 ---
@@ -31,7 +31,7 @@ chapter: false
 
 &emsp; **Internship Duration:** From 01/07/2026 to 31/12/2026
 
-![Your profile picture](/static/images/avatar.jpeg)
+![Your profile picture](images/avatar.jpeg)
 
 ### Report Content
 
