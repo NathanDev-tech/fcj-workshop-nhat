@@ -1,45 +1,49 @@
----
-title: "Blog 1"
-date: 2026-09-17
-weight: 1
-chapter: false
-pre: " <b> 3.1. </b> "
+﻿# Architecture Thinking: Khi Bỏ Từng Service Một — Bạn Học Được Gì?
+
+*Một bài viết về cách học AWS theo chiều sâu — không phải bằng cách học thêm, mà bằng cách bỏ dần đi.*
+
 ---
 
-# ☁️ Tôi thử “phá” một kiến trúc AWS bằng cách bỏ từng service ra
+## Học AWS kiểu gì cho đúng?
 
-## 📝 Mở đầu
+Hầu hết mọi người học AWS bằng cách ghi nhớ từng service làm gì. Route 53 là DNS. CloudFront là CDN. EC2 là máy chủ ảo. RDS là database được quản lý. CloudWatch là monitoring. Và cứ thế tiếp tục.
 
-Khi mới học AWS, mình thường nhớ từng service theo kiểu:
+Cách học đó không sai — nhưng nó chỉ cho bạn biết *cái gì*, không phải *tại sao*.
 
-**EC2 = Compute**</br>
-**RDS = Database**</br>
-**ALB = Load Balancing**</br>
-**CloudWatch = Monitoring**</br>
+Theo mình, kiến trúc tư duy thực sự bắt đầu khi bạn đặt câu hỏi ngược lại: **"Nếu tôi bỏ service này đi, điều gì xảy ra?"** Đó là lúc bạn bắt đầu hiểu giá trị thật sự của từng mảnh trong hệ thống — và đó cũng là cách bạn học architecture thinking thay vì chỉ thuộc service definition.
 
-Nhưng càng học nhiều, mình càng thấy chỉ nhớ định nghĩa service là chưa đủ.
+Bài viết này lấy kiến trúc production đầy đủ làm nền, rồi lần lượt tháo từng service ra — quan sát hệ thống thay đổi như thế nào, ai bị ảnh hưởng, và trade-off thực sự là gì.
 
-Câu hỏi mình bắt đầu đặt ra là:
+---
 
-> **Nếu tất cả các service này cùng nằm trong một hệ thống, tại sao từng service lại cần xuất hiện?**
+## Kiến Trúc Gốc — "Production-Ready Architecture"
 
-Và mình thử một cách học khác:
+Đây là kiến trúc chúng ta sẽ phân tích. Mỗi service đều có lý do tồn tại:
 
-> **Nếu bỏ từng service ra khỏi architecture thì chuyện gì xảy ra?**
+**Luồng traffic từ User đến Database:**
 
-## 🏗️ Architecture / Bối cảnh
+```
+User → Internet
+  → Amazon Route 53 (DNS resolution)
+  → Amazon CloudFront (CDN + TLS termination)
+      └── AWS WAF (attaches to / protects CloudFront)
+  → Internet Gateway (cổng vào VPC)
+  → Application Load Balancer — ALB (Public Subnet)
+      ← NAT Gateway (cùng Public Subnet, cho EC2 ra ngoài)
+  → Amazon EC2 × 2 (Private Subnet, Auto Scaling Group)
+  → Amazon RDS Multi-AZ (Private Subnet)
 
-**Route 53 → CloudFront → WAF → VPC → ALB → Auto Scaling EC2 → RDS Multi-AZ**
-
-Bên cạnh đó là **IAM, CloudWatch, Internet Gateway và NAT Gateway** để xử lý access, monitoring và network
-
-![Architecture Diagram](/fcj-workshop-nhat/images/archnew.png)
+Monitoring toàn bộ hệ thống:
+  → Amazon CloudWatch (Monitoring & Audit)
+```
 
 Mình gọi đây là **"production-ready architecture"** — đủ để phục vụ traffic thật, đủ để không bị đánh thức lúc 3 giờ sáng quá thường xuyên, và đủ bảo mật để không bị bypass bởi các attack cơ bản.
 
 Bây giờ, hãy bắt đầu tháo dỡ từng lớp.
 
-## 🔍 Thử nghiệm 1: 🌐 Nếu bỏ Internet Gateway?
+---
+
+## Phần 1: Nếu Bỏ Internet Gateway Thì Sao?
 
 Trước khi nói về CloudFront hay ALB, cần hiểu Internet Gateway (IGW) — vì đây là thứ nhiều người hay bỏ qua nhất trong kiến trúc.
 
@@ -67,8 +71,9 @@ IGW không phải là "optional component". Nó là nền tảng bắt buộc. K
 
 > **"Internet Gateway không làm gì fancy — nó chỉ là cánh cửa. Nhưng không có cánh cửa, căn nhà là nhà tù."**
 
+---
 
-## 🔍 Thử nghiệm 2: Nếu bỏ NAT Gateway?
+## Phần 2: Nếu Bỏ NAT Gateway Thì Sao?
 
 ### NAT Gateway làm gì và tại sao nằm trong Public Subnet?
 
@@ -108,7 +113,9 @@ NAT Gateway là "silent protector" — bạn không thấy nó làm gì cho đ�
 
 > **"Bỏ NAT Gateway để tiết kiệm $32/tháng — rồi bạn dùng $300/giờ engineering time để debug tại sao EC2 không gọi được payment API."**
 
-## 🔍 Thử nghiệm 3: 🌍 Nếu bỏ CloudFront?
+---
+
+## Phần 3: Nếu Bỏ CloudFront Thì Sao?
 
 ### CloudFront làm gì trong kiến trúc này?
 
@@ -140,7 +147,9 @@ CloudFront không chỉ là "CDN để tăng tốc". Trong kiến trúc này, n�
 
 > **"Bỏ CloudFront = bỏ khiên che + bỏ cache + expose origin. Ba cái giá đó cộng lại đắt hơn nhiều so với $10–50/tháng CloudFront charge."**
 
-## 🔍 Thử nghiệm 3: 🛡️ Nếu bỏ WAF?
+---
+
+## Phần 4: Nếu Bỏ WAF Thì Sao?
 
 ### WAF làm gì và tại sao attach vào CloudFront?
 
@@ -180,7 +189,9 @@ WAF là một trong những service rẻ nhất so với giá trị nó mang l�
 
 > **"Không có WAF không có nghĩa là không bị tấn công. Nó chỉ có nghĩa là bạn không biết mình đang bị tấn công."**
 
-## 🔍 Thử nghiệm 3: ⚖️ Nếu bỏ ALB?
+---
+
+## Phần 5: Nếu Bỏ ALB Thì Sao?
 
 ### ALB làm gì trong kiến trúc này?
 
@@ -210,8 +221,9 @@ ALB tốn khoảng $18–25/tháng. Nhưng nó là tầng trung gian không th�
 
 > **"ALB không chỉ là load balancer — nó là người gác cổng của Private Subnet."**
 
+---
 
-## 🔍 Thử nghiệm 4: 📈 Nếu bỏ Auto Scaling?
+## Phần 6: Nếu Bỏ Auto Scaling Thì Sao?
 
 ### Auto Scaling Group làm gì?
 
@@ -248,7 +260,9 @@ Không có Auto Scaling = bạn là Auto Scaling. Bạn phải luôn sẵn sàng
 
 > **"Auto Scaling không phải để tiết kiệm tiền. Nó để bạn ngủ ngon."**
 
-## 🔍 Thử nghiệm 4: 🗄️ Nếu bỏ RDS và cài database trực tiếp trên EC2?
+---
+
+## Phần 7: Nếu Bỏ RDS và Dùng Database Local Trên EC2 Thì Sao?
 
 ### RDS Multi-AZ trong sơ đồ
 
@@ -282,7 +296,9 @@ $80–100/tháng tiết kiệm được từ việc dùng EC2 DB sẽ không đ�
 
 > **"RDS không cho bạn một database. Nó cho bạn một đội DBA — mà không cần tuyển dụng ai."**
 
-## 🔍 Thử nghiệm 5: 📊 Nếu bỏ CloudWatch?
+---
+
+## Phần 8: Nếu Bỏ CloudWatch Thì Sao?
 
 ### CloudWatch trong sơ đồ
 
@@ -312,7 +328,9 @@ CloudWatch là service duy nhất trong list này mà mình không thể nghĩ r
 
 > **"Bạn không thể cải thiện thứ bạn không đo được. Và bạn không thể sửa thứ bạn không thấy."**
 
-## 📌 Tổng kết nhanh - Architecture Thinking Framework
+---
+
+## Phần 9: Tổng Kết — Architecture Thinking Framework
 
 ### Pattern chung
 
@@ -353,3 +371,26 @@ Một kỹ sư senior nhìn vào sơ đồ và hỏi: **"Nếu thứ này biến
 
 Câu trả lời cho câu hỏi thứ hai mới là thứ quyết định kiến trúc của bạn.
 
+---
+
+## Bonus: Câu Hỏi Tự Luyện
+
+Áp dụng framework 3 câu hỏi cho những tình huống sau:
+
+**"Nếu bỏ Route 53 và trỏ domain thẳng vào CloudFront IP thì sao?"**
+Gợi ý: CloudFront IP có thể thay đổi. Không có DNS failover. Không có latency routing cho multi-region.
+
+**"Nếu dùng 1 NAT Gateway cho cả 2 AZ thay vì mỗi AZ 1 cái thì sao?"**
+Gợi ý: AZ1 down → EC2 ở AZ2 cũng mất outbound internet vì NAT GW ở AZ1. Chi phí tiết kiệm được là $32/tháng. Trade-off có xứng đáng không?
+
+**"Nếu bỏ Multi-AZ trên RDS thì sao?"**
+Gợi ý: Single-AZ RDS rẻ hơn ~50%. Khi AZ đó có sự cố (đã xảy ra với AWS thực tế), recovery time là bao lâu?
+
+**"Nếu thay EC2 + ASG bằng AWS Lambda thì kiến trúc thay đổi như thế nào?"**
+Gợi ý: Auto Scaling trở thành implicit — Lambda tự scale. Nhưng cold start latency xuất hiện, execution time limit 15 phút, RDS connection pooling trở thành vấn đề nghiêm trọng. Trade-off nào mới xuất hiện?
+
+---
+
+*Không có câu trả lời đúng hay sai cho những câu hỏi này. Chỉ có trade-off — và việc hiểu chúng là thứ phân biệt "người dùng được AWS" với "người thiết kế được hệ thống trên AWS".*
+
+*Bài viết này dựa trên kiến trúc: User → Route 53 → CloudFront (+ WAF) → IGW → ALB → EC2 × 2 (ASG) → RDS Multi-AZ, với CloudWatch monitoring toàn bộ hệ thống.*
