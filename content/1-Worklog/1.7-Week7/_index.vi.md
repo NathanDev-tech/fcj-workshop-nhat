@@ -16,9 +16,9 @@ pre: " <b> 1.7. </b> "
 ### Các công việc đã làm trong tuần này:
 | Thứ | Công việc | Ngày bắt đầu | Ngày hoàn thành | Nguồn tài liệu |
 |:---:|---|:---:|:---:|---|
-| 2 | AWS Lambda - Serverless và tự động hóa EC2 | 14/09/2026 | 14/09/2026 | [Tối ưu chi phí EC2 với Lambda]([https://000022.awsstudygroup.com/](https://000022.awsstudygroup.com/)) |
-| 3 | Ôn tập CLF-C02 bằng ExamPro và tìm hiểu Amazon SQS | 15/09/2026 | 15/09/2026 | [ExamPro CLF-C02]([https://www.exampro.co/clf-c02](https://www.exampro.co/clf-c02)) |
-| 4 | Bắt đầu làm quen với Grafana cơ bản | 16/09/2026 | 16/09/2026 | [Getting started with Grafana basic]([https://000029.awsstudygroup.com/](https://000029.awsstudygroup.com/)) |
+| 2 | AWS Lambda - Serverless và tự động hóa EC2 | 14/09/2026 | 14/09/2026 | [Tối ưu chi phí EC2 với Lambda](https://000022.awsstudygroup.com/) |
+| 3 | Ôn tập CLF-C02 bằng ExamPro và tìm hiểu Amazon SQS | 15/09/2026 | 15/09/2026 | [ExamPro CLF-C02](https://www.exampro.co/clf-c02) |
+| 4 | Bắt đầu làm quen với Grafana cơ bản | 16/09/2026 | 16/09/2026 | [Getting started with Grafana basic](https://000029.awsstudygroup.com/) |
 | 5 |  | 17/09/2026 | 17/09/2026 |  |
 | 6 |  | 18/09/2026 | 18/09/2026 |  |
 
