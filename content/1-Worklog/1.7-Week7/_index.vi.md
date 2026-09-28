@@ -25,7 +25,6 @@ pre: " <b> 1.7. </b> "
 ### Kết quả đạt được tuần 7:
 
 &emsp;◉ Thứ Hai:
-
 <br>&emsp;&emsp;○ Tìm hiểu AWS Lambda và mô hình Serverless.
 <br>&emsp;&emsp;○ Tìm hiểu cách AWS Lambda thực thi mã mà không yêu cầu tự quản lý trực tiếp máy chủ.
 <br>&emsp;&emsp;○ Tạo và cấu hình IAM Role cho Lambda.
@@ -33,7 +32,6 @@ pre: " <b> 1.7. </b> "
 <br>&emsp;&emsp;○ Tìm hiểu cách Lambda có thể được sử dụng để tự động hóa các tác vụ vận hành và hỗ trợ tối ưu chi phí EC2.
 
 &emsp;◉ Thứ Ba:
-
 <br>&emsp;&emsp;○ Ôn tập các nội dung AWS Certified Cloud Practitioner CLF-C02 bằng ExamPro.
 <br>&emsp;&emsp;○ Ôn tập Application Integration, Messaging, Serverless, Security, Shared Responsibility Model và các trường hợp sử dụng của AWS service.
 <br>&emsp;&emsp;○ Tìm hiểu Amazon SQS và các khái niệm Queue, Message, Producer và Consumer.
