@@ -28,41 +28,24 @@ pre: " <b> 1.8. </b> "
 ### Week 8 Achievements:
 
 &emsp;◉ Wednesday:
-
 <br>&emsp;&emsp;○ Studied AWS Systems Manager and learned how it can be used to centrally manage EC2 instances.
-
 <br>&emsp;&emsp;○ Practiced configuring IAM Role for EC2 and registering instances as managed nodes in Systems Manager.
-
 <br>&emsp;&emsp;○ Practiced Patch Manager using the Scan and install option to manage patches on Windows EC2 instances.
-
 <br>&emsp;&emsp;○ Practiced Run Command with AWS-RunPowerShellScript and executed commands on multiple managed instances.
-
 <br>&emsp;&emsp;○ Learned how Systems Manager can reduce the need to manage EC2 instances individually.
 
 &emsp;◉ Thursday:
-
 <br>&emsp;&emsp;○ Studied AWS CloudFormation and the Infrastructure as Code approach.
-
 <br>&emsp;&emsp;○ Used AWS CloudShell as the working environment for CloudFormation activities.
-
 <br>&emsp;&emsp;○ Learned the main CloudFormation template sections including Parameters, Resources and Outputs.
-
 <br>&emsp;&emsp;○ Created a CloudFormation template containing Security Group, IAM Role, Instance Profile and EC2 resources.
-
 <br>&emsp;&emsp;○ Used cfn-lint to validate the CloudFormation template before deployment.
-
 <br>&emsp;&emsp;○ Created a CloudFormation Stack and checked the deployment result.
 
 &emsp;◉ Friday:
-
 <br>&emsp;&emsp;○ Studied VPC Flow Logs and its role in network monitoring.
-
 <br>&emsp;&emsp;○ Created and configured VPC Flow Logs for the workshop environment.
-
 <br>&emsp;&emsp;○ Configured CloudWatch Logs as the destination for VPC Flow Logs.
-
 <br>&emsp;&emsp;○ Learned how Flow Logs can support traffic monitoring and Security Group troubleshooting.
-
 <br>&emsp;&emsp;○ Reviewed the relationship between VPC, Network Interface, VPC Flow Logs and CloudWatch Logs.
-
 <br>&emsp;&emsp;○ Reviewed and cleaned up AWS resources after completing the workshop.
