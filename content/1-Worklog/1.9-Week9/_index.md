@@ -23,12 +23,20 @@ pre: " <b> 1.9. </b> "
 | Day | Task | Start Date | Completion Date | Reference Material |
 |:---:|---|:---:|:---:|---|
 | 2 |  | 28/09/2026 | 28/09/2026 |  |
-| 3 |  | 29/09/2026 | 29/09/2026 |  |
+| 3 | Participated in AWS Cloud and AI Day Hanoi 2026; attended AWS keynote, technical sessions, expo activities and explored topics related to Cloud, AI, Data Analytics and modern applications | 29/09/2026 | 29/09/2026 | [AWS Cloud and AI Day Hanoi](https://aws.amazon.com/events/cloud-day-hanoi/) |
 | 4 | Studied EC2 Right-Sizing; created an IAM Role, attached the Role to EC2, installed and configured the CloudWatch Agent, collected metrics, and reviewed optimization recommendations from AWS Compute Optimizer | 30/09/2026 | 30/09/2026 | [EC2 Right-Sizing](https://000032.awsstudygroup.com/vi/) |
 | 5 | Studied AWS Service Quotas; checked AWS service quotas, reviewed current limits, and learned the process of requesting a quota increase when additional capacity is required | 01/10/2026 | 01/10/2026 | [AWS Service Quotas](https://000063.awsstudygroup.com/vi/) |
-| 6 | Studied Cost & Usage Management with IAM; created an IAM Group, User and Policy, practiced restricting permissions by Region, EC2 Family, Instance Size and EBS Volume, and tested the policy results | 02/10/2026 | 02/10/2026 | [Cost and Usage Management](https://000064.awsstudygroup.com/vi/) |
+| 6 | Studied Cost & Usage Management with IAM and participated in a Fireside Chat with Dr. Werner Vogels, focusing on technology, cloud innovation and the future direction of AI | 02/10/2026 | 02/10/2026 | [Cost and Usage Management](https://000064.awsstudygroup.com/vi/) / [Fireside Chat with Dr. Werner Vogels](https://www.youtube.com/live/jWjOIfMA9qc) |
 
 ### Week 9 Achievements:
+
+&emsp; ◉ Tuesday:
+<br>&emsp;&emsp;○ Participated in AWS Cloud and AI Day Hanoi 2026 at JW Marriott Hotel Hanoi.
+<br>&emsp;&emsp;○ Attended the AWS keynote and explored the main themes of cloud computing, artificial intelligence and modern technology.
+<br>&emsp;&emsp;○ Participated in technical sessions covering topics related to AI, data analytics, migration, modern applications and cloud technologies.
+<br>&emsp;&emsp;○ Visited the expo area to explore AWS technology demonstrations and interactive showcases.
+<br>&emsp;&emsp;○ Learned from AWS experts, customer stories and technology sessions about how cloud and AI can be applied to practical business and technical problems.
+<br>&emsp;&emsp;○ Gained a broader understanding of current AWS technology trends and connected the event topics with my learning path in Cloud Computing and Data Analytics.
 
 &emsp;◉ Wednesday:
 <br>&emsp;&emsp;○ Studied the concept of EC2 Right-Sizing and the importance of selecting an EC2 instance size based on actual workload requirements.
@@ -37,13 +45,11 @@ pre: " <b> 1.9. </b> "
 <br>&emsp;&emsp;○ Attached the IAM Role to the EC2 instance and checked the permission configuration for the instance.
 <br>&emsp;&emsp;○ Installed and configured the CloudWatch Agent on the EC2 instance to collect resource utilization information, including memory utilization data.
 <br>&emsp;&emsp;○ Learned the relationship between EC2, IAM Role, CloudWatch Agent and monitoring data during the resource optimization process.
-
 <br>&emsp;&emsp;○ Studied EC2 Resource Optimization and learned how collected metrics can support EC2 configuration analysis.
 <br>&emsp;&emsp;○ Studied AWS Compute Optimizer and learned how its recommendations can support the selection of a more suitable EC2 configuration.
 <br>&emsp;&emsp;○ Realized that EC2 optimization should be based on actual usage data rather than selecting an instance only from its default configuration.
 
 &emsp;◉ Thursday:
-
 <br>&emsp;&emsp;○ Studied AWS Service Quotas and the concept of quotas and service limits for AWS services.
 <br>&emsp;&emsp;○ Explored the Service Quotas console and learned how to check quotas for different AWS services.
 <br>&emsp;&emsp;○ Learned how to identify the current quota value and monitor resource limits within the AWS account.
@@ -63,4 +69,7 @@ pre: " <b> 1.9. </b> "
 <br>&emsp;&emsp;○ Practiced restricting the creation and usage of EBS volumes based on the configured IAM policies.
 <br>&emsp;&emsp;○ Tested the effectiveness of IAM Policies by performing resource creation operations and observing whether the actions were allowed or denied.
 <br>&emsp;&emsp;○ Gained a better understanding of how IAM can be used not only for access control but also for resource governance and cost management.
+<br>&emsp;&emsp;○ Participated in a Fireside Chat with Dr. Werner Vogels and gained additional perspectives on cloud technology, innovation, artificial intelligence and the role of technology in the future.
+<br>&emsp;&emsp;○ Reflected on how cloud computing and AI can be combined to create new solutions and improve the way applications and businesses operate.
+<br>&emsp;&emsp;○ Related the discussion to my own learning path in AWS Cloud Computing and my career direction in Data Analytics.
 <br>&emsp;&emsp;○ Reviewed and cleaned up AWS resources after completing the workshop.

@@ -1,128 +1,105 @@
 ---
 title: "Event 2"
-date: 2024-01-01
-weight: 1
+date: 2026-10-02
+weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-<!-- {{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy it verbatim** into your report, including this warning.
-{{% /notice %}} -->
-
-### None
-
-<!-- # Summary Report: “GenAI-powered App-DB Modernization workshop”
+# Summary Report: "Fireside Chat with Dr. Werner Vogels"
 
 ### Event Objectives
 
-- Share best practices in modern application design
-- Introduce Domain-Driven Design (DDD) and event-driven architecture
-- Provide guidance on selecting the right compute services
-- Present AI tools to support the development lifecycle
+- Gain insights from **Dr. Werner Vogels, Vice President and CTO of Amazon.com**.
+- Explore important topics related to **innovation, cloud computing, artificial intelligence, and the future of technology**.
+- Learn from the experience of a technology leader who has worked on large-scale systems and technology innovation.
+- Develop a broader understanding of how technology may evolve in the coming years.
 
-### Speakers
+### Event Highlights
 
-- **Jignesh Shah** – Director, Open Source Databases
-- **Erica Liu** – Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** – Assc. Specialist SA, Serverless Amazon Web Services
+#### Innovation and Technology
 
-### Key Highlights
+- Explored the importance of **continuous innovation** in the technology industry.
+- Learned how technological innovation can create new opportunities and solve practical problems.
+- Gained insights into the relationship between technology, engineering, and business transformation.
 
-#### Identifying the drawbacks of legacy application architecture
+#### Cloud Computing
 
-- Long product release cycles → Lost revenue/missed opportunities  
-- Inefficient operations → Reduced productivity, higher costs  
-- Non-compliance with security regulations → Security breaches, loss of reputation  
+- Gained a broader perspective on the development and future of **cloud computing**.
+- Learned how cloud technologies enable organizations to build scalable and flexible systems.
+- Better understood the importance of reliability and scalability in modern technology systems.
 
-#### Transitioning to modern application architecture – Microservices
+#### Artificial Intelligence
 
-Migrating to a modular system — each function is an **independent service** communicating via **events**, built on three core pillars:
+- Explored the growing impact of **Artificial Intelligence** on software development and business.
+- Learned how AI may change the way developers and technology professionals work.
+- Gained a broader perspective on the opportunities and challenges created by rapidly developing AI technologies.
 
-- **Queue Management**: Handle asynchronous tasks  
-- **Caching Strategy**: Optimize performance  
-- **Message Handling**: Flexible inter-service communication  
+#### Engineering at Scale
 
-#### Domain-Driven Design (DDD)
-
-- **Four-step method**: Identify domain events → arrange timeline → identify actors → define bounded contexts  
-- **Bookstore case study**: Demonstrates real-world DDD application  
-- **Context mapping**: 7 patterns for integrating bounded contexts  
-
-#### Event-Driven Architecture
-
-- **3 integration patterns**: Publish/Subscribe, Point-to-point, Streaming  
-- **Benefits**: Loose coupling, scalability, resilience  
-- **Sync vs async comparison**: Understanding the trade-offs  
-
-#### Compute Evolution
-
-- **Shared Responsibility Model**: EC2 → ECS → Fargate → Lambda  
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value  
-- **Functions vs Containers**: Criteria for appropriate choice  
-
-#### Amazon Q Developer
-
-- **SDLC automation**: From planning to maintenance  
-- **Code transformation**: Java upgrade, .NET modernization  
-- **AWS Transform agents**: VMware, Mainframe, .NET migration  
+- Learned from Dr. Werner Vogels' experience with large-scale technology systems.
+- Gained insights into the importance of **scalability, reliability, simplicity, and customer focus**.
+- Understood that large-scale technology requires strong engineering principles and long-term thinking.
 
 ### Key Takeaways
 
-#### Design Mindset
+#### Technology Mindset
 
-- **Business-first approach**: Always start from the business domain, not the technology  
-- **Ubiquitous language**: Importance of a shared vocabulary between business and tech teams  
-- **Bounded contexts**: Identifying and managing complexity in large systems  
+- Technology should focus on solving meaningful problems and creating real value.
+- Innovation requires curiosity, experimentation, and continuous improvement.
+- Technology professionals need to keep learning because the industry changes rapidly.
 
-#### Technical Architecture
+#### Engineering Perspective
 
-- **Event storming technique**: Practical method for modeling business processes  
-- Use **event-driven communication** instead of synchronous calls  
-- **Integration patterns**: When to use sync, async, pub/sub, streaming  
-- **Compute spectrum**: Criteria for choosing between VM, containers, and serverless  
+- Building systems at scale requires attention to **reliability, scalability, performance, and operational efficiency**.
+- Good engineering decisions should consider both current requirements and future growth.
+- Simplicity can be an important principle when dealing with complex systems.
 
-#### Modernization Strategy
+#### Future of Technology
 
-- **Phased approach**: No rushing — follow a clear roadmap  
-- **7Rs framework**: Multiple modernization paths depending on the application  
-- **ROI measurement**: Cost reduction + business agility  
+- AI will continue to play an important role in the development of modern technology.
+- Cloud computing provides an important foundation for technological innovation.
+- The combination of **Cloud, Data, and AI** will continue to influence software development and digital transformation.
 
 ### Applying to Work
 
-- **Apply DDD** to current projects: Event storming sessions with business teams  
-- **Refactor microservices**: Use bounded contexts to define service boundaries  
-- **Implement event-driven patterns**: Replace some sync calls with async messaging  
-- **Adopt serverless**: Pilot AWS Lambda for suitable use cases  
-- **Try Amazon Q Developer**: Integrate into the dev workflow to boost productivity  
+- Improve my understanding of AWS cloud architecture and services.
+- Apply scalable and reliable design principles to my software projects.
+- Continue exploring practical applications of AI technologies.
+- Develop a stronger understanding of how technical decisions can affect business outcomes.
+- Maintain a continuous-learning mindset throughout my career.
 
 ### Event Experience
 
-Attending the **“GenAI-powered App-DB Modernization”** workshop was extremely valuable, giving me a comprehensive view of modernizing applications and databases using advanced methods and tools. Key experiences included:
+Attending the **Fireside Chat with Dr. Werner Vogels** was a particularly valuable experience because it provided an opportunity to listen directly to a highly influential technology leader.
 
-#### Learning from highly skilled speakers
-- Experts from AWS and major tech organizations shared **best practices** in modern application design.  
-- Through real-world case studies, I gained a deeper understanding of applying **DDD** and **Event-Driven Architecture** to large projects.  
+#### Learning from Dr. Werner Vogels
 
-#### Hands-on technical exposure
-- Participating in **event storming** sessions helped me visualize how to **model business processes** into domain events.  
-- Learned how to **split microservices** and define **bounded contexts** to manage large-system complexity.  
-- Understood trade-offs between **synchronous and asynchronous communication** and integration patterns like **pub/sub, point-to-point, streaming**.  
+- Gained valuable perspectives on **innovation, cloud computing, AI, and the future of technology**.
+- Learned from his experience with large-scale technology systems and engineering challenges.
+- Gained a broader understanding of how technology leaders approach long-term innovation.
 
-#### Leveraging modern tools
-- Explored **Amazon Q Developer**, an AI tool for SDLC support from planning to maintenance.  
-- Learned to **automate code transformation** and pilot serverless with **AWS Lambda** to improve productivity.  
+#### Broader Technology Perspective
 
-#### Networking and discussions
-- The workshop offered opportunities to exchange ideas with experts, peers, and business teams, enhancing the **ubiquitous language** between business and tech.  
-- Real-world examples reinforced the importance of the **business-first approach** rather than focusing solely on technology.  
+- The discussion helped me look beyond individual technologies and consider their broader impact on business and society.
+- I gained a stronger awareness of the relationship between **technology, engineering culture, and business transformation**.
+- The event encouraged me to think more deeply about how today's technologies may evolve in the future.
 
-#### Lessons learned
-- Applying DDD and event-driven patterns reduces **coupling** while improving **scalability** and **resilience**.  
-- Modernization requires a **phased approach** with **ROI measurement**; rushing the process can be risky.  
-- AI tools like Amazon Q Developer can significantly **boost productivity** when integrated into the current workflow.  
+#### Personal Development
 
-#### Some event photos
-*Add your event photos here*  
+- The event motivated me to continue learning about AWS and cloud technologies.
+- It strengthened my interest in AI and data-related technologies.
+- I gained additional motivation to develop practical skills alongside theoretical knowledge.
 
-> Overall, the event not only provided technical knowledge but also helped me reshape my thinking about application design, system modernization, and cross-team collaboration. -->
+#### Lessons Learned
+
+- Continuous learning is essential in the technology industry.
+- Good technology begins with a clear understanding of the problem that needs to be solved.
+- Building reliable systems requires long-term thinking and strong engineering principles.
+- Innovation is not only about creating new technologies but also about using technology effectively to create meaningful impact.
+
+### Some Event Photos
+
+![Fireside Chat with Dr. Werner Vogels - Photo 1](../4.2-Event2/images/event2.jpg)
+
+

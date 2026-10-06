@@ -1,127 +1,109 @@
 ---
-title: "Event 1"
-date: 2024-01-01
+title: "Sự kiện 1 "
+date: 2026-09-29
 weight: 1
 chapter: false
 pre: " <b> 4.1. </b> "
 ---
 
-<!-- {{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}} -->
+# Bài Thu hoạch: "AWS Cloud and AI Day Hà Nội"
 
-### Chưa có
+### Mục tiêu của sự kiện
 
-<!-- # Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+- Tìm hiểu những xu hướng mới nhất trong **điện toán đám mây, trí tuệ nhân tạo, dữ liệu và phát triển ứng dụng hiện đại**.
+- Tiếp cận những chia sẻ thực tế từ **các chuyên gia AWS, chuyên gia công nghệ và cộng đồng Cloud**.
+- Tìm hiểu cách các công nghệ AWS có thể được áp dụng vào các bài toán thực tế trong doanh nghiệp.
+- Mở rộng kiến thức về **Cloud, AI, Data Analytics và phát triển phần mềm hiện đại**.
 
-### Mục Đích Của Sự Kiện
+### Nội dung nổi bật
 
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
+#### Điện toán đám mây và AI
 
-### Danh Sách Diễn Giả
+- Tìm hiểu những xu hướng mới trong **điện toán đám mây và trí tuệ nhân tạo**.
+- Tìm hiểu cách hạ tầng Cloud hỗ trợ các bài toán AI hiện đại và chuyển đổi số.
+- Có thêm góc nhìn về cách AWS giúp doanh nghiệp đẩy nhanh quá trình đổi mới công nghệ.
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+#### Dữ liệu và phân tích
 
-### Nội Dung Nổi Bật
+- Tìm hiểu vai trò của **dữ liệu và phân tích dữ liệu** trong doanh nghiệp hiện đại.
+- Khám phá cách dữ liệu được sử dụng để hỗ trợ ra quyết định và xây dựng các ứng dụng AI.
+- Hiểu rõ hơn mối liên hệ giữa **Data, Analytics và AI**.
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### Ứng dụng hiện đại
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+- Tìm hiểu các phương pháp phát triển và thiết kế ứng dụng hiện đại.
+- Tiếp cận các công nghệ như **cloud-native, container, serverless và hệ thống có khả năng mở rộng**.
+- Hiểu rõ hơn cách hiện đại hóa các ứng dụng truyền thống bằng công nghệ Cloud.
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
+#### AI và các công nghệ mới
 
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
+- Tìm hiểu vai trò ngày càng lớn của **Generative AI và Agentic AI**.
+- Khám phá cách AI hỗ trợ lập trình viên, doanh nghiệp và các nhóm công nghệ.
+- Nhận thấy AI đang ngày càng trở thành một phần quan trọng trong quy trình phát triển phần mềm và vận hành doanh nghiệp.
 
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
+### Những kiến thức rút ra
 
-#### Domain-Driven Design (DDD)
+#### Kiến thức kỹ thuật
 
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
+- Điện toán đám mây và AI ngày càng có mối liên hệ chặt chẽ.
+- Một **nền tảng dữ liệu tốt** là yếu tố quan trọng để xây dựng các giải pháp AI hiệu quả.
+- Ứng dụng hiện đại cần chú trọng đến **khả năng mở rộng, tính linh hoạt, bảo mật và độ tin cậy**.
+- AWS cung cấp nhiều dịch vụ khác nhau để đáp ứng các yêu cầu kỹ thuật cụ thể.
 
-#### Event-Driven Architecture
+#### Phát triển chuyên môn
 
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
+- Việc học tập liên tục là cần thiết vì công nghệ Cloud và AI thay đổi rất nhanh.
+- Kiến thức kỹ thuật cần được gắn với **nhu cầu và bài toán thực tế của doanh nghiệp**.
+- Tham gia các sự kiện công nghệ giúp tôi có cơ hội học hỏi trực tiếp từ các chuyên gia giàu kinh nghiệm.
 
-#### Compute Evolution
+#### Định hướng nghề nghiệp
 
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
+- Sự kiện giúp tôi hiểu rõ hơn về các cơ hội nghề nghiệp liên quan đến **Cloud Computing, Data Analytics và AI**.
+- Có thêm góc nhìn về những công nghệ đang được sử dụng trong thực tế.
+- Tạo động lực để tiếp tục phát triển kiến thức về AWS và dữ liệu.
 
-#### Amazon Q Developer
+### Áp dụng vào công việc
 
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+- Vận dụng các kiến thức AWS Cloud vào công việc thực tập và các dự án cá nhân.
+- Tiếp tục tìm hiểu các **dịch vụ AWS phục vụ Data Analytics và AI**.
+- Tăng cường thực hành thông qua các workshop và AWS hands-on lab.
+- Tìm hiểu cách kết hợp Cloud với kiến thức hiện có về **Python, SQL và phát triển Web**.
 
-### Những Gì Học Được
+### Trải nghiệm tại sự kiện
 
-#### Tư Duy Thiết Kế
+Tham dự **AWS Cloud and AI Day** là một trải nghiệm đáng giá, giúp tôi có cơ hội trực tiếp tham gia một sự kiện công nghệ quy mô lớn và tiếp cận các chuyên gia AWS cũng như cộng đồng công nghệ.
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
+#### Học hỏi từ các chuyên gia
 
-#### Kiến Trúc Kỹ Thuật
+- Được tiếp cận những chia sẻ thực tế về **Cloud, AI, Data và Modern Applications**.
+- Hiểu rõ hơn về các xu hướng công nghệ đang phát triển.
+- Nhận thấy rõ hơn mối liên hệ giữa giải pháp kỹ thuật và nhu cầu thực tế của doanh nghiệp.
 
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
+#### Tiếp cận công nghệ
 
-#### Chiến Lược Hiện Đại Hóa
+- Tham gia các phiên chia sẻ về Cloud và AI.
+- Mở rộng hiểu biết về cách kết hợp nhiều dịch vụ AWS để xây dựng các giải pháp có khả năng mở rộng.
+- Tiếp cận các công nghệ và phương pháp đang được sử dụng phổ biến trong ngành.
 
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+#### Kết nối cộng đồng
 
-### Ứng Dụng Vào Công Việc
+- Có cơ hội giao lưu với sinh viên, lập trình viên và những người yêu thích công nghệ.
+- Trải nghiệm môi trường kết nối và chia sẻ kiến thức của cộng đồng AWS.
+- Tiếp nhận thêm nhiều góc nhìn mới từ những người tham dự khác.
 
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+#### Bài học kinh nghiệm
 
-### Trải nghiệm trong event
+- Công nghệ nên được sử dụng để giải quyết những vấn đề thực tế và có ý nghĩa.
+- Việc học tập liên tục kết hợp với thực hành là rất quan trọng trong ngành công nghệ.
+- Kiến thức về Cloud, Data và AI có thể bổ trợ cho nhau và tạo ra nhiều cơ hội phát triển nghề nghiệp.
+- Giao lưu với các chuyên gia giúp mở rộng kiến thức ngoài phạm vi học tập trên lớp.
 
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
+### Hình ảnh sự kiện
 
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
 
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
 
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
 
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
+![AWS Cloud and AI Day - Photo 1](../4.1-Event1/images/event1.jpg)
 
-#### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
 
-#### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team. -->
+![AWS Cloud and AI Day - Photo 2](../4.1-Event1/images/event12.jpg)

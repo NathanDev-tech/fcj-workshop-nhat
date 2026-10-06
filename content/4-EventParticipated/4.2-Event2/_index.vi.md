@@ -1,127 +1,104 @@
 ---
-title: "Event 2"
-date: 2024-01-01
-weight: 1
+title: "Sự kiện 2"
+date: 2026-10-02
+weight: 2
 chapter: false
 pre: " <b> 4.2. </b> "
 ---
 
-<!-- {{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}} -->
+# Bài Thu Hoạch: "Fireside Chat with Dr. Werner Vogels"
 
-### Chưa có
+### Mục tiêu của sự kiện
 
-<!-- # Bài thu hoạch “GenAI-powered App-DB Modernization workshop”
+- Tiếp cận những chia sẻ từ **Dr. Werner Vogels, Phó Chủ tịch kiêm Giám đốc Công nghệ của Amazon**.
+- Tìm hiểu về **đổi mới sáng tạo, điện toán đám mây, trí tuệ nhân tạo và tương lai của công nghệ**.
+- Học hỏi kinh nghiệm từ một nhà lãnh đạo công nghệ có nhiều kinh nghiệm trong việc phát triển các hệ thống quy mô lớn.
+- Mở rộng góc nhìn về xu hướng phát triển của công nghệ trong tương lai.
 
-### Mục Đích Của Sự Kiện
+### Nội dung nổi bật
 
-- Chia sẻ best practices trong thiết kế ứng dụng hiện đại
-- Giới thiệu phương pháp DDD và event-driven architecture
-- Hướng dẫn lựa chọn compute services phù hợp
-- Giới thiệu công cụ AI hỗ trợ development lifecycle
+#### Đổi mới và công nghệ
 
-### Danh Sách Diễn Giả
+- Tìm hiểu tầm quan trọng của **đổi mới liên tục** trong ngành công nghệ.
+- Hiểu cách đổi mới công nghệ có thể tạo ra những cơ hội mới và giải quyết các vấn đề thực tế.
+- Có thêm góc nhìn về mối liên hệ giữa công nghệ, kỹ thuật và chuyển đổi kinh doanh.
 
-- **Jignesh Shah** - Director, Open Source Databases
-- **Erica Liu** - Sr. GTM Specialist, AppMod
-- **Fabrianne Effendi** - Assc. Specialist SA, Serverless Amazon Web Services
+#### Điện toán đám mây
 
-### Nội Dung Nổi Bật
+- Có thêm góc nhìn về quá trình phát triển và tương lai của **điện toán đám mây**.
+- Tìm hiểu cách Cloud giúp doanh nghiệp xây dựng các hệ thống linh hoạt và có khả năng mở rộng.
+- Hiểu rõ hơn tầm quan trọng của tính ổn định và khả năng mở rộng trong các hệ thống hiện đại.
 
-#### Đưa ra các ảnh hưởng tiêu cực của kiến trúc ứng dụng cũ
+#### Trí tuệ nhân tạo
 
-- Thời gian release sản phẩm lâu → Mất doanh thu/bỏ lỡ cơ hội
-- Hoạt động kém hiệu quả → Mất năng suất, tốn kém chi phí
-- Không tuân thủ các quy định về bảo mật → Mất an ninh, uy tín
+- Tìm hiểu ảnh hưởng ngày càng lớn của **Artificial Intelligence** đối với phát triển phần mềm và doanh nghiệp.
+- Nhận thấy AI có thể thay đổi cách lập trình viên và các chuyên gia công nghệ làm việc.
+- Có thêm góc nhìn về cơ hội và thách thức do tốc độ phát triển nhanh của AI.
 
-#### Chuyển đổi sang kiến trúc ứng dụng mới - Microservice Architecture
+#### Kỹ thuật ở quy mô lớn
 
-Chuyển đổi thành hệ thống modular – từng chức năng là một **dịch vụ độc lập** giao tiếp với nhau qua **sự kiện** với 3 trụ cột cốt lõi:
+- Học hỏi từ kinh nghiệm của Dr. Werner Vogels trong việc phát triển và vận hành các hệ thống công nghệ quy mô lớn.
+- Hiểu vai trò của các yếu tố **khả năng mở rộng, độ tin cậy, tính đơn giản và tập trung vào khách hàng**.
+- Nhận thấy việc xây dựng hệ thống lớn đòi hỏi nền tảng kỹ thuật tốt và tư duy dài hạn.
 
-- **Queue Management**: Xử lý tác vụ bất đồng bộ
-- **Caching Strategy:** Tối ưu performance
-- **Message Handling:** Giao tiếp linh hoạt giữa services
+### Những kiến thức rút ra
 
-#### Domain-Driven Design (DDD)
+#### Tư duy công nghệ
 
-- **Phương pháp 4 bước**: Xác định domain events → sắp xếp timeline → identify actors → xác định bounded contexts
-- **Case study bookstore**: Minh họa cách áp dụng DDD thực tế
-- **Context mapping**: 7 patterns tích hợp bounded contexts
+- Công nghệ cần hướng đến việc giải quyết các vấn đề có ý nghĩa và tạo ra giá trị thực tế.
+- Đổi mới đòi hỏi sự tò mò, thử nghiệm và tinh thần cải tiến liên tục.
+- Người làm công nghệ cần không ngừng học hỏi vì ngành công nghệ thay đổi rất nhanh.
 
-#### Event-Driven Architecture
+#### Góc nhìn kỹ thuật
 
-- **3 patterns tích hợp**: Publish/Subscribe, Point-to-point, Streaming
-- **Lợi ích**: Loose coupling, scalability, resilience
-- **So sánh sync vs async**: Hiểu rõ trade-offs (sự đánh đổi)
+- Xây dựng hệ thống ở quy mô lớn cần quan tâm đến **độ tin cậy, khả năng mở rộng, hiệu năng và hiệu quả vận hành**.
+- Các quyết định kỹ thuật nên cân nhắc cả yêu cầu hiện tại và khả năng phát triển trong tương lai.
+- Tính đơn giản có thể là một nguyên tắc quan trọng khi xử lý các hệ thống phức tạp.
 
-#### Compute Evolution
+#### Tương lai của công nghệ
 
-- **Shared Responsibility Model**: Từ EC2 → ECS → Fargate → Lambda
-- **Serverless benefits**: No server management, auto-scaling, pay-for-value
-- **Functions vs Containers**: Criteria lựa chọn phù hợp
+- AI sẽ tiếp tục đóng vai trò quan trọng trong sự phát triển của công nghệ hiện đại.
+- Cloud Computing là một nền tảng quan trọng để hỗ trợ đổi mới công nghệ.
+- Sự kết hợp giữa **Cloud, Data và AI** sẽ tiếp tục tác động mạnh đến phát triển phần mềm và chuyển đổi số.
 
-#### Amazon Q Developer
+### Áp dụng vào công việc
 
-- **SDLC automation**: Từ planning đến maintenance
-- **Code transformation**: Java upgrade, .NET modernization
-- **AWS Transform agents**: VMware, Mainframe, .NET migration
+- Củng cố kiến thức về kiến trúc và các dịch vụ AWS.
+- Áp dụng những nguyên tắc về khả năng mở rộng và độ tin cậy vào các dự án phần mềm.
+- Tiếp tục tìm hiểu những ứng dụng thực tế của AI.
+- Nâng cao khả năng đánh giá tác động của các quyết định kỹ thuật đến hoạt động kinh doanh.
+- Duy trì tinh thần học tập liên tục trong quá trình phát triển nghề nghiệp.
 
-### Những Gì Học Được
+### Trải nghiệm tại sự kiện
 
-#### Tư Duy Thiết Kế
+Tham dự **Fireside Chat with Dr. Werner Vogels** là một trải nghiệm đặc biệt vì tôi có cơ hội trực tiếp lắng nghe những chia sẻ từ một trong những nhà lãnh đạo công nghệ có ảnh hưởng lớn trong ngành.
 
-- **Business-first approach**: Luôn bắt đầu từ business domain, không phải technology
-- **Ubiquitous language**: Importance của common vocabulary giữa business và tech teams
-- **Bounded contexts**: Cách identify và manage complexity trong large systems
+#### Học hỏi từ Dr. Werner Vogels
 
-#### Kiến Trúc Kỹ Thuật
+- Tiếp nhận nhiều góc nhìn về **đổi mới, Cloud Computing, AI và tương lai công nghệ**.
+- Học hỏi từ kinh nghiệm xây dựng và vận hành các hệ thống công nghệ quy mô lớn.
+- Có thêm góc nhìn về cách các nhà lãnh đạo công nghệ suy nghĩ về đổi mới trong dài hạn.
 
-- **Event storming technique**: Phương pháp thực tế để mô hình hóa quy trình kinh doanh
-- Sử dụng **Event-driven communication** thay vì synchronous calls
-- **Integration patterns**: Hiểu khi nào dùng sync, async, pub/sub, streaming
-- **Compute spectrum**: Criteria chọn từ VM → containers → serverless
+#### Mở rộng góc nhìn công nghệ
 
-#### Chiến Lược Hiện Đại Hóa
+- Buổi trao đổi giúp tôi nhìn công nghệ ở góc độ rộng hơn thay vì chỉ tập trung vào từng công nghệ riêng lẻ.
+- Hiểu rõ hơn mối quan hệ giữa **công nghệ, văn hóa kỹ thuật và chuyển đổi kinh doanh**.
+- Có thêm động lực để suy nghĩ về sự phát triển của những công nghệ đang được sử dụng hiện nay.
 
-- **Phased approach**: Không rush, phải có roadmap rõ ràng
-- **7Rs framework**: Nhiều con đường khác nhau tùy thuộc vào đặc điểm của mỗi ứng dụng
-- **ROI measurement**: Cost reduction + business agility
+#### Phát triển bản thân
 
-### Ứng Dụng Vào Công Việc
+- Có thêm động lực để tiếp tục học tập về AWS và Cloud Computing.
+- Củng cố sự quan tâm đối với AI và các công nghệ liên quan đến dữ liệu.
+- Nhận thấy tầm quan trọng của việc kết hợp kiến thức lý thuyết với kỹ năng thực hành.
 
-- **Áp dụng DDD** cho project hiện tại: Event storming sessions với business team
-- **Refactor microservices**: Sử dụng bounded contexts để identify service boundaries
-- **Implement event-driven patterns**: Thay thế một số sync calls bằng async messaging
-- **Serverless adoption**: Pilot AWS Lambda cho một số use cases phù hợp
-- **Try Amazon Q Developer**: Integrate vào development workflow để boost productivity
+#### Bài học kinh nghiệm
 
-### Trải nghiệm trong event
+- Học tập liên tục là yêu cầu cần thiết đối với người làm công nghệ.
+- Một giải pháp tốt cần bắt đầu từ việc hiểu rõ vấn đề cần giải quyết.
+- Xây dựng hệ thống đáng tin cậy đòi hỏi tư duy dài hạn và nền tảng kỹ thuật vững chắc.
+- Đổi mới không chỉ là tạo ra công nghệ mới mà còn là cách sử dụng công nghệ để tạo ra giá trị thực tế.
 
-Tham gia workshop **“GenAI-powered App-DB Modernization”** là một trải nghiệm rất bổ ích, giúp tôi có cái nhìn toàn diện về cách hiện đại hóa ứng dụng và cơ sở dữ liệu bằng các phương pháp và công cụ hiện đại. Một số trải nghiệm nổi bật:
+### Hình ảnh sự kiện
 
-#### Học hỏi từ các diễn giả có chuyên môn cao
-- Các diễn giả đến từ AWS và các tổ chức công nghệ lớn đã chia sẻ **best practices** trong thiết kế ứng dụng hiện đại.
-- Qua các case study thực tế, tôi hiểu rõ hơn cách áp dụng **Domain-Driven Design (DDD)** và **Event-Driven Architecture** vào các project lớn.
 
-#### Trải nghiệm kỹ thuật thực tế
-- Tham gia các phiên trình bày về **event storming** giúp tôi hình dung cách **mô hình hóa quy trình kinh doanh** thành các domain events.
-- Học cách **phân tách microservices** và xác định **bounded contexts** để quản lý sự phức tạp của hệ thống lớn.
-- Hiểu rõ trade-offs giữa **synchronous và asynchronous communication** cũng như các pattern tích hợp như **pub/sub, point-to-point, streaming**.
-
-#### Ứng dụng công cụ hiện đại
-- Trực tiếp tìm hiểu về **Amazon Q Developer**, công cụ AI hỗ trợ SDLC từ lập kế hoạch đến maintenance.
-- Học cách **tự động hóa code transformation** và pilot serverless với **AWS Lambda**, từ đó nâng cao năng suất phát triển.
-
-#### Kết nối và trao đổi
-- Workshop tạo cơ hội trao đổi trực tiếp với các chuyên gia, đồng nghiệp và team business, giúp **nâng cao ngôn ngữ chung (ubiquitous language)** giữa business và tech.
-- Qua các ví dụ thực tế, tôi nhận ra tầm quan trọng của **business-first approach**, luôn bắt đầu từ nhu cầu kinh doanh thay vì chỉ tập trung vào công nghệ.
-
-#### Bài học rút ra
-- Việc áp dụng DDD và event-driven patterns giúp giảm **coupling**, tăng **scalability** và **resilience** cho hệ thống.
-- Chiến lược hiện đại hóa cần **phased approach** và đo lường **ROI**, không nên vội vàng chuyển đổi toàn bộ hệ thống.
-- Các công cụ AI như Amazon Q Developer có thể **boost productivity** nếu được tích hợp vào workflow phát triển hiện tại.
-
-#### Một số hình ảnh khi tham gia sự kiện
-* Thêm các hình ảnh của các bạn tại đây
-> Tổng thể, sự kiện không chỉ cung cấp kiến thức kỹ thuật mà còn giúp tôi thay đổi cách tư duy về thiết kế ứng dụng, hiện đại hóa hệ thống và phối hợp hiệu quả hơn giữa các team. -->
+![Fireside Chat with Dr. Werner Vogels - Hình 1](../4.2-Event2/images/event2.jpg)
