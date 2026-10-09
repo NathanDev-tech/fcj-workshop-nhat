@@ -1,6 +1,6 @@
 ---
 
-title: "Week 7 Worklog"
+title: "Worklog Tuần 7"
 
 date: 2026-08-17
 

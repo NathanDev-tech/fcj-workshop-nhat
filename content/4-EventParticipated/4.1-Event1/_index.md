@@ -100,7 +100,7 @@ Attending **AWS Cloud and AI Day** was a valuable opportunity to experience a la
 ### Some Event Photos
 
 
-![AWS Cloud and AI Day - Photo 1](../4.1-Event1/images/event1.jpg)
+![AWS Cloud and AI Day - Photo 1](images/event1.jpg)
 
-#### Photo 2
-![AWS Cloud and AI Day - Photo 2](../4.1-Event1/images/event12.jpg)
+
+![AWS Cloud and AI Day - Photo 2](images/event12.jpg)

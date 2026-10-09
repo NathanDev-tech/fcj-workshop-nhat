@@ -101,4 +101,4 @@ Tham dự **Fireside Chat with Dr. Werner Vogels** là một trải nghiệm đ�
 ### Hình ảnh sự kiện
 
 
-![Fireside Chat with Dr. Werner Vogels - Hình 1](../4.2-Event2/images/event2.jpg)
+![Fireside Chat with Dr. Werner Vogels - Hình 1](/fcj-workshop-nhat/images/event2.jpg)

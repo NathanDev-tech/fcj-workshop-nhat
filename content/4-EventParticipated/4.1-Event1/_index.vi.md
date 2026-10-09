@@ -103,7 +103,7 @@ Tham dự **AWS Cloud and AI Day** là một trải nghiệm đáng giá, giúp 
 
 
 
-![AWS Cloud and AI Day - Photo 1](../4.1-Event1/images/event1.jpg)
+![AWS Cloud and AI Day - Photo 1](/fcj-workshop-nhat/images/event1.jpg)
 
 
-![AWS Cloud and AI Day - Photo 2](../4.1-Event1/images/event12.jpg)
+![AWS Cloud and AI Day - Photo 2](/fcj-workshop-nhat/images/event12.jpg)

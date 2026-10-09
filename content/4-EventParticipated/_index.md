@@ -8,7 +8,7 @@ pre: " <b> 4. </b> "
 
 
 
-### None
+### Event
 
 ### [Event 1](4.1-Event1/)
 &emsp;**Event Name:** AWS Cloud and AI Day Hanoi
