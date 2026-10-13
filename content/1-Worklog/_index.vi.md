@@ -22,7 +22,7 @@ Năm nay em - Nguyễn Minh Nhật sẽ thực tập tại chương trình AWS F
 
 **Tuần 5:** [Công việc tuần 5](1.5-week5/)
 
-<!-- **Tuần 6:** [Công việc tuần 6](1.6-week6/)
+**Tuần 6:** [Công việc tuần 6](1.6-week6/)
 
 **Tuần 7:** [Công việc tuần 7](1.7-week7/)
 
@@ -58,4 +58,4 @@ Năm nay em - Nguyễn Minh Nhật sẽ thực tập tại chương trình AWS F
 
 **Tuần 23:** [Công việc tuần 23](1.23-week23/)
 
-**Tuần 24:** [Công việc tuần 24](1.24-week24/) -->
+**Tuần 24:** [Công việc tuần 24](1.24-week24/)

@@ -22,7 +22,7 @@ This year, I - Nguyen Minh Nhat will intern in the AWS FCAJ Workforce program fo
 
 **Week 5:** [Week 5 tasks](1.5-week5/)
 
-<!-- **Week 6:** [Week 6 tasks](1.6-week6/)
+**Week 6:** [Week 6 tasks](1.6-week6/)
 
 **Week 7:** [Week 7 tasks](1.7-week7/)
 
@@ -58,4 +58,4 @@ This year, I - Nguyen Minh Nhat will intern in the AWS FCAJ Workforce program fo
 
 **Week 23:** [Week 23 tasks](1.23-week23/)
 
-**Week 24:** [Week 24 tasks](1.24-week24/) -->
+**Week 24:** [Week 24 tasks](1.24-week24/) 
