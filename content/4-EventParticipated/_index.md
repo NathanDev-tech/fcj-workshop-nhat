@@ -31,9 +31,9 @@ pre: " <b> 4. </b> "
 &emsp;**Role:** Attendee
 
 ### [Event 3](4.3-Event3/)  
-&emsp;**Event Name:** Fireside Chat with Dr. Wener Vogels, CTO to Amazon
+&emsp;**Event Name:** First Cloud AI Journey Community Day
 
-&emsp;**Date & Time:** 08:30, October 02, 2026
+&emsp;**Date & Time:** 09:00, October 31, 2026
 
 &emsp;**Location:** 26th Floor, Bitexco Tower, 02 Hai Trieu Street, Saigon Ward, Ho Chi Minh City
 
