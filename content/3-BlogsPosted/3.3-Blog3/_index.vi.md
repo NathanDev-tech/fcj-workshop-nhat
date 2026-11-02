@@ -35,77 +35,17 @@ Bài viết này sẽ không cung cấp hàng trăm dòng code mẫu để bạn
 
 Để hiểu rõ tại sao những hành vi trên lại xảy ra, chúng ta cần nhìn vào cách thức Boto3 giao tiếp với các phân vùng lưu trữ (partitions) của DynamoDB qua hai sơ đồ kiến trúc sau:
 
+![aws-architecture](/fcj-workshop-nhat/images/aws_blog3.png)
+
 ### 1. Kiến trúc luồng trích xuất dữ liệu tổng thể
 
-Sơ đồ dưới đây mô tả hành trình từ lúc client gửi yêu cầu trích xuất dữ liệu, đi qua các lớp xác thực IAM, phân tuyến request, truy cập phân vùng vật lý và chuẩn hóa đầu ra:
-
-{{< mermaid align="center" >}}
-flowchart LR
-    subgraph ClientEnv ["Môi trường thực thi (Local / EC2 / Lambda)"]
-        Script["Python Automation Script"]
-        Boto3["AWS SDK for Python (Boto3)"]
-        Encoder["Data Transformation Layer"]
-        Script --> Boto3
-        Boto3 --> Encoder
-    end
-
-    subgraph AWS_Security ["Bảo mật & Quyền hạn"]
-        IAM["AWS IAM Role / STS<br/>Quyền: dynamodb:Scan"]
-    end
-
-    subgraph AWS_Cloud ["Dịch vụ Amazon DynamoDB"]
-        Router["Request Router<br/>(Hệ thống định tuyến phân tán)"]
-        subgraph Partitions ["Storage Partitions (Các phân vùng vật lý)"]
-            P1["Partition 1<br/>(Dải Hash A)"]
-            P2["Partition 2<br/>(Dải Hash B)"]
-            P3["Partition 3<br/>(Dải Hash C)"]
-        end
-    end
-
-    subgraph OutputDestination ["Đích xuất dữ liệu"]
-        JSON_File["Báo cáo JSON"]
-        CSV_File["Báo cáo CSV"]
-    end
-
-    Boto3 -.->|"1. Xác thực IAM"| IAM
-    Boto3 -->|"2. Gửi HTTPS Scan Request"| Router
-    Router --> P1 & P2 & P3
-    P1 & P2 & P3 -->|"3. Đọc dữ liệu thô (Tối đa 1MB)"| Router
-    Router -->|"4. Trả về Response (Items + LastKey)"| Boto3
-    Encoder -->|"5. Chuẩn hóa dữ liệu & Xuất file"| JSON_File & CSV_File
-{{< /mermaid >}}
-
----
+Sơ đồ dưới đây mô tả hành trình từ lúc client gửi yêu cầu trích xuất dữ liệu, đi qua các lớp xác thực IAM, phân tuyến request, truy cập phân vùng vật lý và chuẩn hóa đầu ra.
 
 ### 2. Vòng đời phân trang nội bộ của DynamoDB Engine
 
-Điểm mấu chốt gây hiểu lầm cho nhiều lập trình viên nằm ở **thứ tự xử lý** giữa việc đọc dữ liệu thô và việc áp dụng bộ lọc trên máy chủ DynamoDB:
-
-{{< mermaid align="center" >}}
-flowchart TD
-    Start(["Bắt đầu: Gửi lệnh Scan"]) --> ReadStorage["1. Đọc dữ liệu từ đĩa vật lý (Storage Partitions)"]
-    
-    subgraph DynamoDB_Engine ["Bên trong DynamoDB Engine"]
-        ReadStorage --> Check1MB{"2. Đã đọc đủ 1MB<br/>hoặc chạm mốc cuối bảng?"}
-        Check1MB -- "Chưa đủ" --> ReadStorage
-        Check1MB -- "Đủ 1MB / Hết bảng" --> ApplyFilter["3. Áp dụng FilterExpression trên bộ nhớ đệm<br/>(Loại bỏ item không khớp)"]
-        ApplyFilter --> PrepareResp["4. Đóng gói kết quả:<br/>- Items: Các bản ghi thỏa mãn<br/>- LastEvaluatedKey: Con trỏ vị trí tiếp theo"]
-    end
-
-    PrepareResp --> ReceiveResp["Client nhận phản hồi"]
-    ReceiveResp --> CheckLastKey{"Response có chứa<br/>LastEvaluatedKey?"}
-    
-    CheckLastKey -- "CÓ: Dữ liệu vẫn còn!" --> UpdateKey["Gán ExclusiveStartKey = LastEvaluatedKey"]
-    UpdateKey --> ReadStorage
-    
-    CheckLastKey -- "KHÔNG: Đã duyệt toàn bộ bảng" --> Finish(["Hoàn thành quét toàn bộ"])
-
-    classDef highlight fill:#ff9900,stroke:#333,stroke-width:2px,color:#000;
-    class CheckLastKey,ApplyFilter highlight;
-{{< /mermaid >}}
+Điểm mấu chốt gây hiểu lầm cho nhiều lập trình viên nằm ở **thứ tự xử lý** giữa việc đọc dữ liệu thô và việc áp dụng bộ lọc trên máy chủ DynamoDB.
 
 > ⚠️ **Quy luật bất biến:** DynamoDB thực hiện bước **1 & 2 (Đọc dữ liệu thô từ đĩa cứng)** trước khi thực hiện bước **3 (Lọc dữ liệu trên bộ nhớ)**. Sự tách biệt này chính là nguồn gốc của cái bẫy phân trang đầu tiên.
-
 ---
 
 ## 🔍 Bóc tách 1: Giới hạn vật lý 1MB và nghịch lý "Scan rỗng nhưng dữ liệu vẫn còn"
