@@ -1,117 +1,132 @@
 ---
 title: "Proposal"
-date: 2024-01-01
+date: 2026-09-09
 weight: 2
 chapter: false
-pre: " <b> 2. </b> "
+pre: "<b>2. </b>"
 ---
-<!-- {{% notice warning %}}
-⚠️ **Note:** The information below is for reference purposes only. Please **do not copy verbatim** for your report, including this warning.
-{{% /notice %}} -->
 
-<!-- In this section, you need to summarize the contents of the workshop that you **plan** to conduct. -->
+# RakiBookery
+## CI/CD Pipeline Automation on AWS
+### 1. Project Overview
 
-### None
+RakiBookery is an e-commerce platform specialized in online book management and sales services. The system integrates core functionalities including: product catalog, shopping cart, order management (Order), promotions (Promo), uploaded image resource processing, intelligent product recommendations, and order notification delivery. Given its nature of handling real-time purchase transactions and storing multimedia resources, the system requires deployment on an infrastructure with flexible scalability, high security, and ease of operation.
 
-<!-- # IoT Weather Platform for Lab Research
-## A Unified AWS Serverless Solution for Real-Time Weather Monitoring
+This proposal presents a solution for deploying the RakiBookery system on Amazon Web Services (AWS) in the Singapore Region (`ap-southeast-1`) following a Cloud-Native architecture, meeting requirements for high availability, multi-layered security, and operational automation. The goal of this solution is to build a reusable infrastructure that standardizes processes in alignment with DevOps principles in a Production environment.
 
-### 1. Executive Summary
-The IoT Weather Platform is designed for the ITea Lab team in Ho Chi Minh City to enhance weather data collection and analysis. It supports up to 5 weather stations, with potential scalability to 10-15, utilizing Raspberry Pi edge devices with ESP32 sensors to transmit data via MQTT. The platform leverages AWS Serverless services to deliver real-time monitoring, predictive analytics, and cost efficiency, with access restricted to 5 lab members via Amazon Cognito.
+- **Project Duration:** 4 Sprints / 4 weeks
+- **Team Size:** 5 members (Product Owner: Văn An | Scrum Master: Trương Gia Hào | AWS Admin: Minh Nhật | DevOps & Cloud Engineers: Kiệt, Vũ Bảo)
+
+---
 
 ### 2. Problem Statement
-### What’s the Problem?
-Current weather stations require manual data collection, becoming unmanageable with multiple units. There is no centralized system for real-time data or analytics, and third-party platforms are costly and overly complex.
 
-### The Solution
-The platform uses AWS IoT Core to ingest MQTT data, AWS Lambda and API Gateway for processing, Amazon S3 for storage (including a data lake), and AWS Glue Crawlers and ETL jobs to extract, transform, and load data from the S3 data lake to another S3 bucket for analysis. AWS Amplify with Next.js provides the web interface, and Amazon Cognito ensures secure access. Similar to Thingsboard and CoreIoT, users can register new devices and manage connections, though this platform operates on a smaller scale and is designed for private use. Key features include real-time dashboards, trend analysis, and low operational costs.
+#### Current State
+Prior to implementing this proposal, the RakiBookery project only existed as application source code (PHP Web Application & MySQL Database) running locally, facing several limitations:
 
-### Benefits and Return on Investment
-The solution establishes a foundational resource for lab members to develop a larger IoT platform, serving as a study resource, and provides a data foundation for AI enthusiasts for model training or analysis. It reduces manual reporting for each station via a centralized platform, simplifying management and maintenance, and improves data reliability. Monthly costs are $0.66 USD per the AWS Pricing Calculator, with a 12-month total of $7.92 USD. All IoT equipment costs are covered by the existing weather station setup, eliminating additional development expenses. The break-even period of 6-12 months is achieved through significant time savings from reduced manual work.
+- **Insufficient Security Hardening:** No enforcement of Multi-Factor Authentication (Force MFA Policy) for all IAM users, no application of the Least Privilege principle, and Database connection credentials stored in plain-text.
+- **Single-tier Infrastructure, Lack of Network Segmentation:** The application and Database run together or have not been clearly separated into Private Subnets within a VPC.
+- **Manual Processing Workflows:** Product image upload and processing has not been automated; the system lacks automatic notification mechanisms and AI-powered product recommendation support for users.
 
-### 3. Solution Architecture
-The platform employs a serverless AWS architecture to manage data from 5 Raspberry Pi-based stations, scalable to 15. Data is ingested via AWS IoT Core, stored in an S3 data lake, and processed by AWS Glue Crawlers and ETL jobs to transform and load it into another S3 bucket for analysis. Lambda and API Gateway handle additional processing, while Amplify with Next.js hosts the dashboard, secured by Cognito. The architecture is detailed below:
+#### Objectives
+- Standardize PHP application packaging using **Docker Images** and centrally manage them on **Amazon ECR**.
+- Deploy the application as a Serverless Container with **Amazon ECS Fargate** combined with an **Application Load Balancer (ALB)**.
+- Build a private **Amazon VPC** network infrastructure with separated Public/Private Subnets in the Singapore region (`ap-southeast-1`).
+- Enforce **Force MFA Policy** activation, manage IAM Least Privilege, and store sensitive credentials securely on **AWS Secrets Manager**.
+- Automate image upload event processing with **AWS Lambda**, send order alerts/notifications via **Amazon SNS**, and integrate AI book recommendations using **Amazon Bedrock**.
+- Enhance PHP Web application security with **AWS WAF** at the CloudFront layer.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+#### Solution
+- Design and provision a Multi-Subnet VPC infrastructure and RDS MySQL in a Private Subnet.
+- Package the PHP application with a Dockerfile and push it to Amazon ECR.
+- Route user traffic through CloudFront CDN and Application Load Balancer to ECS Fargate.
+- Centrally manage secrets with AWS Secrets Manager and protect authentication credentials.
+- Establish a Serverless Event-driven workflow with S3 Event Trigger, Lambda, and SNS.
+- Monitor the entire system with CloudWatch Dashboards, Alarms, and Log Groups.
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+#### Return on Investment
+- **Cost Efficiency:** Using the Serverless model (ECS Fargate, Lambda) ensures payment only for actual resources consumed.
+- **Security First:** Ensures data safety with Force MFA, Secrets Manager, Private Subnet database isolation, and AWS WAF to protect against PHP Web attacks.
+- **Operational Excellence:** Minimizes manual operations in infrastructure management and media data processing.
 
-### AWS Services Used
-- **AWS IoT Core**: Ingests MQTT data from 5 stations, scalable to 15.
-- **AWS Lambda**: Processes data and triggers Glue jobs (two functions).
-- **Amazon API Gateway**: Facilitates web app communication.
-- **Amazon S3**: Stores raw data in a data lake and processed outputs (two buckets).
-- **AWS Glue**: Crawlers catalog data, and ETL jobs transform and load it.
-- **AWS Amplify**: Hosts the Next.js web interface.
-- **Amazon Cognito**: Secures access for lab users.
+---
 
-### Component Design
-- **Edge Devices**: Raspberry Pi collects and filters sensor data, sending it to IoT Core.
-- **Data Ingestion**: AWS IoT Core receives MQTT messages from the edge devices.
-- **Data Storage**: Raw data is stored in an S3 data lake; processed data is stored in another S3 bucket.
-- **Data Processing**: AWS Glue Crawlers catalog the data, and ETL jobs transform it for analysis.
-- **Web Interface**: AWS Amplify hosts a Next.js app for real-time dashboards and analytics.
-- **User Management**: Amazon Cognito manages user access, allowing up to 5 active accounts.
+### 3. Architecture Diagrams
 
-### 4. Technical Implementation
-**Implementation Phases**
-This project has two parts—setting up weather edge stations and building the weather platform—each following 4 phases:
-- Build Theory and Draw Architecture: Research Raspberry Pi setup with ESP32 sensors and design the AWS serverless architecture (1 month pre-internship)
-- Calculate Price and Check Practicality: Use AWS Pricing Calculator to estimate costs and adjust if needed (Month 1).
-- Fix Architecture for Cost or Solution Fit: Tweak the design (e.g., optimize Lambda with Next.js) to stay cost-effective and usable (Month 2).
-- Develop, Test, and Deploy: Code the Raspberry Pi setup, AWS services with CDK/SDK, and Next.js app, then test and release to production (Months 2-3).
+#### Overall Architecture
 
-**Technical Requirements**
-- Weather Edge Station: Sensors (temperature, humidity, rainfall, wind speed), a microcontroller (ESP32), and a Raspberry Pi as the edge device. Raspberry Pi runs Raspbian, handles Docker for filtering, and sends 1 MB/day per station via MQTT over Wi-Fi.
-- Weather Platform: Practical knowledge of AWS Amplify (hosting Next.js), Lambda (minimal use due to Next.js), AWS Glue (ETL), S3 (two buckets), IoT Core (gateway and rules), and Cognito (5 users). Use AWS CDK/SDK to code interactions (e.g., IoT Core rules to S3). Next.js reduces Lambda workload for the fullstack web app.
+To be added
 
-### 5. Timeline & Milestones
-**Project Timeline**
-- Pre-Internship (Month 0): 1 month for planning and old station review.
-- Internship (Months 1-3): 3 months.
-    - Month 1: Study AWS and upgrade hardware.
-    - Month 2: Design and adjust architecture.
-    - Month 3: Implement, test, and launch.
-- Post-Launch: Up to 1 year for research.
+#### Service Connection Architecture
 
-### 6. Budget Estimation
-You can find the budget estimation on the [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01).  
-Or you can download the [Budget Estimation File](../attachments/budget_estimation.pdf).
+To be added
 
-### Infrastructure Costs
-- AWS Services:
-    - AWS Lambda: $0.00/month (1,000 requests, 512 MB storage).
-    - S3 Standard: $0.15/month (6 GB, 2,100 requests, 1 GB scanned).
-    - Data Transfer: $0.02/month (1 GB inbound, 1 GB outbound).
-    - AWS Amplify: $0.35/month (256 MB, 500 ms requests).
-    - Amazon API Gateway: $0.01/month (2,000 requests).
-    - AWS Glue ETL Jobs: $0.02/month (2 DPUs).
-    - AWS Glue Crawlers: $0.07/month (1 crawler).
-    - MQTT (IoT Core): $0.08/month (5 devices, 45,000 messages).
+#### Architecture Components
 
-Total: $0.7/month, $8.40/12 months
+| Well-Architected Pillar | AWS Service | Role & Function in the System |
+| --- | --- | --- |
+| **Operational Excellence** | **Amazon ECR, Docker** | Write Dockerfile to package the PHP application, store and manage Container Image versions on ECR. |
+| **Security** | **AWS IAM, AWS Secrets Manager, AWS WAF** | Enforce Force MFA Policy, apply IAM Least Privilege, secure DB credentials with Secrets Manager, attach AWS WAF to block PHP Web attacks. |
+| **Reliability** | **Amazon VPC, Amazon RDS MySQL** | Set up VPC in Singapore (`ap-southeast-1`) with Public/Private Subnets and Internet Gateway; RDS MySQL runs in a Private Subnet with automatic Backup & Encryption enabled. |
+| **Performance Efficiency** | **Amazon ECS Fargate, ALB, CloudFront** | Run the application as a Serverless Container on ECS Fargate in a Private Subnet, distribute traffic through ALB, and accelerate static/media content delivery via CloudFront CDN. |
+| **Cost Optimization** | **Amazon S3, AWS Fargate** | Classify storage capacity across 3 dedicated S3 Buckets (Static Web, Media with Encryption & Versioning enabled, Logs); Fargate charges based on actual resource usage. |
+| **Sustainability & Integration** | **AWS Lambda, Amazon SNS, Amazon Bedrock** | Lambda automatically processes images uploaded to S3 & sends messages; Amazon SNS sends order/error notifications; Amazon Bedrock experiments with intelligent book recommendations. |
 
-- Hardware: $265 one-time (Raspberry Pi 5 and sensors).
+---
 
-### 7. Risk Assessment
-#### Risk Matrix
-- Network Outages: Medium impact, medium probability.
-- Sensor Failures: High impact, low probability.
-- Cost Overruns: Medium impact, low probability.
+### 4. Timeline & Milestones
 
-#### Mitigation Strategies
-- Network: Local storage on Raspberry Pi with Docker.
-- Sensors: Regular checks and spares.
-- Cost: AWS budget alerts and optimization.
+| Sprint / Phase | Key Work Items |
+| :--- | :--- |
+| **SPRINT 1: Foundation & Infrastructure** | - **VPC Setup (`AWS-001`):** Create VPC, Internet Gateway, Public/Private Subnets, Route Tables, Security Groups.<br>- **RDS MySQL Provisioning (`AWS-002`):** Provision RDS MySQL in a Private Subnet, enable Backup/Encryption, import `bookstoredb.sql`.<br>- **S3 Buckets (`AWS-003`):** Create 3 S3 Buckets (Static Web, Media, Logs), configure Block Public Access & Encryption.<br>- **IAM & Secrets Manager (`IAM-001`):** Create IAM Users/Groups, configure Force MFA, store DB credentials in Secrets Manager.<br>- **ECR + Dockerfile (`AWS-004`):** Write PHP application Dockerfile, create ECR Repository, build & push image.<br>- **Order + Promo Fullstack (`BE-001`):** Update Order database schema and complete the Promotion feature. |
+| **SPRINT 2: Compute & Core Services** | - **Fargate & Task Definition (`AWS-005`):** Initialize ECS Cluster (Fargate), create Task Definition connecting env/secrets from Secrets Manager.<br>- **ALB + Target Group (`AWS-006`):** Create Application Load Balancer, Target Group, and Health Check.<br>- **CloudFront & CDN (`AWS-007`):** Distribute static/media content from S3 & ALB through CloudFront Distribution.<br>- **Connect PHP App to RDS (`APP-001`):** Configure secret connection strings and test basic CRUD functionality. |
+| **SPRINT 3: Serverless, Monitoring & Finalization** | - **SNS Notification (`AWS-008`):** Create SNS Topic to send order/error notifications via Email.<br>- **Lambda Functions (`AWS-009`):** Write Lambda functions to process images uploaded to S3 & send automatic notifications.<br>- **CloudWatch Monitoring (`OPS-001`):** Create CloudWatch Dashboard, configure Alarms (CPU, 5xx, RDS) and Log Groups.<br>- **Amazon Bedrock & AWS WAF (`BEDROCK-001`):** |
+| **SPRINT 4: Testing & Documentation** | - **E2E Testing & Runbook (`QA-001` / `DOCS-001`):** Test the complete purchase flow, image upload, and package the operational documentation (Runbook). |
 
-#### Contingency Plans
-- Revert to manual methods if AWS fails.
-- Use CloudFormation for cost-related rollbacks.
+---
 
-### 8. Expected Outcomes
-#### Technical Improvements: 
-Real-time data and analytics replace manual processes.  
-Scalable to 10-15 stations.
-#### Long-term Value
-1-year data foundation for AI research.  
-Reusable for future projects. -->
+### 5. Estimated Budget
+
+The system optimizes costs based on the **AWS Pay-As-You-Go** and **Serverless** model, maximizing the use of service free tiers in the Singapore Region (`ap-southeast-1`).
+
+| AWS Service | Configuration & Role in Architecture |
+| --- | --- |
+| **Amazon ECS Fargate** | Runs the PHP backend container based on actual Task Definition resource requirements, optimizing idle costs. |
+| **Amazon RDS MySQL** | Provision an RDS instance in a Private Subnet with appropriate storage capacity for `bookstoredb.sql`. |
+| **Amazon S3 & CloudFront** | Store static files, media, and logs with 3 dedicated buckets; CloudFront CDN reduces origin bandwidth load. |
+| **AWS Secrets Manager & ECR** | Securely store DB credentials (charged per secret/month) and store Docker Images on the ECR repository. |
+| **AWS Lambda & Amazon SNS** | Charged per number of requests and execution time when triggering image processing/notification events. |
+| **Amazon CloudWatch** | Configure log collection for Fargate/Lambda and set alerts based on cost/performance thresholds. |
+
+---
+
+### 6. Risk Assessment
+
+#### Risk Matrix & Response Plan
+
+| Identified Risk | Likelihood | Impact | Mitigation & Response Plan |
+| --- | --- | --- | --- |
+| **Exposure of Sensitive Information / DB Credentials** | Low | Very High | Store all credentials on Secrets Manager; enforce **Force MFA Policy** for all IAM Accounts. |
+| **Database Connection Failure from Fargate** | Medium | High | Place RDS MySQL in a Private Subnet; configure Security Groups to only allow internal access from ECS Fargate Tasks. |
+| **PHP Web Security Vulnerability Attack** | Medium | High | Integrate **AWS WAF** at the CloudFront layer to block common attack vectors targeting PHP applications. |
+| **Errors During Image Upload Processing** | Medium | Medium | Decouple image processing logic into separate **AWS Lambda** functions running independently via S3 Event Trigger. |
+
+---
+
+### 7. Expected Outcomes
+
+Upon completion of the RakiBookery project deployment, the system is expected to achieve the following outcomes:
+
+- **Standardized Cloud-Native Infrastructure:** The entire RakiBookery Web E-commerce system operates stably and securely on AWS ECS Fargate and RDS MySQL in the Singapore region.
+- **Automation & AI Integration:** Automate media resource processing workflows with Serverless Lambda, broadcast order alerts via SNS, and experiment with AI product recommendation features powered by Amazon Bedrock.
+- **Security and Operational Best Practices:** Comply with Force MFA regulations, enforce IAM Least Privilege controls, encrypt S3/Secrets resources, and package a complete operational guide (Runbook) for the team.
+
+---
+
+### 8. References
+
+[1]: [AWS Well-Architected Framework](https://aws.amazon.com/architecture/well-architected/)
+
+[2]: [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/)
+
+[3]: [AWS Secrets Manager Developer Guide](https://docs.aws.amazon.com/secretsmanager/)

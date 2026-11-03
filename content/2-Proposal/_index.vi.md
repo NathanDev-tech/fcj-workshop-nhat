@@ -1,110 +1,132 @@
 ---
 title: "Bản đề xuất"
-date: 2026-01-01
+date: 2026-09-09
 weight: 2
 chapter: false
-pre: " <b> 2. </b> "
+pre: "<b>2. </b>"
 ---
-<!-- {{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}} -->
 
-<!-- Tại phần này, bạn cần tóm tắt các nội dung trong workshop mà bạn **dự tính** sẽ làm. -->
+# RakiBookery
+## Tự động hóa quy trình CI/CD trên nền tảng AWS
+### 1. Tổng quan dự án
 
-### Chưa có
+RakiBookery là nền tảng thương mại điện tử chuyên cung cấp dịch vụ quản lý và bán sách trực tuyến. Hệ thống tích hợp các chức năng cốt lõi bao gồm: danh mục sản phẩm, giỏ hàng, quản lý đơn hàng (Order), chương trình khuyến mãi (Promo), xử lý tài nguyên ảnh tải lên, gợi ý sản phẩm thông minh và gửi thông báo đơn hàng. Với đặc điểm xử lý giao dịch mua bán theo thời gian thực và lưu trữ tài nguyên đa phương tiện, hệ thống cần được triển khai trên một hạ tầng có khả năng mở rộng linh hoạt, bảo mật cao và dễ dàng vận hành.
 
-<!-- # IoT Weather Platform for Lab Research  
-## Giải pháp AWS Serverless hợp nhất cho giám sát thời tiết thời gian thực  
+Đề xuất này trình bày giải pháp triển khai hệ thống RakiBookery trên nền tảng Amazon Web Services (AWS) tại Region Singapore (`ap-southeast-1`) theo kiến trúc Cloud-Native, đáp ứng các yêu cầu về tính sẵn sàng cao, bảo mật nhiều lớp và tự động hóa vận hành. Mục tiêu của giải pháp là xây dựng một hạ tầng có khả năng tái sử dụng, chuẩn hóa quy trình theo định hướng DevOps trong môi trường Production.
 
-### 1. Tóm tắt điều hành  
-IoT Weather Platform được thiết kế dành cho nhóm *ITea Lab* tại TP. Hồ Chí Minh nhằm nâng cao khả năng thu thập và phân tích dữ liệu thời tiết. Nền tảng hỗ trợ tối đa 5 trạm thời tiết, có khả năng mở rộng lên 10–15 trạm, sử dụng thiết bị biên Raspberry Pi kết hợp cảm biến ESP32 để truyền dữ liệu qua MQTT. Nền tảng tận dụng các dịch vụ AWS Serverless để cung cấp giám sát thời gian thực, phân tích dự đoán và tiết kiệm chi phí, với quyền truy cập giới hạn cho 5 thành viên phòng lab thông qua Amazon Cognito.  
+- **Thời gian thực hiện dự án:** 4 Sprints / 4 tuần
+- **Quy mô nhân sự:** 5 thành viên (Product Owner: Văn An | Scrum Master: Trương Gia Hào | AWS Admin: Minh Nhật | DevOps & Cloud Engineers: Kiệt, Vũ Bảo)
 
-### 2. Tuyên bố vấn đề  
-*Vấn đề hiện tại*  
-Các trạm thời tiết hiện tại yêu cầu thu thập dữ liệu thủ công, khó quản lý khi có nhiều trạm. Không có hệ thống tập trung cho dữ liệu hoặc phân tích thời gian thực, và các nền tảng bên thứ ba thường tốn kém và quá phức tạp.  
+---
 
-*Giải pháp*  
-Nền tảng sử dụng AWS IoT Core để tiếp nhận dữ liệu MQTT, AWS Lambda và API Gateway để xử lý, Amazon S3 để lưu trữ (bao gồm data lake), và AWS Glue Crawlers cùng các tác vụ ETL để trích xuất, chuyển đổi, tải dữ liệu từ S3 data lake sang một S3 bucket khác để phân tích. AWS Amplify với Next.js cung cấp giao diện web, và Amazon Cognito đảm bảo quyền truy cập an toàn. Tương tự như Thingsboard và CoreIoT, người dùng có thể đăng ký thiết bị mới và quản lý kết nối, nhưng nền tảng này hoạt động ở quy mô nhỏ hơn và phục vụ mục đích sử dụng nội bộ. Các tính năng chính bao gồm bảng điều khiển thời gian thực, phân tích xu hướng và chi phí vận hành thấp.  
+### 2. Phát biểu vấn đề
 
-*Lợi ích và hoàn vốn đầu tư (ROI)*  
-Giải pháp tạo nền tảng cơ bản để các thành viên phòng lab phát triển một nền tảng IoT lớn hơn, đồng thời cung cấp nguồn dữ liệu cho những người nghiên cứu AI phục vụ huấn luyện mô hình hoặc phân tích. Nền tảng giảm bớt báo cáo thủ công cho từng trạm thông qua hệ thống tập trung, đơn giản hóa quản lý và bảo trì, đồng thời cải thiện độ tin cậy dữ liệu. Chi phí hàng tháng ước tính 0,66 USD (theo AWS Pricing Calculator), tổng cộng 7,92 USD cho 12 tháng. Tất cả thiết bị IoT đã được trang bị từ hệ thống trạm thời tiết hiện tại, không phát sinh chi phí phát triển thêm. Thời gian hoàn vốn 6–12 tháng nhờ tiết kiệm đáng kể thời gian thao tác thủ công.  
+#### Hiện trạng
+Trước khi triển khai đề xuất, dự án RakiBookery mới chỉ tồn tại ở dạng mã nguồn ứng dụng (PHP Web Application & MySQL Database) hoạt động cục bộ, gặp phải một số hạn chế:
 
-### 3. Kiến trúc giải pháp  
-Nền tảng áp dụng kiến trúc AWS Serverless để quản lý dữ liệu từ 5 trạm dựa trên Raspberry Pi, có thể mở rộng lên 15 trạm. Dữ liệu được tiếp nhận qua AWS IoT Core, lưu trữ trong S3 data lake và xử lý bởi AWS Glue Crawlers và ETL jobs để chuyển đổi và tải vào một S3 bucket khác cho mục đích phân tích. Lambda và API Gateway xử lý bổ sung, trong khi Amplify với Next.js cung cấp bảng điều khiển được bảo mật bởi Cognito.  
+- **Bảo mật chưa được thắt chặt:** Chưa áp dụng quy định bắt buộc xác thực đa yếu tố (Force MFA Policy) cho toàn bộ IAM users, chưa áp dụng nguyên tắc phân quyền tối thiểu (Least Privilege) và thông tin kết nối Database còn lưu trữ dưới dạng plain-text.
+- **Hạ tầng đơn lẻ, thiếu phân tách mạng:** Ứng dụng và Database chạy chung hoặc chưa được phân tách rõ ràng vào các Private Subnets trong VPC.
+- **Quy trình xử lý thủ công:** Việc tải và xử lý ảnh sản phẩm chưa được tự động hóa; hệ thống thiếu các cơ chế thông báo tự động và AI hỗ trợ gợi ý sản phẩm cho người dùng.
 
-![IoT Weather Station Architecture](/images/2-Proposal/edge_architecture.jpeg)
+#### Mục tiêu
+- Chuẩn hóa việc đóng gói ứng dụng PHP bằng **Docker Image** và quản lý tập trung trên **Amazon ECR**.
+- Triển khai ứng dụng dạng Serverless Container với **Amazon ECS Fargate** kết hợp **Application Load Balancer (ALB)**.
+- Xây dựng hạ tầng mạng riêng **Amazon VPC** phân tách Public/Private Subnets tại region Singapore (`ap-southeast-1`).
+- Bắt buộc kích hoạt **Force MFA Policy**, quản lý IAM Least Privilege và lưu trữ thông tin nhạy cảm bí mật trên **AWS Secrets Manager**.
+- Tự động hóa xử lý sự kiện tải ảnh bằng **AWS Lambda**, gửi cảnh báo/thông báo đơn hàng qua **Amazon SNS** và tích hợp AI gợi ý sách bằng **Amazon Bedrock**.
+- Tăng cường bảo mật ứng dụng Web PHP bằng **AWS WAF** tại tầng CloudFront.
 
-![IoT Weather Platform Architecture](/images/2-Proposal/platform_architecture.jpeg)
+#### Giải pháp
+- Thiết kế và khởi tạo hạ tầng VPC Multi-Subnet và RDS MySQL trong Private Subnet.
+- Đóng gói ứng dụng PHP với Dockerfile và đẩy lên Amazon ECR.
+- Định tuyến lưu lượng người dùng qua CloudFront CDN và Application Load Balancer tới ECS Fargate.
+- Quản lý secrets tập trung bằng AWS Secrets Manager và bảo vệ thông tin xác thực.
+- Thiết lập quy trình Serverless Event-driven với S3 Event Trigger, Lambda và SNS.
+- Giám sát toàn bộ hệ thống bằng CloudWatch Dashboards, Alarms và Log Groups.
 
-*Dịch vụ AWS sử dụng*  
-- *AWS IoT Core*: Tiếp nhận dữ liệu MQTT từ 5 trạm, mở rộng lên 15.  
-- *AWS Lambda*: Xử lý dữ liệu và kích hoạt Glue jobs (2 hàm).  
-- *Amazon API Gateway*: Giao tiếp với ứng dụng web.  
-- *Amazon S3*: Lưu trữ dữ liệu thô (data lake) và dữ liệu đã xử lý (2 bucket).  
-- *AWS Glue*: Crawlers lập chỉ mục dữ liệu, ETL jobs chuyển đổi và tải dữ liệu.  
-- *AWS Amplify*: Lưu trữ giao diện web Next.js.  
-- *Amazon Cognito*: Quản lý quyền truy cập cho người dùng phòng lab.  
+#### Lợi tức đầu tư
+- **Tối ưu hóa chi phí (Cost Efficiency):** Sử dụng mô hình Serverless (ECS Fargate, Lambda) giúp chỉ trả chi phí theo tài nguyên thực tế tiêu thụ.
+- **Tăng cường bảo mật (Security First):** Đảm bảo an toàn dữ liệu với Force MFA, Secrets Manager, Private Subnet cách ly Database và AWS WAF chống tấn công Web PHP.
+- **Tự động hóa vận hành (Operational Excellence):** Giảm thiểu thao tác thủ công trong quản lý hạ tầng và xử lý dữ liệu truyền thông (media).
 
-*Thiết kế thành phần*  
-- *Thiết bị biên*: Raspberry Pi thu thập và lọc dữ liệu cảm biến, gửi tới IoT Core.  
-- *Tiếp nhận dữ liệu*: AWS IoT Core nhận tin nhắn MQTT từ thiết bị biên.  
-- *Lưu trữ dữ liệu*: Dữ liệu thô lưu trong S3 data lake; dữ liệu đã xử lý lưu ở một S3 bucket khác.  
-- *Xử lý dữ liệu*: AWS Glue Crawlers lập chỉ mục dữ liệu; ETL jobs chuyển đổi để phân tích.  
-- *Giao diện web*: AWS Amplify lưu trữ ứng dụng Next.js cho bảng điều khiển và phân tích thời gian thực.  
-- *Quản lý người dùng*: Amazon Cognito giới hạn 5 tài khoản hoạt động.  
+---
 
-### 4. Triển khai kỹ thuật  
-*Các giai đoạn triển khai*  
-Dự án gồm 2 phần — thiết lập trạm thời tiết biên và xây dựng nền tảng thời tiết — mỗi phần trải qua 4 giai đoạn:  
-1. *Nghiên cứu và vẽ kiến trúc*: Nghiên cứu Raspberry Pi với cảm biến ESP32 và thiết kế kiến trúc AWS Serverless (1 tháng trước kỳ thực tập).  
-2. *Tính toán chi phí và kiểm tra tính khả thi*: Sử dụng AWS Pricing Calculator để ước tính và điều chỉnh (Tháng 1).  
-3. *Điều chỉnh kiến trúc để tối ưu chi phí/giải pháp*: Tinh chỉnh (ví dụ tối ưu Lambda với Next.js) để đảm bảo hiệu quả (Tháng 2).  
-4. *Phát triển, kiểm thử, triển khai*: Lập trình Raspberry Pi, AWS services với CDK/SDK và ứng dụng Next.js, sau đó kiểm thử và đưa vào vận hành (Tháng 2–3).  
+### 3. Sơ đồ kiến trúc
 
-*Yêu cầu kỹ thuật*  
-- *Trạm thời tiết biên*: Cảm biến (nhiệt độ, độ ẩm, lượng mưa, tốc độ gió), vi điều khiển ESP32, Raspberry Pi làm thiết bị biên. Raspberry Pi chạy Raspbian, sử dụng Docker để lọc dữ liệu và gửi 1 MB/ngày/trạm qua MQTT qua Wi-Fi.  
-- *Nền tảng thời tiết*: Kiến thức thực tế về AWS Amplify (lưu trữ Next.js), Lambda (giảm thiểu do Next.js xử lý), AWS Glue (ETL), S3 (2 bucket), IoT Core (gateway và rules), và Cognito (5 người dùng). Sử dụng AWS CDK/SDK để lập trình (ví dụ IoT Core rules tới S3). Next.js giúp giảm tải Lambda cho ứng dụng web fullstack.  
+#### Kiến trúc tổng thể
 
-### 5. Lộ trình & Mốc triển khai  
-- *Trước thực tập (Tháng 0)*: 1 tháng lên kế hoạch và đánh giá trạm cũ.  
-- *Thực tập (Tháng 1–3)*:  
-    - Tháng 1: Học AWS và nâng cấp phần cứng.  
-    - Tháng 2: Thiết kế và điều chỉnh kiến trúc.  
-    - Tháng 3: Triển khai, kiểm thử, đưa vào sử dụng.  
-- *Sau triển khai*: Nghiên cứu thêm trong vòng 1 năm.  
+Cần bổ sung
 
-### 6. Ước tính ngân sách  
-Có thể xem chi phí trên [AWS Pricing Calculator](https://calculator.aws/#/estimate?id=621f38b12a1ef026842ba2ddfe46ff936ed4ab01)  
-Hoặc tải [tệp ước tính ngân sách](../attachments/budget_estimation.pdf).  
+#### Kiến trúc kết nối dịch vụ
 
-*Chi phí hạ tầng*  
-- AWS Lambda: 0,00 USD/tháng (1.000 request, 512 MB lưu trữ).  
-- S3 Standard: 0,15 USD/tháng (6 GB, 2.100 request, 1 GB quét).  
-- Truyền dữ liệu: 0,02 USD/tháng (1 GB vào, 1 GB ra).  
-- AWS Amplify: 0,35 USD/tháng (256 MB, request 500 ms).  
-- Amazon API Gateway: 0,01 USD/tháng (2.000 request).  
-- AWS Glue ETL Jobs: 0,02 USD/tháng (2 DPU).  
-- AWS Glue Crawlers: 0,07 USD/tháng (1 crawler).  
-- MQTT (IoT Core): 0,08 USD/tháng (5 thiết bị, 45.000 tin nhắn).  
+Cần bổ sung
 
-*Tổng*: 0,7 USD/tháng, 8,40 USD/12 tháng  
-- *Phần cứng*: 265 USD một lần (Raspberry Pi 5 và cảm biến).  
+#### Các thành phần kiến trúc
 
-### 7. Đánh giá rủi ro  
-*Ma trận rủi ro*  
-- Mất mạng: Ảnh hưởng trung bình, xác suất trung bình.  
-- Hỏng cảm biến: Ảnh hưởng cao, xác suất thấp.  
-- Vượt ngân sách: Ảnh hưởng trung bình, xác suất thấp.  
+| Trụ cột Well-Architected | Dịch vụ AWS | Vai trò & Chức năng trong Hệ thống |
+| --- | --- | --- |
+| **Operational Excellence** | **Amazon ECR, Docker** | Viết Dockerfile đóng gói ứng dụng PHP, lưu trữ và quản lý phiên bản Container Images trên ECR. |
+| **Security** | **AWS IAM, AWS Secrets Manager, AWS WAF** | Bắt buộc thiết lập Force MFA Policy, phân quyền IAM Least Privilege, bảo mật DB credentials bằng Secrets Manager, gắn AWS WAF ngăn chặn tấn công Web PHP. |
+| **Reliability** | **Amazon VPC, Amazon RDS MySQL** | Thiết lập VPC tại Singapore (`ap-southeast-1`) với Public/Private Subnets, Internet Gateway; RDS MySQL chạy trong Private Subnet bật tính năng tự động Backup & Encryption. |
+| **Performance Efficiency** | **Amazon ECS Fargate, ALB, CloudFront** | Vận hành ứng dụng dạng Serverless Container trên ECS Fargate trong Private Subnet, điều phối lưu lượng qua ALB và tăng tốc phân phối dữ liệu tĩnh/media qua CloudFront CDN. |
+| **Cost Optimization** | **Amazon S3, AWS Fargate** | Phân loại lưu trữ dung lượng qua 3 S3 Buckets chuyên biệt (Static Web, Media bật Encryption & Versioning, Logs); Fargate tính phí theo tài nguyên thực dùng. |
+| **Sustainability & Integration** | **AWS Lambda, Amazon SNS, Amazon Bedrock** | Lambda tự động xử lý ảnh upload lên S3 & gửi tin nhắn; Amazon SNS gửi thông báo đơn hàng/lỗi; Amazon Bedrock thử nghiệm gợi ý sách thông minh. |
 
-*Chiến lược giảm thiểu*  
-- Mạng: Lưu trữ cục bộ trên Raspberry Pi với Docker.  
-- Cảm biến: Kiểm tra định kỳ, dự phòng linh kiện.  
-- Chi phí: Cảnh báo ngân sách AWS, tối ưu dịch vụ.  
+---
 
-*Kế hoạch dự phòng*  
-- Quay lại thu thập thủ công nếu AWS gặp sự cố.  
-- Sử dụng CloudFormation để khôi phục cấu hình liên quan đến chi phí.  
+### 4. Timeline & Milestones
 
-### 8. Kết quả kỳ vọng  
-*Cải tiến kỹ thuật*: Dữ liệu và phân tích thời gian thực thay thế quy trình thủ công. Có thể mở rộng tới 10–15 trạm.  
-*Giá trị dài hạn*: Nền tảng dữ liệu 1 năm cho nghiên cứu AI, có thể tái sử dụng cho các dự án tương lai. -->
+| Sprint / Giai đoạn | Hạng mục công việc chính | 
+| :--- | :--- | 
+| **SPRINT 1: Foundation & Infrastructure** | - **Setup VPC (`AWS-001`):** Tạo VPC, Internet Gateway, Public/Private Subnets, Route Tables, Security Groups.<br>- **RDS MySQL Provisioning (`AWS-002`):** Khởi tạo RDS MySQL trong Private Subnet, bật Backup/Encryption, import `bookstoredb.sql`.<br>- **S3 Buckets (`AWS-003`):** Tạo 3 S3 Buckets (Static Web, Media, Logs), cấu hình Block Public Access & Encryption.<br>- **IAM & Secrets Manager (`IAM-001`):** Tạo IAM Users/Groups, cấu hình Force MFA, lưu DB credentials vào Secrets Manager.<br>- **ECR + Dockerfile (`AWS-004`):** Viết Dockerfile ứng dụng PHP, tạo ECR Repository, build & push image.<br>- **Order + Promo Fullstack (`BE-001`):** Cập nhật CSDL Order và hoàn thiện tính năng Khuyến mãi. |
+| **SPRINT 2: Compute & Core Services** | - **Fargate & Task Definition (`AWS-005`):** Khởi tạo ECS Cluster (Fargate), tạo Task Definition kết nối env/secrets từ Secrets Manager.<br>- **ALB + Target Group (`AWS-006`):** Tạo Application Load Balancer, Target Group và Health Check.<br>- **CloudFront & CDN (`AWS-007`):** Phân phối static/media content từ S3 & ALB qua CloudFront Distribution.<br>- **Kết nối PHP app với RDS (`APP-001`):** Cấu hình connection string bí mật và kiểm thử các chức năng CRUD cơ bản. |
+| **SPRINT 3: Serverless, Monitoring & Hoàn thiện** | - **SNS Notification (`AWS-008`):** Tạo SNS Topic gửi thông báo đơn hàng/lỗi qua Email.<br>- **Lambda Functions (`AWS-009`):** Viết Lambda xử lý ảnh upload lên S3 & gửi thông báo tự động.<br>- **CloudWatch Monitoring (`OPS-001`):** Tạo CloudWatch Dashboard, cấu hình Alarms (CPU, 5xx, RDS) và Log Groups.<br>- **Amazon Bedrock & AWS WAF (`BEDROCK-001`):**
+| **SPRINT 4: Testing & Documents** | - **E2E Testing & Runbook (`QA-001` / `DOCS-001`):** Kiểm thử toàn bộ flow mua hàng, upload ảnh và đóng gói tài liệu vận hành. |
+
+---
+
+### 5. Ngân sách dự kiến
+
+Hệ thống tối ưu hóa chi phí dựa trên mô hình **AWS Pay-As-You-Go** và **Serverless**, tận dụng tối đa các hạn mức dịch vụ tại Region Singapore (`ap-southeast-1`).
+
+| Dịch vụ AWS | Cấu hình & Vai trò theo kiến trúc |
+| --- | --- |
+| **Amazon ECS Fargate** | Chạy backend PHP container theo nhu cầu tài nguyên thực tế của Task Definition, tối ưu chi phí idle. |
+| **Amazon RDS MySQL** | Khởi tạo RDS instance trong Private Subnet với dung lượng lưu trữ phù hợp cho `bookstoredb.sql`. |
+| **Amazon S3 & CloudFront** | Lưu trữ tệp tĩnh, media và log với 3 buckets chuyên biệt; CloudFront CDN giảm tải băng thông truy cập gốc. |
+| **AWS Secrets Manager & ECR** | Lưu trữ an toàn DB credentials (tính phí theo secret/tháng) và lưu trữ Docker Images trên ECR repository. |
+| **AWS Lambda & Amazon SNS** | Tính phí theo số lượng yêu cầu (requests) và thời gian thực thi (execution time) khi trigger xử lý ảnh/thông báo. |
+| **Amazon CloudWatch** | Cấu hình thu thập log cho Fargate/Lambda và cảnh báo theo ngưỡng chi phí/hiệu năng. |
+
+---
+
+### 6. Đánh giá rủi ro
+
+#### Ma trận rủi ro & Kế hoạch ứng phó
+
+| Rủi ro nhận diện | Khả năng | Ảnh hưởng | Biện pháp giảm thiểu & Kế hoạch ứng phó |
+| --- | --- | --- | --- |
+| **Lộ thông tin nhạy cảm / DB Credentials** | Thấp | Rất cao | Lưu trữ toàn bộ credentials trên Secrets Manager; bắt buộc áp dụng **Force MFA Policy** cho toàn bộ IAM Accounts. |
+| **Sự cố kết nối Database từ Fargate** | Trung bình | Cao | Đặt RDS MySQL trong Private Subnet; cấu hình Security Group chỉ cho phép truy cập nội bộ từ ECS Fargate Tasks. |
+| **Tấn công lỗ hổng bảo mật Web PHP** | Trung bình | Cao | Tích hợp **AWS WAF** tại tầng CloudFront để ngăn chặn các kiểu tấn công phổ biến vào ứng dụng PHP. |
+| **Lỗi phát sinh khi xử lý upload ảnh** | Trung bình | Trung bình | Tách rời logic xử lý ảnh sang các hàm **AWS Lambda** chạy độc lập theo S3 Event Trigger. |
+
+---
+
+### 7. Kết quả mong đợi
+
+Sau khi hoàn thành triển khai dự án RakiBookery, hệ thống dự kiến đạt được các kết quả sau:
+
+- **Hạ tầng chuẩn hóa Cloud-Native:** Toàn bộ hệ thống Web E-commerce RakiBookery vận hành ổn định, bảo mật trên AWS ECS Fargate và RDS MySQL tại region Singapore.
+- **Tự động hóa & Tích hợp AI:** Tự động hóa quy trình xử lý tài nguyên media bằng Serverless Lambda, phát cảnh báo đơn hàng qua SNS và thử nghiệm tính năng AI gợi ý sản phẩm dựa trên Amazon Bedrock.
+- **Bảo mật và Vận hành chuẩn mực:** Tuân thủ quy định Force MFA, kiểm soát IAM Least Privilege, mã hóa tài nguyên S3/Secrets và đóng gói bộ tài liệu hướng dẫn vận hành (Runbook) đầy đủ cho nhóm.
+
+---
+
+### 8. Tài liệu tham khảo
+
+[1]: [AWS Well-Architected Framework](https://aws.amazon.com/vi/architecture/well-architected/)
+
+[2]: [Amazon ECS Documentation](https://docs.aws.amazon.com/ecs/)
+
+[3]: [AWS Secrets Manager Developer Guide](https://docs.aws.amazon.com/secretsmanager/)
