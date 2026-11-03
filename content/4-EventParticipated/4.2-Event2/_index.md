@@ -100,6 +100,4 @@ Attending the **Fireside Chat with Dr. Werner Vogels** was a particularly valuab
 
 ### Some Event Photos
 
-![Fireside Chat with Dr. Werner Vogels - Photo 1](../4.2-Event2/images/event2.jpg)
-
-
+![Fireside Chat with Dr. Werner Vogels - Hình 1](/fcj-workshop-nhat/images/event2.jpg)
