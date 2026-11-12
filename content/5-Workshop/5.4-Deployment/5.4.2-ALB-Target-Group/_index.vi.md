@@ -32,7 +32,9 @@ pre : " <b> 5.4.2 </b> "
 
 > **Quan trọng:** Chọn **IP addresses**, không chọn *Instances*, vì ECS Fargate sử dụng network mode `awsvpc`.
 
-![Cấu hình Basic Target Group](url_hinh_anh_cua_ban_1)
+![Cấu hình Basic Target Group](images/Basic_Target_Group_Configuration_1.png)
+![Cấu hình Basic Target Group](images/Basic_Target_Group_Configuration_2.png)
+![Cấu hình Basic Target Group](images/Basic_Target_Group_Configuration_3.png)
 
 ### 1.3. Tạo Target Group
 1. Nhấn **Next**.
@@ -41,7 +43,8 @@ pre : " <b> 5.4.2 </b> "
 
 *Lưu ý: ECS Service sẽ tự động đăng ký IP của Fargate task vào Target Group khi chúng ta liên kết chúng. Sau khi tạo, Target Group có **0 registered targets** là điều hoàn toàn bình thường.*
 
-![Register targets & Tạo Target Group](url_hinh_anh_cua_ban_2)
+![Register targets & Tạo Target Group](images/Create_Target_Group_1.png)
+![Register targets & Tạo Target Group](images/success1.png)
 
 ---
 
@@ -58,6 +61,8 @@ pre : " <b> 5.4.2 </b> "
 | **Load balancer name** | RakiBookery-alb |
 | **Scheme** | Internet-facing |
 | **IP address type** | IPv4 |
+![Register targets & Tạo Target Group](images/Basic_Configuration.png)
+
 
 ### 2.2. Network mapping
 | Trường | Giá trị |
@@ -68,7 +73,7 @@ pre : " <b> 5.4.2 </b> "
 
 > **Lưu ý:** Public subnet cần có route `0.0.0.0/0` đến Internet Gateway.
 
-![Network Mapping](url_hinh_anh_cua_ban_3)
+![Network Mapping](images/NetworkMapping.png)
 
 ### 2.3. Security groups
 Cần tạo security group riêng cho ALB.
@@ -108,7 +113,7 @@ Nhấn **Create load balancer** và đợi trạng thái chuyển sang **Active*
 
 * **DNS name thu được:** `RakiBookery-alb-1141293019.ap-southeast-1.elb.amazonaws.com`
 
-![Hoàn tất tạo ALB](url_hinh_anh_cua_ban_4)
+![Hoàn tất tạo ALB](images/CreateALB.png)
 
 ---
 
@@ -130,7 +135,9 @@ Nhấn **Create load balancer** và đợi trạng thái chuyển sang **Active*
 | **Container** | Main |
 | **Container port** | 80 |
 
-![Gắn ALB vào ECS](url_hinh_anh_cua_ban_5)
+![Gắn ALB vào ECS](images/ALB-to-ECS_1.png)
+![Gắn ALB vào ECS](images/ALB-to-ECS_2.png)
+![Gắn ALB vào ECS](images/ALB-to-ECS_3.png)
 
 ---
 > **Tổng kết:** AWS-006 đã hoàn thành cấu hình ALB, Target Group, Health Check, Listener và Security Groups. ECS Service đã được liên kết với ALB. Hiện đang chờ nhóm bật Fargate để kiểm thử Health Check và truy cập website thực tế.

@@ -14,7 +14,7 @@ pre : " <b> 5.4.4 </b> "
 2. Xác định bucket chứa file tĩnh của website RakiBookery và kiểm tra xem đã upload các file CSS, JS, hình ảnh hay chưa.
 3. Giữ **Block Public Access** ở trạng thái BẬT. Không cần bật tính năng *S3 Static Website Hosting* nếu bạn dự định dùng CloudFront với S3 REST origin và OAC.
 
-![Kiểm tra S3 Static Web](url_hinh_anh_cua_ban_1)
+![Kiểm tra S3 Static Web](images/checkS3.png)
 
 ## Bước 2 — Tạo CloudFront Distribution
 
@@ -36,7 +36,12 @@ pre : " <b> 5.4.4 </b> "
 
 > *Lưu ý:* AWS có thể yêu cầu tạo OAC mới; hãy chọn **Create new OAC**.
 
-![Cấu hình CloudFront Distribution](url_hinh_anh_cua_ban_2)
+![Cấu hình CloudFront Distribution](images/Create_Cloudfont_Distribution_1.png)
+![Cấu hình CloudFront Distribution](images/Create_Cloudfont_Distribution_2.png)
+![Cấu hình CloudFront Distribution](images/Create_Cloudfont_Distribution_3.png)
+![Cấu hình CloudFront Distribution](images/Create_Cloudfont_Distribution_4.png)
+![Cấu hình CloudFront Distribution](images/Create_Cloudfont_Distribution_5.png)
+
 
 ## Bước 3 — Cấp quyền CloudFront đọc S3
 
@@ -55,7 +60,7 @@ Sau khi tạo Distribution, hãy mở thông báo hướng dẫn cập nhật S3
 3. Chọn tab **Origins**.
 4. Nhấn **Create origin**.
 
-![Thêm ALB Origin](url_hinh_anh_cua_ban_3)
+![Thêm ALB Origin](images/CreateALB-Origin.png)
 
 ### 4.2. Điền cấu hình ALB Origin
 Ở màn hình Create origin, chọn các giá trị sau:
@@ -74,7 +79,8 @@ Sau khi tạo Distribution, hãy mở thông báo hướng dẫn cập nhật S3
 
 > **Vì sao chọn HTTP only?** ALB của bạn hiện chỉ có listener `HTTP:80`, chưa có `HTTPS:443`. Nếu chọn HTTPS only, CloudFront sẽ không kết nối được với ALB theo cấu hình hiện tại. Đây là cấu hình để thực hành. Khi triển khai hệ thống thật, nên dùng HTTPS giữa CloudFront và ALB.
 
-![Cấu hình ALB Origin chi tiết](url_hinh_anh_cua_ban_4)
+![Cấu hình ALB Origin chi tiết](images/ALB-Origin-Configuration.png)
+![Cấu hình ALB Origin chi tiết](images/success1.png)
 
 ### 4.3. Tạo Origin
 Nhấn **Create origin**. Sau khi tạo, tab Origins dự kiến sẽ có hai Origin như sau:
@@ -100,8 +106,11 @@ Vào CloudFront → Distribution → **Behaviors**. Thiết lập theo ví dụ 
 > * **Quan trọng:** Đường dẫn `/assets/*` chỉ đúng nếu URL thực tế của website dùng đường dẫn đó và object trong S3 có key tương ứng. Nếu ứng dụng dùng `/css/*`, `/js/*` hoặc `/images/*`, bạn cần tạo behavior theo các đường dẫn thực tế đó.
 > * Không nên cache HTML động, trang đăng nhập hoặc giỏ hàng bằng chính sách cache tĩnh.
 
-![Tạo Cache Behavior](url_hinh_anh_cua_ban_5)
-![Cấu hình Cache Behavior S3](url_hinh_anh_cua_ban_6)
+![Tạo Cache Behavior](images/Cache_Behaviors.png)
+![Cấu hình Cache Behavior](images/Edit_Cache_behavior.png)
+![Cấu hình Cache Behavior](images/Edit_Cache_behavior_2.png)
+![Cấu hình Cache Behavior S3](images/CreateBehaviorForS3.png)
+![Cấu hình Cache Behavior S3](images/CreateBehaviorForS3_2.png)
 
 ## Bước 6 — Kiểm tra CloudFront
 
@@ -113,7 +122,7 @@ Vào CloudFront → Distribution → **Behaviors**. Thiết lập theo ví dụ 
 
 Nếu file trả về mã `HTTP 200`, CloudFront đã phân phối nội dung tĩnh thành công. Nếu gặp lỗi `403 AccessDenied`, hãy kiểm tra lại cấu hình OAC, S3 Bucket Policy và object key.
 
-![Kiểm tra truy cập CloudFront](url_hinh_anh_cua_ban_7)
+![Kiểm tra truy cập CloudFront](images/checkCloudFont.png)
 
 ## Bước 7 — Route 53 (Tùy chọn)
 
