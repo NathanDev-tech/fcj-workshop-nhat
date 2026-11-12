@@ -5,11 +5,6 @@ weight: 7
 chapter: false
 pre: " <b> 7. </b> "
 ---
-{{% notice warning %}}
-⚠️ **Lưu ý:** Các thông tin dưới đây chỉ nhằm mục đích tham khảo, vui lòng **không sao chép nguyên văn** cho bài báo cáo của bạn kể cả warning này.
-{{% /notice %}}
-
->Tại đây bạn có thể tự do đóng góp ý kiến cá nhân về những trải nghiệm khi tham gia chương trình First Cloud AI Journey, giúp team FCAJ cải thiện những vấn đề còn thiếu sót dựa trên các hạng mục sau:
 
 ### Đánh giá chung
 
@@ -32,13 +27,17 @@ Văn hóa công ty rất tích cực: mọi người tôn trọng lẫn nhau, l�
 Công ty có hỗ trợ phụ cấp thực tập và tạo điều kiện về thời gian linh hoạt khi cần thiết. Ngoài ra, việc được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
 
 
-### Một số câu hỏi khác
-- Điều bạn **hài lòng nhất** trong thời gian thực tập?  
-- Điều bạn nghĩ công ty **cần cải thiện** cho các thực tập sinh sau?  
-- Nếu giới thiệu cho bạn bè, bạn có **khuyên họ thực tập ở đây không**? Vì sao?  
+### Cảm nhận cá nhân sau quá trình thực tập
+
+Em cảm thấy chương trình đã có lộ trình học rõ ràng và sự hỗ trợ tận tình từ đội ngũ mentor. Đã có rất nhiều các buổi chia sẻ từ Cloud Engineer, Solution Architect đang làm việc tại doanh nghiệp mang lại rất nhiều kiến thức, kinh nghiệm cho các bạn sinh viên trao dồi.
+
+Sau thời gian tham gia Bootcamp FCAJ, em  đã học hỏi được nhiều bài học quý giá từ kiến thức chuyên môn cho đến những kỹ năng mềm không kém phần quan trọng như làm việc nhóm, quản lý tiến độ, tìm kiếm tài liệu kỹ thuật, trình bày ý tưởng và giải quyết vấn đề. Những trải nghiệm này giúp em tự tin hơn khi chuẩn bị bước vào môi trường làm việc sau khi tốt nghiệp.
 
 
-### Đề xuất & mong muốn
-- Bạn có đề xuất gì để cải thiện trải nghiệm trong kỳ thực tập?  
-- Bạn có muốn tiếp tục chương trình này trong tương lai?
-- Góp ý khác (tự do chia sẻ):
+Em sẵn sàng giới thiệu Bootcamp FCAJ khi các bạn sinh viên quan tâm đến Cloud Computing, DevOps hoặc AI, vì FCAJ là môi trường học tập chất lượng, nội dung thực tiễn , và có sự hỗ trợ tích cực từ cộng đồng.
+
+Trong thời gian tới, em mong muốn tiếp tục tham gia các chương trình chuyên sâu của FCAJ về AWS Solution Architecture, DevOps trên AWS để nâng cao kiến thức và kỹ năng. Em cũng hy vọng có cơ hội đồng hành cùng cộng đồng FCAJ trong các hoạt động học thuật và dự án thực tế.
+
+Cuối cùng, em xin chân thành cảm ơn các anh chị mentor, Team Admin và Ban tổ chức Bootcamp First Cloud AI Journey đã luôn hướng dẫn, hỗ trợ và đồng hành cùng em trong suốt quá trình thực tập. Trải nghiệm này đã giúp em phát triển thêm về kiến thức chuyên môn, kỹ năng làm việc và tư duy giải quyết vấn đề.
+
+Đặc biệt, em xin gửi lời cảm ơn chân thành đến Anh Nguyễn Gia Hưng - Giám đốc Kiến trúc Giải pháp (Head of Solutions Architecture / SA Director) tại AWS Việt Nam, người đã xây dựng và dẫn dắt cộng đồng FCAJ, nơi em có cơ hội được học hỏi, phát triển bản thân và tiếp cận nhiều công nghệ mới. Những định hướng, kinh nghiệm thực tiễn và sự hỗ trợ của anh đã giúp em nhìn rõ hơn những điểm cần cải thiện của bản thân, từ đó nỗ lực học hỏi và hoàn thiện bản thân hơn mỗi ngày.
