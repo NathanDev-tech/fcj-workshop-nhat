@@ -1,5 +1,5 @@
 ---
-title : "Kiểm thử, vận hành và triển khai liên tục"
+title : "Serverless & AI"
 date : 2024-01-01
 weight : 5
 chapter : false

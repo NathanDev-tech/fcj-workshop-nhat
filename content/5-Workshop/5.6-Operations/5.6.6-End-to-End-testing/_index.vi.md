@@ -3,7 +3,7 @@ title : "Kiểm thử End-to-End"
 date : 2024-01-01
 weight : 6
 chapter : false
-pre : " <b> 5.5.6 </b> "
+pre : " <b> 5.6.6 </b> "
 ---
 
 Sau khi hoàn thành phần này, hệ thống sẽ được xác nhận:
