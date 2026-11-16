@@ -21,7 +21,7 @@ The PHP application retrieves database credentials via standard environment vari
 
 1. Navigate to **Amazon ECS** $\rightarrow$ **Task definitions** $\rightarrow$ select **RakiBookery-task**.
 2. Click **Create new revision**.
-   [img1]
+![Create new Revision interface](images/createRevision.png)
 3. Scroll down to **Container - 1** (Main) under the **Environment variables** section.
 4. Keep the existing `ValueFrom` ARNs (pointing to AWS Secrets Manager) intact, and update the **Key** names according to the mapping table below:
 
@@ -33,11 +33,11 @@ The PHP application retrieves database credentials via standard environment vari
 | `password` | `DB_PASS` |
 
 > **Note:** Leave other secrets (`engine`, `port`, `dbInstanceIdentifier`), Image URI, and port mappings unchanged.
-   [img2]
-   [img3]
+![Environment Variables values interface](images/EnvironmentVariables.png)
+![Environment Variables values interface](images/EnvironmentVariables_2.png)
 5. Scroll to the bottom of the page and click **Create** to generate a new revision (e.g., `RakiBookery-task:3`).
 6. Verify the updated keys under the **Environment and secrets** tab in the container details.
-   [img4]
+   ![Check Environment and secrets interface](images/CheckEnvironmentVariables.png)
 
 ### Step 2: Update the Database Name in AWS Secrets Manager
 
@@ -45,23 +45,23 @@ By default, the `dbname` field in a newly generated RDS secret may be set to `my
 
 1. Open **AWS Secrets Manager** $\rightarrow$ select the secret **fcj/sprint1/rds/mysql**.
 2. In the **Secret value** section, click **Edit**.
-   [img5]
+   ![Edit Secret value interface](images/updatedb_img5.png)
 3. Switch to the **Plaintext** tab, locate `"dbname"`, and change its value from `"mysql"` to `"bookstoredb"`.
 4. Click **Save**.
-   [img6]
+   ![Save dbname change interface](images/updatedb_3_img6.png)
 
 ### Step 3: Update the ECS Service to Apply Changes
 
 1. Navigate to **Amazon ECS** $\rightarrow$ **Clusters** $\rightarrow$ **RakiBookery-cluster** $\rightarrow$ **Services** tab.
 2. Select **RakiBookery-task-service-01** and click **Update service**.
-   [img7]
+   ![Update ECS Service interface](images/updateECS_img7.png)
 3. Under **Deployment configuration**:
    - **Task definition revision:** Select the latest revision (e.g., `3 (LATEST)`).
    - **Desired tasks:** Set to `1` (if currently `0`).
    - Check **Force new deployment** whenever you update secret values in Secrets Manager without creating a new task definition revision.
-   [img8]
+   ![Deployment configuration interface](images/updateECS_2_img8.png)
 4. Click **Update** and wait for the new task to reach the **Running** state.
-   [img9]
+   ![Task Running state after update](images/updateECS_3_img9.png)
 
 ---
 
@@ -98,7 +98,7 @@ To maintain security best practices, our RDS instance remains in a private subne
    Copy-Item .\bookstoredb.sql .\db-import\bookstoredb.sql
    Get-ChildItem .\db-import
    ```
-   [img10]
+   ![Verify db-import directory contents](images/docker_img10.png)
 4. Build the Docker image tagged as `rakibookery-db-import:latest`:
    ```powershell
    docker build -t rakibookery-db-import:latest .\db-import
@@ -110,25 +110,25 @@ To maintain security best practices, our RDS instance remains in a private subne
    ```powershell
    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com
    ```
-   [img11]
+   ![Docker login to ECR successful](images/loginDockerToECR_img11.png)
 2. Tag the image with `db-import` so it does not overwrite your web application image:
    ```powershell
    docker tag rakibookery-db-import:latest 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:db-import
    docker images
    ```
-   [img12]
+   ![Docker images after tagging](images/DockerImage_img12.png)
 3. Push the image to ECR:
    ```powershell
    docker push 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:db-import
    ```
-   [img13]
+   ![Push image to ECR interface](images/PushImage_img13.png)
 4. Open **AWS Console $\rightarrow$ Amazon ECR $\rightarrow$ rakibookery** to verify that the `db-import` tag is listed.
-   [img14]
+   ![Verify db-import tag on ECR](images/CheckImage_img14.png)
 
 ### Step 4: Create a Dedicated Task Definition for DB Import
 
 1. Go to **Amazon ECS $\rightarrow$ Task definitions $\rightarrow$ Create new task definition**.
-   [img15]
+   ![Create new Task Definition interface](images/createTask_img15.png)
 2. Configure basic task settings:
    - **Task definition family:** `RakiBookery-db-import-task`
    - **Launch type:** `AWS Fargate`
@@ -136,46 +136,46 @@ To maintain security best practices, our RDS instance remains in a private subne
    - **CPU / Memory:** `0.25 vCPU` / `0.5 GB`
    - **Task role:** Leave empty (`None`)
    - **Task execution role:** `ecsTaskExecutionRole`
-   [img16]
+   ![Basic Task Definition settings](images/createTask_img16.png)
 3. Configure **Container - 1**:
    - **Name:** `db-import`
    - **Image URI:** Browse and select `rakibookery:db-import` from ECR.
-   [img17]
-   [img18]
-   [img19]
+   ![Container Name and Image URI configuration](images/img17.png)
+   ![Container configuration continued](images/img18.png)
+   ![Container configuration continued](images/img19.png)
    - **Port mappings:** Click **Remove** to delete port `80` (not required for a background batch task).
-   [img20]
+   ![Remove port mapping](images/img20.png)
 4. Add **Environment variables** referencing Secrets Manager (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`).
-   [img21]
+   ![Environment variables from Secrets Manager](images/img21.png)
 5. Enable **Logging** (CloudWatch Logs) with log group `/ecs/RakiBookery-db-import-task`.
-   [img22]
+   ![CloudWatch Logging configuration](images/img22.png)
 6. Under **Docker configuration**, set **Entry point** to `sh,-c` and **Command** to import `/import/bookstoredb.sql` into RDS:
    ```bash
    mysql -h "$DB_HOST" -P 3306 -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /import/bookstoredb.sql
    ```
    *(You can subsequently create a new revision with a `SELECT` verification query to confirm the imported row counts).*
 7. Click **Create** to save the Task Definition.
-   [img23]
+   ![Task Definition creation complete](images/img23.png)
 
 ### Step 5: Run the One-off Task to Execute Import and Check Logs
 
 1. Navigate to **Amazon ECS $\rightarrow$ Clusters $\rightarrow$ RakiBookery-cluster $\rightarrow$ Tasks tab $\rightarrow$ Run new task**.
-   [img24]
+   ![Run new task interface](images/img24.png)
 2. Select **Task definition family** `RakiBookery-db-import-task` (`Latest` revision) and **Launch type** `Fargate`.
-   [img25]
-   [img26]
+   ![Select Task definition family](images/img25.png)
+   ![Select Fargate launch type](images/img26.png)
 3. Under **Networking**:
    - **VPC:** `RakiBookery-vpc-01`
    - **Subnets:** Select the same 2 subnets used by your web ECS Service.
    - **Security group:** Select `RakiBookery-fargate-sg` (already permitted on port `3306` in the RDS Security Group).
    - **Public IP:** `Turned on` (allows the Fargate task to pull images from ECR and fetch secrets if no NAT Gateway/VPC Endpoints exist).
-   [img27]
+   ![Networking configuration for Task](images/img27.png)
 4. Click **Create**. The task will execute the SQL import and transition to **Stopped** upon completion.
 5. Click on the completed Task ID $\rightarrow$ **Logs** tab to inspect the output and confirm that all tables (`book`, `category`, `user`, etc.) and records have been populated.
-   [img28]
-   [img29]
-   [img30]
-   [img31]
+   ![Import task logs - result](images/img31.png)
+   ![Import task logs - detail](images/img28.png)
+   ![Import task logs - table data](images/img29.png)
+   ![Import task logs - completion confirmed](images/img30.png)
 
 ---
 
@@ -198,35 +198,35 @@ Inspect `src/app/models/` and update all SQL queries to use lowercase table name
    docker build -t rakibookery:rds-casefix-20261030 .
    docker images rakibookery
    ```
-   [img32]
+   ![Build Docker image with rds-casefix tag](images/img32.png)
 2. Log in to ECR, tag the image, and push it to the repository:
    ```powershell
    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com
    docker tag rakibookery:rds-casefix-20261030 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030
    docker push 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030
    ```
-   [img33]
-   [img34]
-   [img35]
+   ![ECR login successful](images/img33.png)
+   ![Tag new image](images/img34.png)
+   ![Push image to ECR](images/img35.png)
 3. Verify that the `rds-casefix-20261030` tag appears in Amazon ECR.
-   [img36]
+   ![Verify tag on Amazon ECR](images/img36.png)
 
 ### Step 3: Deploy the Updated Image to the ECS Service
 
 1. Go to **Amazon ECS $\rightarrow$ Task definitions $\rightarrow$ RakiBookery-task $\rightarrow$ Create new revision**.
-   [img37]
+   ![Create new revision for Task Definition](images/img37.png)
 2. Update the main container's **Image URI** to `147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030`.
-   [img38]
+   ![Update Image URI](images/img38.png)
 3. Keep all Secrets Manager environment variables (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`) and IAM roles unchanged, then click **Create** (e.g., creating `RakiBookery-task:5`).
-   [img39]
-   [img40]
-   [img41]
-   [img42]
+   ![Keep environment variables unchanged](images/img39.png)
+   ![Confirm IAM Roles configuration](images/img40.png)
+   ![Click Create for new revision](images/img41.png)
+   <!-- [img42] -->
 4. Navigate to **Clusters $\rightarrow$ RakiBookery-cluster $\rightarrow$ Services $\rightarrow$ RakiBookery-task-service-01 $\rightarrow$ Update service**.
-   [img43]
+   ![Update ECS Service interface](images/img43.png)
 5. Select the `Latest` **Task definition revision** (`5`) and click **Update**. Wait for the rolling deployment to complete.
-   [img44]
-   [img45]
+   ![Select Latest Task definition revision](images/img44.png)
+   ![Deployment complete](images/img45.png)
 
 ---
 
@@ -236,16 +236,14 @@ Inspect `src/app/models/` and update all SQL queries to use lowercase table name
 
 1. Open **EC2 $\rightarrow$ Target Groups $\rightarrow$ RakiBookery-tg** and check the **Targets** tab to confirm the registered task status is **Healthy**.
 2. Open **EC2 $\rightarrow$ Load Balancers $\rightarrow$ RakiBookery-alb**, copy the **DNS name**, and open `http://<ALB-DNS-name>` in your browser.
-   [img46]
-   [img47]
 
 ### Step 2: Verify via CloudFront & Upload Missing Static Assets (CSS/JS) if Needed
 
 1. Open **CloudFront $\rightarrow$ Distributions $\rightarrow$ RakiBookery-cloudfront**, copy the **Distribution domain name** (`xxxxx.cloudfront.net`), and open it in a browser.
-   [img48]
+   ![Access website via CloudFront](images/img48.png)
 2. If styles or scripts fail to load (pressing `F12` $\rightarrow$ `Network` tab shows `403` errors for `.css`/`.js` files):
-   [img49]
-   [img50]
+   ![403 error for CSS/JS files](images/img49.png)
+   <!-- [img50]
    [img51]
    [img52]
    - Check the CloudFront **Origins** tab to identify the S3 static asset bucket (e.g., `rakibookery-static-web-246111`).
@@ -264,23 +262,20 @@ Inspect `src/app/models/` and update all SQL queries to use lowercase table name
    - Hard-refresh the CloudFront URL (`Ctrl + Shift + R`) to bypass browser cache and confirm full styling.
    [img64]
    [img65]
-   [img66]
+   [img66] -->
 
 ### Step 3: Validate Live Database Queries on the Website
 
 Once the website loads with full styling and database connectivity, test the following database-driven features:
 1. **Product Listing:** Confirm that all 20 books load on the homepage with titles, authors, categories, and prices fetched from RDS.
-   [img67]
+   ![Product listing from RDS](images/img48.png)
 2. **Search & Category Filtering:** Search by book title (e.g., `midnight`, `harry`) and filter by category.
-   [img68]
-   [img69]
+   ![Search products by name](images/img68.png)
 3. **Price Range Filtering:** Adjust the price slider or enter `From` / `To` values and click **Search**.
-   [img70]
-   [img71]
+   ![Filter by price range](images/img69.png)
 4. **Sorting:** Test sorting by `Price: Low to High` and `Price: High to Low`.
-   [img72]
-   [img73]
+   ![Sort by price ascending](images/img70.png)
+   ![Sort by price descending](images/img71.png)
 
 > **Post-Workshop Cleanup:** Once verification is complete, quit **Docker Desktop** on your local machine (right-click the Docker tray icon $\rightarrow$ **Quit Docker Desktop**) to free up local system resources.
-> [img74]
-> [img75]
+> ![Quit Docker Desktop](images/img74.png)

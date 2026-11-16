@@ -44,23 +44,23 @@ Mặc định khi khởi tạo RDS, trường `dbname` trong Secret có thể ma
 
 1. Mở **AWS Secrets Manager** $\rightarrow$ chọn secret **fcj/sprint1/rds/mysql**.
 2. Tại mục **Secret value**, nhấn **Edit**.
-   [img5]
+   ![Giao diện chỉnh sửa Secret value](images/updatedb_img5.png)
 3. Chuyển sang tab **Plaintext**, tìm trường `"dbname"` và đổi giá trị từ `"mysql"` thành `"bookstoredb"`.
 4. Nhấn **Save** để lưu thay đổi.
-   [img6]
+   ![Giao diện lưu thay đổi dbname](images/updatedb_3_img6.png)
 
 ### Bước 3: Cập nhật ECS Service để áp dụng cấu hình mới
 
 1. Truy cập **Amazon ECS** $\rightarrow$ **Clusters** $\rightarrow$ **RakiBookery-cluster** $\rightarrow$ tab **Services**.
 2. Chọn **RakiBookery-task-service-01** và nhấn **Update service**.
-   [img7]
+   ![Giao diện cập nhật ECS Service](images/updateECS_img7.png)
 3. Trong mục **Deployment configuration**:
    - **Task definition revision:** Chọn revision mới nhất (ví dụ: `3 (LATEST)`).
    - **Desired tasks:** Đảm bảo giá trị là `1` (nếu đang là `0` thì đổi thành `1`).
    - Tích chọn **Force new deployment** nếu bạn vừa cập nhật giá trị bên trong Secrets Manager mà không tạo revision mới.
-   [img8]
+   ![Giao diện cấu hình Deployment](images/updateECS_2_img8.png)
 4. Nhấn **Update** và chờ cho đến khi Task mới chuyển sang trạng thái **Running**.
-   [img9]
+   ![Giao diện Task Running sau khi update](images/updateECS_3_img9.png)
 
 ---
 
@@ -97,7 +97,7 @@ Mặc định khi khởi tạo RDS, trường `dbname` trong Secret có thể ma
    Copy-Item .\bookstoredb.sql .\db-import\bookstoredb.sql
    Get-ChildItem .\db-import
    ```
-   [img10]
+   ![Kiểm tra thư mục db-import](images/docker_img10.png)
 4. Build Docker image với tag `rakibookery-db-import:latest`:
    ```powershell
    docker build -t rakibookery-db-import:latest .\db-import
@@ -109,25 +109,25 @@ Mặc định khi khởi tạo RDS, trường `dbname` trong Secret có thể ma
    ```powershell
    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com
    ```
-   [img11]
+   ![Đăng nhập Docker vào ECR thành công](images/loginDockerToECR_img11.png)
 2. Gắn tag ECR riêng (`db-import`) để không ghi đè lên image của ứng dụng web:
    ```powershell
    docker tag rakibookery-db-import:latest 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:db-import
    docker images
    ```
-   [img12]
+   ![Giao diện Docker images sau khi tag](images/DockerImage_img12.png)
 3. Push image lên ECR:
    ```powershell
    docker push 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:db-import
    ```
-   [img13]
+   ![Giao diện push image lên ECR](images/PushImage_img13.png)
 4. Kiểm tra trên **AWS Console $\rightarrow$ Amazon ECR $\rightarrow$ rakibookery** để xác nhận tag `db-import` đã xuất hiện.
-   [img14]
+   ![Kiểm tra tag db-import trên ECR](images/CheckImage_img14.png)
 
 ### Bước 4: Tạo Task Definition riêng cho tác vụ Import DB
 
 1. Truy cập **Amazon ECS $\rightarrow$ Task definitions $\rightarrow$ Create new task definition**.
-   [img15]
+   ![Giao diện tạo Task Definition mới](images/createTask_img15.png)
 2. Cấu hình thông số cơ bản:
    - **Task definition family:** `RakiBookery-db-import-task`
    - **Launch type:** `AWS Fargate`
@@ -135,46 +135,46 @@ Mặc định khi khởi tạo RDS, trường `dbname` trong Secret có thể ma
    - **CPU / Memory:** `0.25 vCPU` / `0.5 GB`
    - **Task role:** Để trống (`None`)
    - **Task execution role:** `ecsTaskExecutionRole`
-   [img16]
+   ![Cấu hình thông số cơ bản Task Definition](images/createTask_img16.png)
 3. Cấu hình **Container - 1**:
    - **Name:** `db-import`
    - **Image URI:** Chọn image `rakibookery:db-import` từ ECR.
-   [img17]
-   [img18]
-   [img19]
+   ![Cấu hình Container Name và Image URI](images/img17.png)
+   ![Cấu hình Container tiếp theo](images/img18.png)
+   ![Cấu hình Container tiếp theo](images/img19.png)
    - **Port mappings:** Nhấn **Remove** để xóa cổng `80` (tác vụ chạy ngầm không cần mở cổng).
-   [img20]
+   ![Xóa Port mapping](images/img20.png)
 4. Thêm **Environment variables** trỏ tới Secrets Manager tương tự như ứng dụng chính (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`).
-   [img21]
+   ![Cấu hình Environment variables từ Secrets Manager](images/img21.png)
 5. Cấu hình **Logging** (CloudWatch Logs) với log group `/ecs/RakiBookery-db-import-task`.
-   [img22]
+   ![Cấu hình CloudWatch Logging](images/img22.png)
 6. Tại mục **Docker configuration**, nhập **Entry point** là `sh,-c` và **Command** để nạp dữ liệu từ `/import/bookstoredb.sql` vào RDS:
    ```bash
    mysql -h "$DB_HOST" -P 3306 -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" < /import/bookstoredb.sql
    ```
    *(Sau khi import xong, bạn có thể tạo một revision mới với lệnh `SELECT` để kiểm tra số lượng bản ghi trong database).*
 7. Nhấn **Create** để hoàn tất Task Definition.
-   [img23]
+   ![Hoàn tất tạo Task Definition](images/img23.png)
 
 ### Bước 5: Chạy One-off Task để thực thi Import và Kiểm tra Logs
 
 1. Vào **Amazon ECS $\rightarrow$ Clusters $\rightarrow$ RakiBookery-cluster $\rightarrow$ tab Tasks $\rightarrow$ Run new task**.
-   [img24]
+   ![Giao diện Run new task](images/img24.png)
 2. Chọn **Task definition family** là `RakiBookery-db-import-task` (bản `Latest`), **Launch type** là `Fargate`.
-   [img25]
-   [img26]
+   ![Chọn Task definition family](images/img25.png)
+   ![Chọn Launch type Fargate](images/img26.png)
 3. Tại mục **Networking**:
    - **VPC:** `RakiBookery-vpc-01`
    - **Subnets:** Chọn 2 subnet giống với ECS Service của web.
    - **Security group:** Chọn `RakiBookery-fargate-sg` (Security Group đã được RDS Inbound Rule cho phép cổng `3306`).
    - **Public IP:** `Turned on` (giúp task tải image từ ECR và đọc Secret nếu VPC không có NAT Gateway/VPC Endpoint).
-   [img27]
+   ![Cấu hình Networking cho Task](images/img27.png)
 4. Nhấn **Create**. Task sẽ chạy lệnh import và tự động chuyển sang trạng thái **Stopped** sau khi hoàn tất.
 5. Mở chi tiết Task vừa chạy $\rightarrow$ tab **Logs** để kiểm tra kết quả. Nếu chạy lệnh kiểm tra dữ liệu, log sẽ hiển thị danh sách các bảng (`book`, `category`, `user`,...) và tổng số bản ghi đã được nạp thành công.
-   [img31]
-   [img28]
-   [img29]
-   [img30]
+   ![Logs Task import - kết quả](images/img31.png)
+   ![Logs Task import - chi tiết](images/img28.png)
+   ![Logs Task import - bảng dữ liệu](images/img29.png)
+   ![Logs Task import - xác nhận hoàn tất](images/img30.png)
    
 
 ---
@@ -198,35 +198,35 @@ Kiểm tra thư mục `src/app/models/` và cập nhật toàn bộ tên bảng 
    docker build -t rakibookery:rds-casefix-20261030 .
    docker images rakibookery
    ```
-   [img32]
+   ![Build Docker image với tag rds-casefix](images/img32.png)
 2. Đăng nhập ECR, gắn tag và đẩy image mới lên repository:
    ```powershell
    aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com
    docker tag rakibookery:rds-casefix-20261030 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030
    docker push 147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030
    ```
-   [img33]
-   [img34]
-   [img35]
+   ![Đăng nhập ECR thành công](images/img33.png)
+   ![Gắn tag image mới](images/img34.png)
+   ![Push image lên ECR](images/img35.png)
 3. Xác nhận tag `rds-casefix-20261030` đã có trên Amazon ECR.
-   [img36]
+   ![Xác nhận tag trên Amazon ECR](images/img36.png)
 
 ### Bước 3: Triển khai Image mới lên ECS Service
 
 1. Vào **Amazon ECS $\rightarrow$ Task definitions $\rightarrow$ RakiBookery-task $\rightarrow$ Create new revision**.
-   [img37]
+   ![Tạo revision mới cho Task Definition](images/img37.png)
 2. Cập nhật **Image URI** của container chính thành `147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:rds-casefix-20261030`.
-   [img38]
+   ![Cập nhật Image URI](images/img38.png)
 3. Giữ nguyên các biến môi trường Secrets Manager (`DB_HOST`, `DB_NAME`, `DB_USER`, `DB_PASS`) và IAM Roles, nhấn **Create** (tạo ra revision mới, ví dụ `RakiBookery-task:5`).
-   [img39]
-   [img40]
-   [img41]
-   [img42]
+   ![Giữ nguyên biến môi trường](images/img39.png)
+   ![Xác nhận cấu hình IAM Roles](images/img40.png)
+   ![Nhấn Create tạo revision mới](images/img41.png)
+   <!-- [img42] -->
 4. Vào **Clusters $\rightarrow$ RakiBookery-cluster $\rightarrow$ Services $\rightarrow$ RakiBookery-task-service-01 $\rightarrow$ Update service**.
-   [img43]
+   ![Giao diện Update ECS Service](images/img43.png)
 5. Chọn **Task definition revision** là bản `Latest` (`5`) và nhấn **Update**. Chờ quá trình deployment hoàn tất.
-   [img44]
-   [img45]
+   ![Chọn Task definition revision Latest](images/img44.png)
+   ![Deployment hoàn tất](images/img45.png)
 
 ---
 
@@ -236,19 +236,17 @@ Kiểm tra thư mục `src/app/models/` và cập nhật toàn bộ tên bảng 
 
 1. Mở **EC2 $\rightarrow$ Target Groups $\rightarrow$ RakiBookery-tg**, kiểm tra tab **Targets** để đảm bảo trạng thái là **Healthy**.
 2. Mở **EC2 $\rightarrow$ Load Balancers $\rightarrow$ RakiBookery-alb**, sao chép **DNS name** và truy cập qua trình duyệt (`http://<ALB-DNS-name>`).
-   [img46]
-   [img47]
 
 ### Bước 2: Kiểm tra qua CloudFront & Xử lý tài nguyên tĩnh (CSS/JS) nếu thiếu
 
 1. Mở **CloudFront $\rightarrow$ Distributions $\rightarrow$ RakiBookery-cloudfront**, sao chép **Distribution domain name** (dạng `xxxxx.cloudfront.net`) và mở trên trình duyệt.
-   [img48]
+   ![Truy cập website qua CloudFront](images/img48.png)
 2. Nếu giao diện hiển thị thiếu CSS/JS (kiểm tra bằng `F12` $\rightarrow$ tab `Network` thấy lỗi `403` cho các file `.css`/`.js`):
-   [img49]
-   [img50]
+   ![Lỗi 403 cho CSS/JS](images/img49.png)
+   <!-- [img50]
    [img51]
-   [img52]
-   - Kiểm tra **Origin** của CloudFront để xác nhận bucket S3 lưu trữ static web (ví dụ: `rakibookery-static-web-246111`).
+   [img52] 
+   !-- - Kiểm tra **Origin** của CloudFront để xác nhận bucket S3 lưu trữ static web (ví dụ: `rakibookery-static-web-246111`).
    [img53]
    [img54]
    - Truy cập **Amazon S3**, mở bucket trên và upload thư mục `client/` (chứa `css/` và `js/`) vào bên trong thư mục `assets/` để đạt cấu trúc `assets/client/css/...` và `assets/client/js/...`.
@@ -264,23 +262,20 @@ Kiểm tra thư mục `src/app/models/` và cập nhật toàn bộ tên bảng 
    - Quay lại trang CloudFront và nhấn `Ctrl + Shift + R` để tải lại trang bỏ qua cache.
    [img64]
    [img65]
-   [img66]
+   [img66] -->
 
 ### Bước 3: Xác minh Truy vấn Dữ liệu từ RDS
 
 Trên giao diện website đã kết nối thành công với RDS, thực hiện kiểm tra các tính năng tương tác cơ sở dữ liệu:
 1. **Hiển thị danh sách sản phẩm:** Trang chủ tải đầy đủ 20 đầu sách kèm hình ảnh, tác giả, thể loại và giá bán từ RDS.
-   [img67]
+   ![Danh sách sản phẩm từ RDS](images/img48.png)
 2. **Tìm kiếm & Lọc theo tên/thể loại:** Nhập từ khóa (ví dụ: `midnight`, `harry`) và nhấn **Tìm kiếm**.
-   [img68]
-   [img69]
+   ![Tìm kiếm sản phẩm theo tên](images/img68.png)
 3. **Lọc theo khoảng giá:** Kéo thanh trượt giá hoặc nhập khoảng giá (`Từ` - `Đến`) và kiểm tra kết quả trả về.
-   [img70]
-   [img71]
+   ![Lọc theo khoảng giá](images/img69.png)
 4. **Sắp xếp dữ liệu:** Thử chức năng sắp xếp theo `Giá: Thấp đến cao` và `Giá: Cao đến thấp`.
-   [img72]
-   [img73]
+   ![Sắp xếp theo giá tăng dần](images/img70.png)
+   ![Sắp xếp theo giá giảm dần](images/img71.png)
 
 > **Dọn dẹp sau thực hành:** Sau khi hoàn tất triển khai và kiểm tra, hãy tắt **Docker Desktop** trên máy cá nhân (chuột phải vào biểu tượng Docker ở khay hệ thống $\rightarrow$ **Quit Docker Desktop**) để giải phóng tài nguyên hệ thống.
-> [img74]
-> [img75]
+> ![Tắt Docker Desktop](images/img74.png)
