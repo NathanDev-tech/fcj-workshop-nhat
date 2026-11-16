@@ -14,7 +14,7 @@ pre: " <b> 1. </b> "
 
 **Step 2:** On the main interface, click the orange **Create cluster** button.
 
-![Create Cluster Interface](your_image_url_1)
+![Create Cluster Interface](images/CreateClusterECS.png)
 
 **ECS Cluster Configuration:**
 In the **Cluster configuration** section, configure:
@@ -25,15 +25,15 @@ In the **Cluster configuration** section, configure:
 
 **Step 4:** Scroll down to the **Infrastructure - advanced** section, and select the Compute capacity type as **Fargate only**. (This is a Serverless environment; you don't need to worry about provisioning or managing EC2 instances).
 
-![Infrastructure Configuration](your_image_url_2)
+![Infrastructure Configuration](images/ClusterConfiguration.png)
 
 **Step 5:** Keep other optional parameters as default, scroll to the bottom of the page, and click the **Create** button to proceed with creating the cluster.
 
-![Create Cluster Button](your_image_url_3)
+![Create Cluster Button](images/ClickCreate_1.png)
 
 **Step 6:** Wait a moment, and the system will display a green notification bar "Cluster RakiBookery-cluster has been created successfully", confirming that the Cluster has been initialized.
 
-![Successful ECS Cluster Creation Screen](your_image_url_4)
+![Successful ECS Cluster Creation Screen](images/success_1.png)
 
 
 ## 2. Create Task Definition
@@ -42,7 +42,7 @@ In the **Cluster configuration** section, configure:
 
 **Step 2:** Click the **Create new task definition** button (you can also select this via the dropdown menu).
 
-![Create new task definition button](your_image_url_5)
+![Create new task definition button](images/CreateTask.png)
 
 **Task Definition Configuration:**
 
@@ -50,14 +50,14 @@ In the **Cluster configuration** section, configure:
 
 **Step 4:** In the **Infrastructure requirements** section, check the **AWS Fargate** box under Launch type.
 
-![Task definition family and Launch type config](your_image_url_6)
+![Task definition family and Launch type config](images/TaskConfiguration.png)
 
 **Step 5:** Configure server resources with the following parameters:
 - **Operating system/Architecture:** Select `Linux/X86_64`.
 - **CPU:** Select `.25 vCPU`.
 - **Memory:** Select `1 GB`.
 
-![OS, CPU, and Memory config](your_image_url_7)
+![OS, CPU, and Memory config](images/TaskConfiguration_2.png)
 
 **Step 6:** In the **Container - 1** configuration section:
 - **Name:** Name the container (e.g., `Main`).
@@ -65,58 +65,58 @@ In the **Cluster configuration** section, configure:
 - **Image URI:** Paste the image URI you pushed to ECR (e.g., `147956724787.dkr.ecr.ap-southeast-1.amazonaws.com/rakibookery:latest`).
 - **Port mappings:** Enter `80` for Container port, `TCP` for Protocol, and `HTTP` for App protocol.
 
-![Container Configuration](your_image_url_8)
+![Container Configuration](images/ContainerConfiguration.png)
 
 **Step 7:** Scroll to the bottom of the page and click **Create**. The system will redirect and show a green status "Task definition successfully created".
 
-![Create Task Definition Button](your_image_url_9)
+![Create Task Definition Button](images/ClickCreate_2.png)
 
-![Successful Creation Notification](your_image_url_10)
+![Successful Creation Notification](images/success_2.png)
 
 
 ## 3. Assign IAM Permissions for ECS
 
 Open a new tab, navigate to the **IAM (Identity and Access Management)** service, and select **Roles**.
 
-![IAM Roles Interface](your_image_url_11)
+![IAM Roles Interface](images/IAM_roles.png)
 
 Search for and click on the role named `ecsTaskExecutionRole`.
 
-![Search for ecsTaskExecutionRole](your_image_url_12)
+![Search for ecsTaskExecutionRole](images/ecsTaskExecutionRole.png)
 
 In the **Permissions** tab, select **Add permissions** -> **Create inline policy**.
 
-![Create inline policy](your_image_url_13)
+![Create inline policy](images/Policy.png)
 
 Using the JSON editor, enter a policy granting Allow permission for the 2 Actions `secretsmanager:GetSecretValue` and `kms:Decrypt` on Resource `*`.
 
-![JSON Policy Editor 1](your_image_url_14)
-![JSON Policy Editor 2](your_image_url_15)
+![JSON Policy Editor 1](images/JSON_Policy_1.png)
+![JSON Policy Editor 2](images/JSON_Policy_2.png)
 
 Click **Review and create**, name the policy `ECSSecretsAccessPolicy`, and then click **Create policy**. The message "Policy ECSSecretsAccessPolicy created" will appear, confirming successful permission assignment.
 
-![Review and create policy](your_image_url_16)
+![Review and create policy](images/Create_Policy.png)
 
-![Successful Permission Assignment Screen](your_image_url_17)
+![Successful Permission Assignment Screen](images/success_3.png)
 
 
 ## 4. Retrieve RDS Database Secret Information & Configure env
 
 **Step 1:** Access the AWS **Secrets Manager** service, go to **Secrets**. Click on the secret storing your RDS database information (e.g., `fcj/sprint1/rds/mysql`).
 
-![Secrets List](your_image_url_18)
+![Secrets List](images/getEnvSecret.png)
 
 **Step 2:** In the Overview tab, locate the **Secret ARN** section and copy this entire ARN string.
 
-![Secret ARN](your_image_url_19)
+![Secret ARN](images/ARN_Secret.png)
 
 **Step 3:** Return to the Task definitions interface on ECS, click on the `RakiBookery-task` you created.
 
-![Select Task Definition](your_image_url_20)
+![Select Task Definition](images/new_revision.png)
 
 **Step 4:** Click **Create new revision** -> **Create new revision** to update the task configuration.
 
-![Create new revision](your_image_url_21)
+![Create new revision](images/create_new_revision.png)
 
 **Step 5:** Scroll down to the Container configuration section, locate **Environment variables - optional**.
 
@@ -124,7 +124,7 @@ Click **Review and create**, name the policy `ECSSecretsAccessPolicy`, and then 
 - **Variable 1 (Username):** In the Key column, enter `username` | In Value type, select `ValueFrom` | In the Value column, paste the copied Secret ARN.
 - **Variable 2 (Password):** In the Key column, enter `password` | In Value type, select `ValueFrom` | In the Value column, paste the same Secret ARN.
 
-![Add Environment variables](your_image_url_22)
+![Add Environment variables](images/environment_variables.png)
 
 **Step 7:** Double-check the information, then scroll to the bottom and click **Create** to save the new Task Definition Revision.
 

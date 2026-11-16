@@ -14,7 +14,7 @@ pre : " <b> 5.4.4 </b> "
 2. Locate the bucket containing the static files for the RakiBookery website and verify that CSS, JS, and image files have been uploaded.
 3. Keep **Block Public Access** ENABLED. There is no need to enable the *S3 Static Website Hosting* feature if you plan to use CloudFront with an S3 REST origin and OAC.
 
-![Check S3 Static Web](your_image_url_1)
+![Check S3 Static Web](images/checkS3.png)
 
 ## Step 2 — Create CloudFront Distribution
 
@@ -36,7 +36,11 @@ pre : " <b> 5.4.4 </b> "
 
 > *Note:* AWS may ask you to create a new OAC; if so, select **Create new OAC**.
 
-![CloudFront Distribution Config](your_image_url_2)
+![CloudFront Distribution Config](images/Create_Cloudfont_Distribution_1.png)
+![CloudFront Distribution Config](images/Create_Cloudfont_Distribution_2.png)
+![CloudFront Distribution Config](images/Create_Cloudfont_Distribution_3.png)
+![CloudFront Distribution Config](images/Create_Cloudfont_Distribution_4.png)
+![CloudFront Distribution Config](images/Create_Cloudfont_Distribution_5.png)
 
 ## Step 3 — Grant CloudFront permission to read S3
 
@@ -55,7 +59,7 @@ After creating the Distribution, open the prompt guiding you to update the S3 Bu
 3. Select the **Origins** tab.
 4. Click **Create origin**.
 
-![Add ALB Origin](your_image_url_3)
+![Add ALB Origin](images/CreateALB-Origin.png)
 
 ### 4.2. Fill in ALB Origin Configuration
 On the Create origin screen, apply the following values:
@@ -74,7 +78,8 @@ On the Create origin screen, apply the following values:
 
 > **Why choose HTTP only?** Your ALB currently only has an `HTTP:80` listener and lacks `HTTPS:443`. If you select HTTPS only, CloudFront will fail to connect to the ALB with the current setup. This is acceptable for practice purposes. For real-world production deployments, HTTPS should be used between CloudFront and ALB.
 
-![Detailed ALB Origin Config](your_image_url_4)
+![Detailed ALB Origin Config](images/ALB-Origin-Configuration.png)
+![Detailed ALB Origin Config](images/success1.png)
 
 ### 4.3. Create Origin
 Click **Create origin**. After creation, the Origins tab should list two origins:
@@ -100,8 +105,13 @@ Navigate to CloudFront → Distribution → **Behaviors**. Configure them based 
 > * **Important:** The path `/assets/*` is only correct if the actual URL structure of your website uses it and the corresponding S3 objects have matching keys. If the application uses `/css/*`, `/js/*`, or `/images/*`, you must create separate behaviors reflecting those actual paths.
 > * Never apply static caching policies to dynamic HTML, login pages, or shopping carts.
 
-![Create Cache Behavior](your_image_url_5)
-![Configure S3 Cache Behavior](your_image_url_6)
+![Create Cache Behavior](images/Cache_Behaviors.png)
+![Edit Cache Behavior](images/Edit_Cache_behavior.png)
+![Edit Cache Behavior](images/Edit_Cache_behavior_2.png)
+![Configure S3 Cache Behavior](images/CreateBehaviorForS3.png)
+![Configure S3 Cache Behavior](images/CreateBehaviorForS3_2.png)
+![S3 Behavior Success](images/success_CreateBehaviorForS3.png)
+![Behavior Success](images/success_behavior.png)
 
 ## Step 6 — Test CloudFront
 
@@ -113,7 +123,7 @@ Navigate to CloudFront → Distribution → **Behaviors**. Configure them based 
 
 If the file returns an `HTTP 200` status, CloudFront is successfully distributing static content. If you encounter a `403 AccessDenied` error, double-check your OAC configuration, S3 Bucket Policy, and object keys.
 
-![Test CloudFront Access](your_image_url_7)
+![Test CloudFront Access](images/checkCloudFont.png)
 
 ## Step 7 — Route 53 (Optional)
 

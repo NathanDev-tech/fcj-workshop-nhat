@@ -39,7 +39,9 @@ Fill in the information according to the following table:
 
 > **Important:** Select **IP addresses**, do not select *Instances*, because ECS Fargate uses the `awsvpc` network mode.
 
-![Basic Configuration Illustration](your_image_url_1)
+![Basic Configuration Illustration](images/Basic_Target_Group_Configuration_1.png)
+![Basic Configuration Illustration](images/Basic_Target_Group_Configuration_2.png)
+![Basic Configuration Illustration](images/Basic_Target_Group_Configuration_3.png)
 
 ### 1.3. Create Target Group
 
@@ -51,7 +53,8 @@ Fill in the information according to the following table:
 
 *Note: The ECS Service will automatically register Fargate task IPs to the Target Group when we link them. After creation, it is completely normal for the Target Group to have **0 registered targets**.*
 
-![Target Group Creation Illustration](your_image_url_2)
+![Target Group Creation Illustration](images/Create_Target_Group_1.png)
+![Target Group Creation Illustration](images/success1.png)
 
 ## 2. Create Application Load Balancer (ALB)
 
@@ -81,7 +84,7 @@ Fill in the information according to the following table:
 
 > **Note:** The Public subnet must have a `0.0.0.0/0` route pointing to the Internet Gateway.
 
-![Network Mapping Illustration](your_image_url_3)
+![Network Mapping Illustration](images/NetworkMapping.png)
 
 ### 2.3. Security groups
 
@@ -132,7 +135,8 @@ Click **Create load balancer** and wait for the status to change to **Active**.
 
 * **Generated DNS name:** `RakiBookery-alb-1141293019.ap-southeast-1.elb.amazonaws.com`
 
-![ALB Creation Illustration](your_image_url_4)
+![ALB Creation Illustration](images/Basic_Configuration.png)
+![ALB Creation Illustration](images/CreateALB.png)
 
 ## 3. Attach ALB to ECS Service
 
@@ -157,6 +161,8 @@ Click **Create load balancer** and wait for the status to change to **Active**.
 | **Container** | Main | 
 | **Container port** | 80 | 
 
-![ECS Service Link Illustration](your_image_url_5)
+![ECS Service Link Illustration](images/ALB-to-ECS_1.png)
+![ECS Service Link Illustration](images/ALB-to-ECS_2.png)
+![ECS Service Link Illustration](images/ALB-to-ECS_3.png)
 
 > **Summary:** AWS-006 has completed the configuration of the ALB, Target Group, Health Check, Listener, and Security Groups. The ECS Service has been successfully linked with the ALB. We are currently waiting for the team to spin up Fargate to test the Health Check and access the actual website.
