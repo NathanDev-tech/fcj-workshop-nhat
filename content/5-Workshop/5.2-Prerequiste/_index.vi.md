@@ -7,21 +7,58 @@ pre : " <b> 5.2. </b> "
 ---
 
 #### IAM permissions
-Để triển khai và dọn dẹp tài nguyên trong workshop, tài khoản AWS cần có quyền IAM phù hợp.
-
-Trong dự án RakiBookery, chúng ta sử dụng IAM User dành cho tất cả thành viên trong nhóm, thuộc IAM Group RakiBookery. Tài khoản đã bật MFA và được gắn chính sách AdministratorAccess thông qua IAM Group; ngoài ra, policy IAMUserChangePassword được gắn trực tiếp vào User. Vì vậy, nhóm không cần gắn thêm policy mẫu của bài lab gốc.
-
-Chính sách AdministratorAccess đang sử dụng có nội dung như sau:
-```
+The policy below defines the IAM permissions required to deploy the AWS services in the RakiBookery workshop.
+```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "*",
-      "Resource": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "RakiBookeryFullWorkshopPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:*Vpc*",
+                "ec2:*Subnet*",
+                "ec2:*SecurityGroup*",
+                "ec2:*InternetGateway*",
+                "ec2:*Route*",
+                "ec2:*NetworkInterface*",
+                "ec2:*Address*",
+                "ec2:Describe*",
+                "ec2:CreateTags",
+                "rds:*",
+                "s3:*",
+                "iam:CreateUser",
+                "iam:CreateGroup",
+                "iam:AddUserToGroup",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:GetRole",
+                "iam:ListRoles",
+                "iam:CreatePolicy",
+                "iam:DeletePolicy",
+                "iam:GetPolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:AttachGroupPolicy",
+                "iam:PutRolePolicy",
+                "iam:PassRole",
+                "secretsmanager:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticloadbalancing:*",
+                "cloudfront:*",
+                "route53:*",
+                "sns:*",
+                "lambda:*",
+                "logs:*",
+                "cloudwatch:*",
+                "bedrock:*",
+                "aoss:*",
+                "apigateway:*"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
 

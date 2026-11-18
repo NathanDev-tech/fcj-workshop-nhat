@@ -7,23 +7,60 @@ pre : " <b> 5.2. </b> "
 ---
 
 #### IAM permissions
+The policy below defines the IAM permissions required to deploy the AWS services in the RakiBookery workshop.
 
-To deploy and clean up resources in this workshop, the AWS account must have the appropriate IAM permissions.
-
-In the RakiBookery project, we use IAM Users for all team members, belonging to the RakiBookery IAM Group. The account has MFA enabled and is granted the AdministratorAccess policy through the IAM Group. Additionally, the IAMUserChangePassword policy is attached directly to the User. Therefore, the team does not need to attach the sample IAM policy provided in the original lab.
-
-The AdministratorAccess policy currently in use is defined as follows:
 
 ```json
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "*",
-      "Resource": "*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "RakiBookeryFullWorkshopPolicy",
+            "Effect": "Allow",
+            "Action": [
+                "ec2:*Vpc*",
+                "ec2:*Subnet*",
+                "ec2:*SecurityGroup*",
+                "ec2:*InternetGateway*",
+                "ec2:*Route*",
+                "ec2:*NetworkInterface*",
+                "ec2:*Address*",
+                "ec2:Describe*",
+                "ec2:CreateTags",
+                "rds:*",
+                "s3:*",
+                "iam:CreateUser",
+                "iam:CreateGroup",
+                "iam:AddUserToGroup",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:GetRole",
+                "iam:ListRoles",
+                "iam:CreatePolicy",
+                "iam:DeletePolicy",
+                "iam:GetPolicy",
+                "iam:AttachRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:AttachGroupPolicy",
+                "iam:PutRolePolicy",
+                "iam:PassRole",
+                "secretsmanager:*",
+                "ecr:*",
+                "ecs:*",
+                "elasticloadbalancing:*",
+                "cloudfront:*",
+                "route53:*",
+                "sns:*",
+                "lambda:*",
+                "logs:*",
+                "cloudwatch:*",
+                "bedrock:*",
+                "aoss:*",
+                "apigateway:*"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 ```
 
