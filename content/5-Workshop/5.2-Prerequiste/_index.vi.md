@@ -221,7 +221,7 @@ Trong lab này, chúng ta sử dụng Asia Pacific (Singapore) region (ap-southe
 
 Quá trình triển khai CloudFormation cần khoảng 15 phút để hoàn thành.
 
-![complete](/fcj-workshop-nhat/images/5-Workshop/5.2-Prerequisite/cfsuccess.png)
+![success](/fcj-workshop-nhat/images/5-Workshop/5.2-Prerequisite/cfsuccess.png)
 
 + VPCs đã được tạo
 
