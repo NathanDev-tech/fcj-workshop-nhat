@@ -6,42 +6,42 @@ chapter : false
 pre : " <b> 5.6.2 </b> "
 ---
 
-### 5.5.2.1. Create a CloudFront Distribution
+### 5.6.2.1. Create a CloudFront Distribution
 
-Open the CloudFront console, go to **Distributions**, and select **Create distribution**. Then configure the following settings:
+Open **CloudFront Console → Distributions** and select **Create distribution**, then fill in the following settings:
 
-**Distribution name:** Enter `raki-frontend-cdn`.
+**Distribution name:** Enter `raki-prod-php-edge-cdn`.
 
-**Description – optional:** Leave this blank or enter `CloudFront CDN for RakiBookery Frontend and API`.
+**Description – optional:** Leave blank or enter `rakibookery-prod PHP on ALB, static on S3`.
 
 **Distribution type:** Keep **Single website or app** selected.
 
-**Domain (Route 53 managed domain – optional):** Leave this blank because the project uses the default `*.cloudfront.net` URL provided by AWS.
+**Domain (Route 53 managed domain – optional):** Leave blank because the project uses the default `*.cloudfront.net` URL provided by AWS.
 
-![image011.png](/images/5-Workshop/5.5-Raki-Operations/image011.png)
+![134447.png](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.2-CloudFront-CDN-Setup/134447.png)
 
-### 5.5.2.3. Configure the S3 Origin and OAC
+### 5.6.2.2. Configure the S3 Origin and OAC
 
 **Origin type:** Select **Amazon S3**.
 
-**S3 origin:** Select the `raki-frontend-dev.s3.ap-southeast-1.amazonaws.com` bucket.
+**S3 origin:** Select the bucket `rakibookery-prod-static-98798946184613 ap-southeast-1.amazonaws.com`.
 
-**Origin path – optional:** Leave this blank; do not enter `/path`, because the frontend is stored in the bucket root.
+**Origin path – optional:** Leave blank; do not enter `/src/public` because the frontend is stored in the public directory of the bucket.
 
-**Allow private S3 bucket access to CloudFront:** Keep **Allow private S3 bucket access to CloudFront – Recommended** selected. This enables **Origin Access Control (OAC)**, allowing CloudFront to read the private bucket while preventing direct user access to S3.
+**Allow private S3 bucket access to CloudFront:** Keep **Allow private S3 bucket access to CloudFront – Recommended** selected. This is the **Origin Access Control (OAC)** feature, which allows CloudFront to read the private bucket and prevents users from accessing S3 directly.
 
 **Origin settings:** Keep **Use recommended origin settings**.
 
 **Cache settings:** Keep **Use recommended cache settings tailored to serving S3 content**.
 
-![image013.png](/images/5-Workshop/5.5-Raki-Operations/image013.png)
+![134701.png](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.2-CloudFront-CDN-Setup/134701.png)
 
-### 5.5.2.4. Adjust the ALB Origin
+### 5.6.2.3. Adjust the ALB Origin
 
-After creating the distribution, open **Distributions**, select the newly created distribution, open the **Origins** tab, and edit the linked Elastic Load Balancing origin. Set *Protocol* to **HTTP only** to match the current ALB/API configuration and avoid communication issues or `400 Bad Request` responses caused by a protocol mismatch.
+After creation, go to **Distributions**, select the distribution just created, open the **Origins** tab, and edit the linked Elastic Load Balancing origin. Set *Protocol* to **HTTP only** to match the current ALB/API setup and avoid communication errors or `400 Bad Request` responses caused by a protocol mismatch.
 
-![image015.png](/images/5-Workshop/5.5-Raki-Operations/image015.png)
+![134711.png](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.2-CloudFront-CDN-Setup/134711.png)
 
-Wait until the distribution status is **Enabled** and deployment is complete, then open the deployed URL.
+![135129.png](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.2-CloudFront-CDN-Setup/135129.png)
 
-![image017.png](/images/5-Workshop/5.5-Raki-Operations/image017.png)
+Wait until the distribution status is **Enabled** and the update is complete, then open the actual deployed URL.
