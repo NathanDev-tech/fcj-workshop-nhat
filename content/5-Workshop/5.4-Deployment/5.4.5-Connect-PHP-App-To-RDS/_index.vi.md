@@ -10,7 +10,7 @@ pre: " <b> 5.4.5. </b> "
 
 Báo cáo RDS của nhóm có ảnh CloudWatch ghi kết quả `COUNT(*) = 20` từ task kiểm thử MySQL. Kết quả này cho thấy task kiểm thử đã kết nối được đến RDS và đọc được dữ liệu. Bước tiếp theo là xác nhận chính container PHP dùng được kết nối đó khi người dùng thao tác trên website.
 
-![Log truy vấn MySQL từ task Fargate kiểm thử](../../../../images/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/02-rds-fargate-query.png)
+![Log truy vấn MySQL từ task Fargate kiểm thử](../../../../images/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/02-rds-fargate-query.png)
 
 ## Cấu hình kết nối PHP
 
