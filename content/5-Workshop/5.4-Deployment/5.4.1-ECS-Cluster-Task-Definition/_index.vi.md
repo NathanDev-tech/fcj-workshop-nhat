@@ -69,7 +69,6 @@ Vào **Secrets Manager → Secrets**, mở secret RDS để lấy **Secret ARN**
 ![Ảnh thao tác chọn ValueFrom cho hai trường thông tin đăng nhập](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/14-secret-valuefrom.png)
 
 
-
 Ảnh thao tác ghi lại hai trường `username` và `password` với kiểu `ValueFrom`. Với PHP, dùng tên biến mà ứng dụng đọc. Trong dự án này, hai biến là `DB_USER` và `DB_PASS`. Mỗi biến cần trỏ tới đúng khóa JSON tương ứng trong secret.
 
 - `DB_USER` lấy giá trị từ `<SECRET_ARN>:username::`.
@@ -77,7 +76,6 @@ Vào **Secrets Manager → Secrets**, mở secret RDS để lấy **Secret ARN**
 - `DB_HOST` dùng endpoint RDS và `DB_NAME` dùng `bookstoredb`.
 
 Với ARN đầy đủ của secret mà thiếu hậu tố khóa JSON, ECS đưa toàn bộ nội dung secret vào biến. Khi chọn từng khóa JSON, dùng Fargate platform **1.4.0 trở lên** trên Linux. Lưu revision mới và ghi lại số revision để chọn đúng khi chạy task. Nếu giá trị secret thay đổi sau đó, khởi chạy task mới để nhận giá trị mới. [AWS về đưa secret vào biến môi trường ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
-
 
 ## Kết luận
 

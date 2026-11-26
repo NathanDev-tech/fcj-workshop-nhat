@@ -42,7 +42,6 @@ After we saved the task definition, the Console showed `RakiBookery-task:1` as `
 
 ![RakiBookery-task:1 is ACTIVE after creation](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/08-task-created.png)
 
-> **Screenshot to add.** After saving the revision with the database variables, capture its revision number, image URI, port `80`, and task execution role. Capture the saved `DB_USER` and `DB_PASS` secret references and the `awslogs` log group and stream prefix. Use the revision details or JSON view and keep secret values hidden.
 
 ## Step 3. Give ECS permission to read the secret
 
@@ -82,7 +81,6 @@ When we enter the full secret ARN without a JSON key at the end, ECS puts the wh
 
 Before testing with the ALB, check that the task uses the expected revision. In the task details, record the image digest if the Console shows it. Check the Apache startup message in the log stream for container `Main`. After a test with a standalone task, stop that task when it is no longer needed.
 
-> **Screenshot to add.** Capture the PHP task with its task ID, revision, and `RUNNING` status. Then capture the startup log for container `Main` from that same task. If the task stops, capture **Stopped reason** and the last available container log.
 
 ## Conclusion
 

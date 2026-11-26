@@ -42,7 +42,6 @@ If the service already exists, open its settings and compare them with the steps
 
 Check a real URL on the ALB after the target becomes `Healthy`. Then compare the task's private IP with the IP under **Targets**. After an update, record the revision and the time of the browser request. If the application logs identify the task that handled the request, match that task with its registered IP.
 
-> **Screenshot to add.** Capture **Deployments** or **Tasks** with the running revision, then capture **Targets** with its IP and `Healthy` status. Save the RakiBookery page opened through the ALB DNS name from the same test.
 
 ## Conclusion
 

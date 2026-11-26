@@ -61,9 +61,9 @@ Trong **VPC → Security groups**, chọn đúng VPC và kiểm tra quy tắc l�
 - Ba ảnh minh chứng xác nhận cấu hình VPC, subnet và route table tại thời điểm chụp. Kết quả health check và kết nối MySQL được ghi riêng khi kiểm thử ứng dụng.
 
 Dùng ID của task để xác định network interface, subnet và security group thực tế. Kiểm tra đường từ ALB đến task qua TCP `80` và từ task đến RDS qua TCP `3306`. Cuối cùng, xác nhận task có thể khởi động với image từ ECR và giá trị từ Secrets Manager. Các bước này kiểm tra cả đường truyền của ứng dụng và khả năng truy cập dịch vụ AWS khi khởi động.
-![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-alb.png)
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/04-inbound-rules-alb.png)
 
-![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-rds.png)
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/05-inbound-rules-rds.png)
 
 ### Kết luận
 

@@ -39,7 +39,6 @@ RDS lưu danh mục và dữ liệu nghiệp vụ bên ngoài container PHP. DB 
 
 Khi instance ở trạng thái **Available**, lấy endpoint và cổng trong **Connectivity & security**. Từ máy nhập liệu đã được duyệt, mở MySQL client, chọn `bookstoredb`, nhập tệp SQL và kiểm tra các bảng cần có. Chuẩn bị tài khoản MySQL dành cho PHP với quyền cần thiết cho ứng dụng. Kiểm tra riêng tài khoản này với tài khoản dùng để nhập dữ liệu.
 
-> **Ảnh cần bổ sung.** Chụp chi tiết DB subnet group có ID hai subnet và Availability Zone, cùng các inbound rule đã lưu của RDS cho client được duyệt. Sau khi nhập, chụp schema, danh sách bảng và kết quả truy vấn thử. Che thông tin xác thực và dữ liệu riêng tư.
 
 ### Kết quả và kiểm tra
 

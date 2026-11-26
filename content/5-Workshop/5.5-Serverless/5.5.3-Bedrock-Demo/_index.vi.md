@@ -170,8 +170,6 @@ Các ID trong prompt là ví dụ định dạng. Mã kiểm tra kiểu dữ li�
 
 ![Trích system prompt cho tra cứu nhà sách và gợi ý sách trong mã Lambda](../../../../images/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/04-system-prompts-source.png)
 
-> **Ảnh cần bổ sung.** Chụp câu trả lời từ tài liệu có `request_id` và log `KB retrieved` tương ứng. Chụp inference profile đang dùng để đối chiếu với biến model trong Lambda.
-
 ## 4. Xây dựng luồng đọc danh mục RDS
 
 Nhóm xây dựng hàm `get_books` bằng PyMySQL. Hàm đọc thông tin đăng nhập từ Secrets Manager và kết nối tới schema `bookstoredb` qua cổng `3306`. Mã sử dụng `global-bundle.pem` để kiểm tra chứng chỉ TLS của RDS.

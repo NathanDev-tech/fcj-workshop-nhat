@@ -170,7 +170,6 @@ The IDs in the prompt show the expected format. The code checks their type, acce
 
 ![System prompt excerpts for store information and book suggestions in Lambda](../../../images/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/04-system-prompts-source.png)
 
-> **Screenshot to add.** Capture an answer from the documents with its `request_id` and matching `KB retrieved` log. Capture the inference profile in use and compare it with the Lambda model variable.
 
 ## 4. Build the RDS catalog flow
 

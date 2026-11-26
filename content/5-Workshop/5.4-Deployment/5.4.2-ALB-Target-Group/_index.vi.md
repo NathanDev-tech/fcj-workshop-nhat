@@ -40,7 +40,6 @@ Dùng đúng VPC của ECS Service. Chuẩn bị hai public subnet thuộc hai A
 
 ![Health Check dùng traffic port và chấp nhận mã HTTP 200](../../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/08-health-check-settings.png)
 
-
 ## Kết luận
 
 Nhóm em đã cấu hình ALB dạng Internet-facing với listener HTTP cổng `80`, Target Group dạng IP và Health Check HTTP. Các thiết lập này xác định đường chuyển tiếp yêu cầu đến container PHP và cách ALB kiểm tra từng target. Bước tiếp theo là liên kết ECS Service với Target Group này và kiểm tra truy cập website qua ALB.

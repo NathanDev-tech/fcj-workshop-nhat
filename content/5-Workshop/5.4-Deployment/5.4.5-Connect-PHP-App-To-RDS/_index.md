@@ -30,8 +30,6 @@ The MySQL test task's **Logs** tab shows the same task ID as the CloudWatch log 
 
 Use the same task definition revision in the ECS service and the approved test account for both tests. For the read test, pick a sample book and compare its name and price on the catalog page with the database values. For the write test, use a permitted action with test data, such as editing a test book. Refresh the page and check the changed value. If you can access MySQL from an approved client, confirm the saved row using the test book's ID.
 
-> **Screenshot to add.** Capture the running PHP task's ID and revision, then the catalog page with the test book's ID, name, and price. For the write test, capture the changed value after refreshing the page and the matching row in RDS when a database client is available. Include the task's application log for the same test time. Use sample data and hide account details.
-
 ## Check connection errors
 
 If the connection times out, our team checks DNS and the network path. If MySQL rejects the login, we check the MySQL user and the secret values passed to the container. To show that the application works, save the browser action and the log for that request.

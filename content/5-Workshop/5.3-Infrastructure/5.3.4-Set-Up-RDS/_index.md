@@ -38,8 +38,6 @@ The database stores the catalog and business data outside the PHP container. The
 
 After the instance becomes **Available**, copy its endpoint and port from **Connectivity & security**. From the approved import host, open the MySQL client, select `bookstoredb`, import the SQL, and check that the expected tables exist. Use a dedicated MySQL user for the PHP application with just the permissions it needs. Test this MySQL user separately from the user used to import data.
 
-> **Screenshot to add.** Capture the DB subnet group details with the two subnet IDs and Availability Zones, plus the saved RDS inbound rules for approved clients. After import, show the schema, table list, and a test query result. Hide credentials and private data.
-
 ### Results and checks
 
 We used a MySQL client in the `rakibookery-rds-connectivity-test` task to query the `book` table. The test task ran in a public subnet. RDS stayed set to **Public access = No**. CloudWatch recorded `COUNT(*) = 20`, which shows that the task could connect and read the data. Section 5.4.5 shows how to check reads and writes from the PHP website.
