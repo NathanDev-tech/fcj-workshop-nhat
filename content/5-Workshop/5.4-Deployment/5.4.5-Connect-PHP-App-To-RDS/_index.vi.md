@@ -6,20 +6,38 @@ chapter: false
 pre: " <b> 5.4.5. </b> "
 ---
 
-## Từ truy vấn thử đến thao tác trên website
+## Mục tiêu
 
-Báo cáo RDS của nhóm có ảnh CloudWatch ghi kết quả `COUNT(*) = 20` từ task kiểm thử MySQL. Kết quả này cho thấy task kiểm thử đã kết nối được đến RDS và đọc được dữ liệu. Bước tiếp theo là xác nhận chính container PHP dùng được kết nối đó khi người dùng thao tác trên website.
+Log CloudWatch của task kiểm thử MySQL hiển thị kết quả `COUNT(*) = 20`. Kết quả này cho thấy task kiểm thử đã kết nối được đến RDS và đọc được dữ liệu. Mục tiêu ở đây là kiểm tra kết nối từ chính container PHP khi người dùng đọc hoặc thay đổi dữ liệu trên website.
 
-![Log truy vấn MySQL từ task Fargate kiểm thử](../../../../images/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/02-rds-fargate-query.png)
+![Log CloudWatch của task Fargate kiểm thử MySQL, truy vấn RDS trả về 20 bản ghi](../../../../images/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/01-rds-fargate-query.png)
 
 ## Cấu hình kết nối PHP
 
-1. Đối chiếu RDS MySQL có **Public access = No** và chỉ mở TCP `3306` từ security group của workload được cấp quyền. Dùng DNS endpoint của RDS cho `DB_HOST` và `bookstoredb` cho `DB_NAME`.
-2. Ánh xạ thông tin đăng nhập trong Secrets Manager vào `DB_USER` và `DB_PASS`. Kiểm tra tên các khóa trong secret và tên biến PHP đọc, sau đó triển khai revision mới cho ECS Service.
-3. Mở danh mục sách để kiểm tra thao tác đọc. Tiếp theo, dùng dữ liệu thử để thực hiện một thao tác ghi, tải lại trang rồi đối chiếu kết quả. Ghi thời điểm yêu cầu và xem log PHP nếu giao diện chỉ trả thông báo lỗi chung.
+**1. Kiểm tra cấu hình mạng.** Xác nhận RDS for MySQL có **Publicly accessible = No**. Trong security group của RDS, kiểm tra quy tắc inbound cho phép TCP `3306` từ security group của task PHP. Dùng DNS endpoint của RDS cho `DB_HOST` và `bookstoredb` cho `DB_NAME`.
 
-## Đánh giá kết quả
+![Ảnh nguồn RDS thể hiện endpoint, cổng 3306, subnet group và Publicly accessible No](../../../../images/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/02-rds-private-network.png)
 
-Khi gặp lỗi kết nối, nhóm em kiểm tra DNS và đường mạng nếu kết nối bị timeout, còn lỗi xác thực thì đối chiếu tài khoản và secret. Minh chứng ở cấp ứng dụng cần gắn với thao tác cụ thể trên trình duyệt và log tương ứng. Ảnh truy vấn thử ở trên là bằng chứng của bài kiểm tra mạng và MySQL.
+**2. Khai báo biến kết nối cơ sở dữ liệu.** Ánh xạ thông tin đăng nhập trong Secrets Manager vào `DB_USER` và `DB_PASS`. Kiểm tra tên các khóa trong secret và tên biến PHP đọc, sau đó triển khai revision mới cho ECS Service.
+
+**3. Kiểm tra revision đã triển khai.** Chờ ECS Service triển khai ổn định. Xác nhận task đang phục vụ website dùng revision có cấu hình mới rồi mới thử từ trình duyệt.
+
+Tab **Logs** của task kiểm thử MySQL hiển thị ID task trùng với log CloudWatch ở trên. Nhờ đó, có thể đối chiếu kết quả truy vấn với đúng task kiểm tra kết nối cơ sở dữ liệu. Các bước bên dưới kiểm tra thao tác dữ liệu từ website PHP.
+
+![ECS Logs hiển thị ID task kiểm thử MySQL và kết quả COUNT bằng 20](../../../../images/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/03-ecs-mysql-test-log.png)
+
+## Kiểm thử một thao tác đọc và một thao tác ghi
+
+Dùng cùng revision của task definition trong ECS Service và tài khoản thử đã được cấp quyền cho cả hai ca. Với ca đọc, chọn một sách mẫu rồi so sánh tên và giá trên trang danh mục với dữ liệu MySQL. Với ca ghi, chọn thao tác được phép với dữ liệu thử, chẳng hạn chỉnh sửa một sách mẫu. Tải lại trang và xác nhận giá trị vừa lưu. Nếu truy cập MySQL được từ client đã duyệt, đối chiếu bản ghi theo ID của sách thử.
+
+
+## Kiểm tra lỗi kết nối
+
+Nếu kết nối hết thời gian chờ, nhóm em kiểm tra DNS và đường mạng. Nếu MySQL từ chối đăng nhập, nhóm đối chiếu tài khoản MySQL và các giá trị secret đã truyền vào container. Minh chứng ở cấp ứng dụng cần gắn với thao tác cụ thể trên trình duyệt và log tương ứng.
 
 [AWS ECS và Secrets Manager](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
+
+## Kết luận
+
+Truy vấn trả về `COUNT(*) = 20`, xác nhận task Fargate kiểm thử đã kết nối RDS và đọc được dữ liệu. Với ứng dụng PHP, kết nối phụ thuộc vào endpoint RDS, quy tắc security group và thông tin đăng nhập từ Secrets Manager. Cần đối chiếu thao tác đọc và thay đổi đã lưu sau khi tải lại trang để xác nhận kết nối cơ sở dữ liệu từ website.
+

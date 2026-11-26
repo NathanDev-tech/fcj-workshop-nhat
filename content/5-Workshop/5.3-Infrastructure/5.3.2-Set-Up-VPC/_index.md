@@ -9,61 +9,65 @@ pre : " <b> 5.3.2 </b> "
 
 ### Objective
 
-Work establishes networking for **users → Application Load Balancer (ALB) → ECS Fargate → RDS for MySQL**. The ALB receives traffic in public subnets. The PHP container and RDS communicate in private subnets within the same VPC.
+Our goal is to set up the RakiBookery network so user requests go to the **Application Load Balancer (ALB)**, then to **ECS Fargate**. The application uses **RDS for MySQL**. The ALB receives traffic in public subnets. In this design, the PHP tasks and RDS use private subnets in the same VPC.
 
-### Prerequisites
+### What we need
 
-- Sign in to the project AWS account, select **Asia Pacific (Singapore)** (`ap-southeast-1`), and use the deployment identity reviewed in [section 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}).
-- Confirm the **VPC ID**, IPv4 CIDR, and two Availability Zones. The November 12, 2026 screenshots show `RakiBookery-vpc-01` with CIDR `10.11.0.0/16`. The RDS screenshot in section 5.3.4 shows a VPC with the same name and a different ID. Use the VPC ID for the environment you are configuring.
-- Confirm the PHP container port, the ALB health check port, and the AWS services the task needs during startup.
+- Sign in to the project AWS account and select **Asia Pacific (Singapore)** (`ap-southeast-1`). Use the approved deployment identity from [section 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}).
+- Check the **VPC ID**, the IPv4 range, and the two Availability Zones. The VPC `RakiBookery-vpc-01` has the CIDR `10.11.0.0/16`. The RDS screenshot in section 5.3.4 shows a VPC with the same name and a different ID. Use the VPC ID from the environment where you are working.
+- Check the PHP container port, the ALB health check port, and which AWS services the task needs when it starts.
 
-### Deployment configuration
+### Why we use public and private subnets
 
-#### 1. Create or inspect the VPC and subnets
+The ALB receives web traffic in public subnets in two Availability Zones. The task accepts traffic from the ALB, and RDS accepts MySQL traffic from the approved application and import clients. Each subnet's route table controls where packets can go. Security groups control which connections the resources accept. We check both layers for the same VPC.
 
-1. Open **VPC → Your VPCs**. If the project VPC exists, check the CIDR, **DNS resolution**, and **DNS hostnames** in **Details**. For a new environment, select **Create VPC → VPC only** and enter the approved CIDR.
-2. Open **Subnets** and verify that each subnet belongs to the intended VPC. If provisioning new subnets, use **Create subnet** and refer to the layout recorded in the screenshots:
+### Deployment setup
 
-   - `ap-southeast-1a`: public `10.11.1.0/24`, private `10.11.3.0/24`.
-   - `ap-southeast-1b`: public `10.11.2.0/24`, private `10.11.4.0/24`.
+#### 1. Create or check the VPC and subnets
 
-![RakiBookery VPC resource map with four subnets](../../../images/5-Workshop/5.3-Infrastructure/vpc-resource-map.png)
+1. Open **VPC → Your VPCs**. If the VPC already exists, open **Details** and check the CIDR, **DNS resolution**, and **DNS hostnames**. For a new environment, choose **Create VPC → VPC only** and enter the approved CIDR.
+2. Open **Subnets** and check that each subnet is in the right VPC. If you need new subnets, choose **Create subnet** and use the settings shown in the Console screenshot.
 
-*Figure 5.3.2a. The resource map shows two AZs, each with one public and one private subnet.*
+   - `ap-southeast-1a` uses public subnet `10.11.1.0/24` and private subnet `10.11.3.0/24`.
+   - `ap-southeast-1b` uses public subnet `10.11.2.0/24` and private subnet `10.11.4.0/24`.
 
-#### 2. Attach an Internet Gateway and configure routes
+![Resource map with the four RakiBookery subnets](../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/01-vpc-resource-map.png)
 
-1. In **VPC → Internet gateways**, verify that `RakiBookery-igw` is attached to the intended VPC. For a new setup, create the gateway and select **Attach to a VPC**.
-2. Open **Route tables → Routes** for the public route table. Add or verify the `0.0.0.0/0` default route to the Internet Gateway. The `10.11.0.0/16 → local` route supports internal traffic.
+#### 2. Attach the Internet Gateway and set up routes
 
-![RakiBookery public route table](../../../images/5-Workshop/5.3-Infrastructure/vpc-public-route-table.png)
+1. In **VPC → Internet gateways**, check that `RakiBookery-igw` is attached to the right VPC. For a new setup, create the gateway and choose **Attach to a VPC**.
+2. For the public route table, open **Route tables → Routes**. Add or check the default route `0.0.0.0/0` to the Internet Gateway. The route `10.11.0.0/16 → local` is for traffic inside the VPC.
 
-*Figure 5.3.2b. The public route table sends its default route to the Internet Gateway.*
+![RakiBookery public route table](../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/02-vpc-public-route-table.png)
 
-3. Under **Subnet associations**, verify both public subnets are associated with the public route table. The screenshots show that the private subnets use the main route table implicitly. At deployment, check the effective route table for each private subnet and make sure it has no direct default route to the Internet Gateway.
+3. Open **Subnet associations** and check that both public subnets use the public route table. The Console screenshot shows that the private subnets use the main route table by default. During deployment, check which route table each private subnet uses. Make sure it has no default route that goes straight to the Internet Gateway.
 
-![Public subnet associations and private subnets using the main route table](../../../images/5-Workshop/5.3-Infrastructure/vpc-subnet-associations.png)
+![Public subnet associations and private subnets using the main route table](../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/03-vpc-subnet-associations.png)
 
-*Figure 5.3.2c. Route table associations and CIDRs for the four subnets at capture time.*
+4. Set up outbound access before you run a Fargate task. For a NAT setup, create a public NAT Gateway in a public subnet and add a route from the task subnet to that gateway. For a VPC endpoint setup, create `ecr.api` and `ecr.dkr` interface endpoints with Private DNS. Associate the S3 gateway endpoint with the route table used by the task subnet. If the task uses Secrets Manager or `awslogs`, check that it can reach those services too. On the interface endpoint security group, allow inbound HTTPS `443` from the task security group. Check the option you use during deployment. [AWS guide to private subnets](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat.html) · [AWS guide to ECR VPC endpoints](https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html).
+#### 3. Limit connections with security groups
 
-4. Prepare outbound connectivity before starting Fargate. With NAT, use a public NAT Gateway in a public subnet and route the task subnet to it. With VPC endpoints, configure `ecr.api` and `ecr.dkr` interface endpoints with private DNS and an S3 gateway endpoint on the task route table. If the task uses Secrets Manager or `awslogs`, verify connectivity to those services. Allow inbound HTTPS `443` from the task security group on the interface endpoint security group. Verify the chosen options during deployment. [AWS VPC private subnet guidance](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat.html) · [AWS ECR VPC endpoints](https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html).
+In **VPC → Security groups**, choose the right VPC and check the traffic rules for each component.
 
-#### 3. Restrict connections with security groups
+- **ALB.** Allow incoming traffic on the listener port in use. For example, use HTTPS `443` if you set up an HTTPS listener.
+- **ECS Fargate.** Allow incoming traffic from the ALB security group on the container port. If the health check uses a different port, allow that port too. Turn off **Assign public IP** when starting a task in a private subnet.
+- **RDS for MySQL.** Allow inbound TCP `3306` from the task security group. Attach this security group to the right RDS instance in [section 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). [AWS guide to ALB security groups](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html).
 
-Under **VPC → Security groups**, choose the intended VPC and configure three sets of inbound rules:
+### Configuration checks
 
-- **ALB.** Allow the active listener port, such as HTTPS `443` after configuring an HTTPS listener.
-- **ECS Fargate.** Allow traffic from the ALB security group on the container port and the health check port if different. Disable **Assign public IP** when launching a task in the private subnets.
-- **RDS for MySQL.** Allow TCP `3306` from the task security group. Assign the database group to the intended RDS instance in [section 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). [AWS ALB security group guidance](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html).
+- Check the VPC ID, the CIDR, the Availability Zone, and the route table each subnet uses. Record the two subnets in the DB subnet group and the RDS security group ID.
+- During Fargate deployment, check that the task can pull the image and read the secret. Then check that the ALB target is **Healthy** and run a MySQL query from the application environment.
+- The three screenshots show the VPC, subnet, and route table settings at the time we took them. We record the health check and MySQL connection results separately when we test the application.
 
-### Verify the configuration
+Use the task ID to find the task's network interface, subnet, and security group. Check the path from the ALB to the task on TCP `80`, and from the task to RDS on TCP `3306`. Finally, check that the task can start with its ECR image and Secrets Manager values. These checks show whether the application can connect and reach the AWS services it needs at startup.
 
-- Check the VPC ID, CIDR, AZ, and effective route table for each subnet. Record both subnets used by the DB subnet group and the RDS security group ID.
-- During Fargate deployment, verify that the task pulls its image and reads the secret. Then check for a **Healthy** ALB target and run a MySQL query from the application environment.
-- The three screenshots establish the VPC, subnet, and route table configuration at capture time. Record health check and MySQL connection results during application testing.
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-alb.png)
+
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-rds.png)
 
 ### Conclusion
 
-Subnets and route tables define traffic paths. Security groups restrict connections along the ALB → Fargate → RDS path. These network settings are the inputs for application and database deployment.
+Subnets and route tables show where traffic can go. Security groups control which connections are allowed along the ALB → Fargate → RDS path. We use these network settings in the next steps to deploy the application and database.
+
 
 

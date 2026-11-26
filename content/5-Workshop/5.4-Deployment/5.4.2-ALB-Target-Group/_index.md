@@ -8,35 +8,39 @@ pre : " <b> 5.4.2 </b> "
 
 ## Objective
 
-After preparing the ECS cluster and task definition, our team needed a browser entry point for the RakiBookery PHP site. Fargate tasks may be replaced during deployment, so the Application Load Balancer (ALB) receives requests and the target group tracks the task IPs that can serve them.
+After we set up the ECS cluster and task definition, our team needed an address the browser could use to open the RakiBookery PHP website. During an ECS deployment, the service can replace Fargate tasks. We use an Application Load Balancer (ALB) to receive web requests. Its target group holds the registered task IP addresses.
 
-## ALB and target group configuration
+## Prepare the listener and network
 
-**1. Use IP targets.** Fargate tasks use `awsvpc` and have their own IPs. Create `RakiBookery-tg` with `IP` as the target type and use HTTP port `80` to match the Apache container in section 5.4.1. ECS registers the task IPs when the service starts.
+Use the VPC that runs the ECS service. Prepare two public subnets in different Availability Zones. Also prepare the ALB security group and the task security group. For a new environment, choose **EC2 → Load Balancers → Create load balancer → Application Load Balancer**. Select **Internet-facing**, the two public subnets, and the ALB security group. Use the listener and target group settings below. [ALB deployment document](https://app.notion.com/p/ALB-Target-Group-Health-Check-3f84cb9c2604807caf58cceadee8794c).
 
-![Creating the IP target group RakiBookery-tg on HTTP port 80](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/01-target-group-ip.png)
+![Source screenshot showing RakiBookery-alb with Internet-facing and IPv4 selected](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/01-alb-internet-facing.png)
 
-![The newly created target group has no registered targets](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/02-target-group-created.png)
+## Set up the ALB and target group
 
-**2. Check the ALB listener.** The workshop configuration uses listener `HTTP:80` on `RakiBookery-alb` in Singapore (`ap-southeast-1`). The listener forwards requests to the application target group.
+**1. Create an IP target group.** Fargate tasks use `awsvpc` and each task has its own IP address. We created `RakiBookery-tg` with the `IP` target type. We used HTTP port `80` to match the Apache container in section 5.4.1. When the service starts tasks, ECS registers their IP addresses with this target group.
 
-![ALB network mapping across two RakiBookery public subnets](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/03-alb-network-mapping.png)
+![Create the RakiBookery-tg IP target group on HTTP port 80](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/02-target-group-ip.png)
 
-![Active ALB with HTTP:80 forwarding to RakiBookery-tg](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/04-alb-http-listener.png)
+![The new target group has zero registered targets](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/03-target-group-created.png)
 
-**3. Check the security groups at both ends.** Allow traffic from the configured sources on the ALB listener. Allow TCP `80` from the ALB security group on the task security group. Review the path to the health check port if it differs from the application port.
+**2. Check the ALB listener.** In the workshop setup, `RakiBookery-alb` in Singapore (`ap-southeast-1`) uses the `HTTP:80` listener. Its rule sends each request to the application's target group. The listener receives the request, and the target group lists the tasks that can receive it.
 
-![HTTP port 80 inbound rule on the ALB security group](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/05-alb-security-group.png)
+![The ALB uses two public subnets in the RakiBookery VPC](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/04-alb-network-mapping.png)
 
-**4. Configure the health check.** The ALB sends an HTTP request to the configured path on each target. The screenshots show path `/`, traffic port `80`, and success code `200`. The interval is `30` seconds, the timeout is `5` seconds, and both the healthy and unhealthy thresholds are `2` consecutive checks. During testing, verify that `/` returns `200`.
+![The active ALB uses HTTP:80 to send requests to RakiBookery-tg](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/05-alb-http-listener.png)
 
-![HTTP health check on the / path](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/06-health-check-path.png)
+**3. Check both security groups.** The ALB security group allows incoming traffic on the listener port from the sources in its rules. The task security group allows traffic on TCP port `80` from the ALB security group. If the health check uses a different port, check whether the ALB can reach that port too.
 
-![Health check uses the traffic port and accepts HTTP 200](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/07-health-check-settings.png)
+![The ALB security group's inbound rule for HTTP port 80](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/06-alb-security-group.png)
 
-## Results and evidence
+**4. Set up the health check.** The ALB sends an HTTP request to a test path on each target. The screenshots show the path `/`, traffic port `80`, and success code `200`. The source settings show an interval of `30` seconds and a timeout of `5` seconds. The healthy and unhealthy thresholds are both `2` checks in a row. During testing, check that `/` returns `200`. [AWS ALB health checks](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html).
 
-The team notes record the ALB, target group, health check, listener, and security groups as configured. At the time of the notes, the team was waiting to start Fargate to confirm healthy targets and reach the site. [Section 5.4.3]({{< relref "/5-Workshop/5.4-Deployment/5.4.3-Link-ECS-with-ALB" >}}) explains task registration and browser verification.
+![The HTTP health check uses the / path](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/07-health-check-path.png)
 
-The screenshots above document the ALB and target group configuration at setup time. [Team ALB notes](https://app.notion.com/p/ALB-Target-Group-Health-Check-3f84cb9c2604807caf58cceadee8794c) · [AWS health check documentation](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/target-group-health-checks.html).
+![The health check uses the traffic port and accepts HTTP 200](../../../images/5-Workshop/5.4-Deployment/5.4.2-ALB-Target-Group/08-health-check-settings.png)
+
+## Conclusion
+
+We configured an internet-facing ALB with an HTTP listener on port `80`, an IP target group, and an HTTP health check. These settings define how requests reach the PHP container and how the ALB checks each target. The next step is to connect the ECS service to this target group and test website access through the ALB.
 

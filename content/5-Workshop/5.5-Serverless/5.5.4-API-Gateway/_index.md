@@ -10,38 +10,42 @@ aliases:
 
 ## Objective
 
-After testing the Lambda handler locally in section 5.5.3, our team needed an HTTPS endpoint for the RakiBookery website to send questions to the book assistant. API Gateway receives the request, forwards the JSON body to Lambda, and returns the result to the website. This lets us verify the API call before testing it in a browser.
+After the local Lambda handler tests in section 5.5.3, our team needs an HTTPS address for the RakiBookery website to send questions to the book assistant. API Gateway gets the request from the website, sends the JSON body to Lambda, and returns the result. We can test the API call first, then try it in a browser.
 
 ## Request flow
 
 ```text
 RakiBookery website → HTTP API → Book assistant Lambda → Bedrock and data sources
-RakiBookery website ← API Gateway HTTP response ← Lambda result
+RakiBookery website ← HTTP response from API Gateway ← Lambda result
 ```
+
+## Test inputs and access
+
+Prepare the assistant function, a sample question, and the browser origin of the RakiBookery site. Decide how callers can access the route before connecting it to the website. CORS controls what a browser can read across origins. If the route requires sign-in, configure an authorizer that checks the user's access. If a test route is open, run it within the test scope and set an appropriate rate limit.
 
 ## Step 1. Create the HTTP API and connect Lambda
 
-In Singapore (`ap-southeast-1`), open **API Gateway → Create API → HTTP API**. Choose a **Lambda** integration and select the assistant function from [section 5.5.3]({{< relref "/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/" >}}). Use payload format **2.0** for the proxy integration. The handler can read the method from `requestContext.http.method` and decode the `body` field. Check the function's resource-based policy for API Gateway invoke permission. [AWS Lambda proxy integration documentation](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html).
+In the Singapore Region (`ap-southeast-1`), open **API Gateway → Create API → HTTP API**. Choose the **Lambda** integration and select the assistant function from [section 5.5.3]({{< relref "/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/" >}}). Use payload format **2.0** for the Lambda proxy integration. The handler reads the HTTP method from `requestContext.http.method` and parses the JSON in `body`. Check the function's resource-based policy to confirm that API Gateway has `lambda:InvokeFunction` permission for the correct function. [AWS guide to Lambda proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html).
 
-<!-- Image 01 when available: API overview and Region. -->
-<!-- Image 02 when available: Lambda target and integration payload format. -->
+> **Screenshot to add.** Capture the HTTP API overview in Singapore and **Integrations** showing the target Lambda and payload format `2.0`.
 
-## Step 2. Configure the route and stage
+## Step 2. Set up the route and stage
 
-Use `POST /chat` as the example route and attach the Lambda integration. In **Stages**, confirm which stage receives requests and whether **Auto-deploy** is enabled. For the `$default` stage, append `/chat` to the invoke URL. For a named stage, use the stage URL displayed in the console and append the route path. Compare the final URL with the website configuration. [AWS HTTP API stages documentation](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-stages.html).
+Use `POST /chat` as an example route and connect it to the Lambda integration. In **Stages**, check which stage gets requests and whether **Auto-deploy** is on. For the `$default` stage, add `/chat` directly to the invoke URL. For a named stage, copy the URL from the console and add the route path. Check that this matches the URL in the website setup. [AWS guide to HTTP API stages](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-stages.html).
 
-<!-- Image 03 when available: route method and integration. -->
-<!-- Image 04 when available: stage and invoke URL. -->
+> **Screenshot to add.** Capture **Routes** showing the actual method and path. Capture **Stages** with the stage name and invoke URL.
 
-## Step 3. Configure CORS for the website
+## Step 3. Set up CORS for the website
 
-If the website and API use different origins, set **Allow origins** to the website origin in use, such as the HTTPS address users open through CloudFront. Allow `POST` and the `Content-Type` header so the browser can send JSON. If the application sends a token, also allow the `Authorization` header and verify the authorizer against the project's sign-in flow. With CORS enabled on the HTTP API, API Gateway handles the `OPTIONS` preflight and sets the CORS headers from its configuration. [AWS HTTP API CORS documentation](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html).
+If the website and API have different origins, set **Allow origins** to the website origin. For example, use the HTTPS address that users open through CloudFront. Allow the `POST` method and the `Content-Type` header so the browser can send JSON. If the application sends a token, allow the `Authorization` header too. Check that the authorizer matches the sign-in setup. When CORS is on for the HTTP API, API Gateway handles the `OPTIONS` preflight and returns the CORS headers set on the API. [AWS guide to CORS for HTTP APIs](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-cors.html).
 
-<!-- Image 05 when available: CORS origin, method, and headers. -->
+> **Screenshot to add.** Capture CORS settings with the website origin, allowed methods, and allowed headers.
 
-## Step 4. Verify the API and browser request
+For a first test, use the invoke URL from **Stages** and the actual route path. If you enable access logs for the stage, include the API Gateway request ID, route, and status. The `request_id` in the response body comes from Lambda and is used to find the function log. [AWS HTTP API access logging](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-logging.html).
 
-Send a `POST` request with the `Content-Type: application/json` header and the following body.
+## Step 4. Test the API and the browser
+
+Send a `POST` request to the route. Set the header to `Content-Type: application/json` and send this body.
 
 ```json
 {
@@ -49,13 +53,13 @@ Send a `POST` request with the `Content-Type: application/json` header and the f
 }
 ```
 
-- **Valid question.** Check the HTTP status and JSON body. After successful retrieval and generation, the handler is expected to return `200` with `answer` and `request_id`. Compare the answer with the source document in the Knowledge Base.
-- **Missing question.** Send `{}` to the same route. The handler is expected to return `400` with `BAD_REQUEST`. This checks request delivery to Lambda and the return of its validation error.
-- **Website request.** Open the browser's **Network** panel and send a question from the website. Check the URL, method, status, and displayed response. If a direct request works and the browser reports an error, inspect the preflight request and origin. For Lambda errors, use the response `request_id` to inspect CloudWatch as described in [section 5.6.5]({{< relref "/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/" >}}).
+- **Valid question.** Check the HTTP status and JSON response. If the handler finds the information and builds an answer, it should return `200` with `answer` and `request_id`. For this question, we compare the answer with the Knowledge Base document.
+- **Website test.** Open the browser's **Network** panel and send a question from the website. Check the URL, method, HTTP status, and answer on the page. Use the response `request_id` to find the matching Lambda log as shown in [section 5.6.5]({{< relref "/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/" >}}).
 
-<!-- Image 06 when available: responses for a valid question and a missing prompt. -->
-<!-- Image 07 when available: browser Network request or displayed answer. -->
+After testing with an API client, send the same question from the browser. Compare the JSON response with the answer on the page to check the path from the website to Lambda.
+
+> **Screenshot to add.** Capture the successful API response with `answer` and `request_id`. Capture the browser's **Network** request, the answer on the page, and the matching Lambda log. Hide authorization headers and tokens.
 
 ## Conclusion
 
-The project Lambda handles an API Gateway request body. The example `POST /chat` route documents the configuration and verification flow. Confirm the deployment using the actual route, stage, and response from the RakiBookery environment.
+The Lambda code can read the API Gateway request body. The HTTP API setup shows how to connect the website to the assistant through a Lambda proxy integration, a route, a stage, and CORS. We use `POST /chat` as an example to compare the API URL, JSON response, and answer on the page.

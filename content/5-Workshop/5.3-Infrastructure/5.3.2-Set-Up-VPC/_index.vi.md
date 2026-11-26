@@ -9,13 +9,17 @@ pre : " <b> 5.3.2 </b> "
 
 ### Mục tiêu
 
-Tổ chức mạng cho RakiBookery theo luồng **người dùng → Application Load Balancer (ALB) → ECS Fargate → RDS MySQL**. ALB nhận lưu lượng ở public subnet. Container PHP và RDS kết nối qua private subnet trong cùng VPC.
+Tổ chức mạng cho RakiBookery theo luồng **người dùng → Application Load Balancer (ALB) → ECS Fargate → RDS for MySQL**. ALB nhận lưu lượng ở public subnet. Theo thiết kế này, các task PHP và RDS được đặt trong private subnet thuộc cùng VPC.
 
 ### Cần chuẩn bị
 
 - Đăng nhập đúng tài khoản AWS của dự án, chọn **Asia Pacific (Singapore)** (`ap-southeast-1`) và dùng danh tính triển khai đã duyệt ở [mục 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}).
 - Xác nhận **VPC ID**, dải IPv4 và hai Availability Zone. Ghi nhận VPC `RakiBookery-vpc-01` có CIDR `10.11.0.0/16`. Ảnh RDS ở mục 5.3.4 ghi nhận một VPC cùng tên nhưng khác ID, nên khi triển khai tiếp cần lấy VPC ID từ chính môi trường đang dùng.
 - Xác định cổng mà container PHP lắng nghe, cổng health check của ALB và các dịch vụ AWS mà task cần gọi khi khởi động.
+
+### Lý do bố trí public subnet và private subnet
+
+ALB nhận lưu lượng web tại các public subnet thuộc hai Availability Zone. Task nhận kết nối từ ALB. RDS nhận kết nối MySQL từ ứng dụng và máy nhập dữ liệu đã được duyệt. Route table của từng subnet xác định đường đi của gói tin. Security group xác định kết nối nào được phép vào tài nguyên. Nhóm kiểm tra cả hai lớp trong cùng VPC.
 
 ### Cấu hình triển khai
 
@@ -27,40 +31,39 @@ Tổ chức mạng cho RakiBookery theo luồng **người dùng → Application
    - `ap-southeast-1a`: public `10.11.1.0/24`, private `10.11.3.0/24`.
    - `ap-southeast-1b`: public `10.11.2.0/24`, private `10.11.4.0/24`.
 
-![Resource map với bốn subnet của RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/vpc-resource-map.png)
-
-*Hình 5.3.2a. Resource map ghi nhận hai AZ, mỗi AZ có một public subnet và một private subnet.*
+![Resource map với bốn subnet của RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/01-vpc-resource-map.png)
 
 #### 2. Kết nối Internet Gateway và phân tuyến
 
 1. Trong **VPC → Internet gateways**, kiểm tra `RakiBookery-igw` đã gắn vào đúng VPC. Nếu dựng mới, tạo gateway và chọn **Attach to a VPC**.
 2. Mở **Route tables → Routes** của bảng public. Tạo hoặc kiểm tra tuyến mặc định `0.0.0.0/0` trỏ tới Internet Gateway. Tuyến `10.11.0.0/16 → local` phục vụ lưu lượng nội bộ.
 
-![Bảng định tuyến public của RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/vpc-public-route-table.png)
-
-*Hình 5.3.2b. Route table public có tuyến mặc định qua Internet Gateway.*
+![Bảng định tuyến public của RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/02-vpc-public-route-table.png)
 
 3. Mở **Subnet associations** và đối chiếu hai public subnet với bảng public. Ảnh Console ghi nhận hai private subnet dùng main route table thông qua liên kết ngầm định. Khi triển khai, kiểm tra route table hiệu lực của từng private subnet và bảo đảm chúng không có tuyến mặc định trực tiếp tới Internet Gateway.
 
-![Public subnet gắn rõ ràng với route table và private subnet dùng main route table](../../../../images/5-Workshop/5.3-Infrastructure/vpc-subnet-associations.png)
+![Public subnet gắn rõ ràng với route table và private subnet dùng main route table](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/03-vpc-subnet-associations.png)
 
-*Hình 5.3.2c. Liên kết route table và CIDR của bốn subnet tại thời điểm chụp.*
-
-4. Chuẩn bị đường ra cho Fargate trước khi chạy task. Với NAT Gateway, dùng NAT công khai trong public subnet và thêm tuyến từ subnet của task tới NAT. Với VPC endpoint, cấu hình interface endpoint `ecr.api` và `ecr.dkr` có Private DNS cùng S3 gateway endpoint cho route table của task. Nếu task dùng Secrets Manager hoặc `awslogs`, kiểm tra đường tới các dịch vụ này. Security group của interface endpoint nhận HTTPS `443` từ security group của task. Các phương án này được đối chiếu riêng khi triển khai. [AWS về VPC với private subnet](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat.html) · [AWS về ECR VPC endpoint](https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html).
+4. Chuẩn bị đường ra cho Fargate trước khi chạy task. Với NAT Gateway, dùng NAT công khai trong public subnet và thêm tuyến từ subnet của task tới NAT. Với VPC endpoint, cấu hình interface endpoint `ecr.api` và `ecr.dkr` có Private DNS. Liên kết S3 gateway endpoint với route table của subnet chạy task. Nếu task dùng Secrets Manager hoặc `awslogs`, kiểm tra đường tới các dịch vụ này. Security group của interface endpoint nhận HTTPS `443` từ security group của task. Các phương án này được đối chiếu riêng khi triển khai. [AWS về VPC với private subnet](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat.html) · [AWS về ECR VPC endpoint](https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html).
 
 #### 3. Giới hạn kết nối bằng security group
 
-Trong **VPC → Security groups**, chọn đúng VPC và cấu hình ba lớp quyền:
+Trong **VPC → Security groups**, chọn đúng VPC và kiểm tra quy tắc lưu lượng của từng thành phần.
 
 - **ALB.** Cho phép inbound ở cổng listener được dùng, ví dụ HTTPS `443` khi đã cấu hình HTTPS.
 - **ECS Fargate.** Cho phép inbound từ security group của ALB tới cổng container và cổng health check nếu hai cổng khác nhau. Khi khởi chạy task trong private subnet, tắt **Assign public IP**.
-- **RDS MySQL.** Cho phép inbound TCP `3306` từ security group của task. Gắn security group này với đúng DB instance ở [mục 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). [AWS về security group cho ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html).
+- **RDS for MySQL.** Cho phép inbound TCP `3306` từ security group của task. Gắn security group này với đúng DB instance ở [mục 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). [AWS về security group cho ALB](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-update-security-groups.html).
 
 ### Kiểm tra cấu hình
 
 - Đối chiếu VPC ID, CIDR, AZ và route table hiệu lực của từng subnet. Ghi lại hai subnet dùng cho DB subnet group và ID security group RDS.
 - Khi triển khai Fargate, xác nhận task kéo được image và đọc secret. Sau đó kiểm tra target của ALB báo **Healthy** và chạy truy vấn MySQL từ môi trường ứng dụng.
 - Ba ảnh minh chứng xác nhận cấu hình VPC, subnet và route table tại thời điểm chụp. Kết quả health check và kết nối MySQL được ghi riêng khi kiểm thử ứng dụng.
+
+Dùng ID của task để xác định network interface, subnet và security group thực tế. Kiểm tra đường từ ALB đến task qua TCP `80` và từ task đến RDS qua TCP `3306`. Cuối cùng, xác nhận task có thể khởi động với image từ ECR và giá trị từ Secrets Manager. Các bước này kiểm tra cả đường truyền của ứng dụng và khả năng truy cập dịch vụ AWS khi khởi động.
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-alb.png)
+
+![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/inbound-rules-rds.png)
 
 ### Kết luận
 

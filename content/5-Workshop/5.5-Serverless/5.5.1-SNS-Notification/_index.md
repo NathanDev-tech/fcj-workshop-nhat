@@ -10,62 +10,56 @@ aliases:
 
 ## Objective
 
-Our team used Amazon SNS to deliver internal RakiBookery notifications for events such as new orders or application errors. We checked email delivery first, then connected Lambda to process messages. These resources are in Singapore (`ap-southeast-1`).
+Our goal is to use Amazon SNS for internal RakiBookery notifications. For example, a message can report a new order or an application error. We checked email delivery first, then connected Lambda to process messages as they arrive. We used the Singapore Region (`ap-southeast-1`) for this work.
+
+## Prepare the topic, publisher, and subscribers
+
+Use a test mailbox that the team can confirm. The topic is the common destination for messages. The publisher sends messages to the topic. The email address and the Lambda function subscribe to receive them. This lets us add another subscriber later without changing the publisher.
 
 ## Implementation
 
-### Step 1 Create the `raki-noti-sns` topic
+### Step 1. Create the `raki-noti-sns` topic
 
-In **Amazon SNS → Topics → Create topic**, select **Standard** and name the topic `raki-noti-sns`. We selected Standard to support direct email and Lambda subscriptions. After creation, record the **Topic ARN** for subscriptions and publisher configuration. [AWS SNS email subscription documentation](https://docs.aws.amazon.com/sns/latest/dg/sns-email-notifications.html).
+In **Amazon SNS → Topics → Create topic**, choose **Standard** and enter the name `raki-noti-sns`. We chose Standard because it supports direct email delivery and Lambda subscriptions. After you create the topic, copy the **Topic ARN**. Use it to create subscriptions or set up the function that sends messages. [AWS guide to SNS email subscriptions](https://docs.aws.amazon.com/sns/latest/dg/sns-email-notifications.html).
 
+![Select Standard and name the topic raki-noti-sns](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/01-topic-create.png)
 
-![Selecting Standard and naming the topic raki-noti-sns](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/01-topic-create.png)
+![The raki-noti-sns topic in the SNS topic list](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/02-topic-list.png)
 
+### Step 2. Subscribe the team email address
 
-![The raki-noti-sns topic in the SNS console](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/02-topic-list.png)
+Open the topic and choose **Create subscription**. Set **Protocol** to `Email` and enter the email address in **Endpoint**. We opened the email from AWS Notifications and chose **Confirm subscription**. We then checked for `Confirmed` in the console. The email address can now receive messages from the topic.
 
+![Create a subscription with the Email protocol](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/03-email-subscribe.png)
 
-### Step 2 Subscribe the team email address
+![AWS Notifications email asking the team to confirm the raki-noti-sns subscription](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/04-email-confirmation-message.png)
 
-Open the topic and choose **Create subscription**. Set **Protocol** to `Email` and enter the recipient as the **Endpoint**. We opened the AWS Notifications email, selected **Confirm subscription**, and checked for status `Confirmed` in the console. The endpoint can then receive messages from the topic.
+![The email subscription status is Confirmed](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/05-email-confirmed.png)
 
+### Step 3. Connect Lambda to the topic
 
-![Creating a subscription using the Email protocol](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/03-email-subscribe.png)
+We created an **AWS Lambda** subscription and selected `raki-sns-handler` as the destination. When a new message arrives, SNS calls Lambda asynchronously, so it does not wait for the function to finish. The handler reads the subject and message and writes them to CloudWatch Logs. See the function setup in [section 5.5.2]({{< relref "/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/" >}}).
 
+The team notes also show a Lambda publisher. It reads the topic ARN from `SNS_TOPIC_ARN`, calls `sns.publish()`, and logs the `MessageId`. The publisher needs `sns:Publish` on the ARN of `raki-noti-sns`. Keep the publisher and the receiving handler separate so the handler does not send a message back to the topic that called it. [AWS guide to receiving SNS events in Lambda](https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html).
 
-![The email subscription shows Confirmed](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/04-email-confirmed.png)
+![Select AWS Lambda and the raki-sns-handler endpoint](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/06-lambda-subscribe.png)
 
+![The Lambda subscription status is Confirmed](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/07-lambda-confirmed.png)
 
-### Step 3 Connect Lambda to the topic
-
-We configured an **AWS Lambda** subscription for `raki-sns-handler`. On delivery, SNS invokes the function to read and log the subject and body. [Section 5.5.2]({{< relref "/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/" >}}) documents the receiving function.
-
-For publishing, the team notes show a Lambda example that reads the ARN from `SNS_TOPIC_ARN`, calls `sns.publish()`, and logs the `MessageId`. Grant a publisher `sns:Publish` for the `raki-noti-sns` ARN. Keep the publisher separate from the receiving handler so it cannot republish an event to the topic that triggered it. [AWS documentation on SNS-triggered Lambda functions](https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html).
-
-
-![Selecting AWS Lambda and raki-sns-handler as the endpoint](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/05-lambda-subscribe.png)
-
-
-![The Lambda subscription shows Confirmed](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/06-lambda-confirmed.png)
-
+![SNS topic showing both Email and Lambda subscriptions as Confirmed](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/11-topic-confirmed-subscriptions.png)
 
 ## Tests and results
 
+![Publish message button on the raki-noti-sns topic page](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/08-publish-console.png)
 
-![Publish message on the raki-noti-sns topic page](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/07-publish-console.png)
+1. **Send a different message for each protocol.** Open the topic and choose **Publish message**. Use the option for different messages by protocol and enter the content for `email`. The screenshot shows the test message in the inbox.
+2. **Send the same message to all subscriptions.** We used the same message for each subscription and sent a test notification for order `#1001`. The screenshot shows the message in the inbox.
+3. **Check the Lambda publisher.** For a test order, compare the time the function ran, the `MessageId` in the response or in CloudWatch Logs, and the email received. This is what we expect to check in a publisher test. The two email screenshots below show messages sent directly from the SNS console.
 
+![Email with the test message for the Email protocol](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/09-email-protocol-test.png)
 
-1. **Protocol-specific payload.** From the topic, choose **Publish message**, use a protocol-specific payload, and set a value for `email`. The inbox capture shows the sample email payload.
-2. **Identical payload.** We sent a test notification for order `#1001` using the same payload for every subscription. The inbox capture records receipt.
-3. **Lambda publisher.** For a test order, match the invocation time, the `MessageId` in the response or CloudWatch Logs, and the received email. This is the expected publisher result. The email captures below document messages published directly from the SNS console.
-
-
-![Email received with the protocol-specific test payload](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/08-email-protocol-test.png)
-
-
-![Email received for test order #1001](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/09-email-order-test.png)
-
+![Test email for order #1001](../../../images/5-Workshop/5.5-Serverless/5.5.1-SNS-Notification/10-email-order-test.png)
 
 ## Conclusion
 
-The Standard topic delivered test messages to email, and the Lambda subscription was configured. This verifies **SNS → email**. Verifying **application → publisher → SNS → email** requires a publisher log and email from the same invocation.
+We confirmed that the Standard topic sent test emails and that we added the Lambda subscription. This checks the **SNS → email** flow. To verify the **application → publisher → SNS → email** flow, we need to match the publisher log to an email with the same test order ID. 

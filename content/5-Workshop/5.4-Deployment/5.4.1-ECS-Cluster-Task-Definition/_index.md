@@ -8,78 +8,82 @@ pre : " <b> 5.4.1 </b> "
 
 ## Objective
 
-After pushing the Docker image to ECR, our team needed to define how the PHP application would run on AWS. An **ECS cluster** groups the tasks. A **task definition** specifies the image, resources, port, permissions, and environment variables. We chose Fargate so AWS would manage the compute infrastructure.
+After we pushed the Docker image to ECR, our team needed to set up the PHP application on AWS. We use an **ECS cluster** to manage the RakiBookery tasks. The **task definition** stores the settings for the container, including its image, CPU, memory, port, roles, and environment variables. We chose Fargate so AWS could manage the servers that run the tasks.
+
+## What we need before creating the task
+
+Prepare the image URI in ECR, `ecsTaskExecutionRole`, and the ARN of the database secret from section 5.3. Check that the log group is ready if the task uses `awslogs`. [ECS deployment document](https://docs.google.com/document/d/1_qk9uf_5MlByeEo4Yaxt8YJSsoqWjTnO/edit). The cluster is where we run and watch tasks. The task definition describes the image, port, CPU, memory, and role. An ECS service later uses that definition to keep tasks running.
 
 ## Step 1. Create the ECS cluster
 
-In Singapore (`ap-southeast-1`), open **Amazon ECS → Clusters → Create cluster**. Name it `RakiBookery-cluster` and select **Fargate only** under infrastructure. ECS confirmed creation and listed the cluster. At the time of the capture, the new cluster had no running tasks.
+In the Singapore Region (`ap-southeast-1`), we opened **Amazon ECS → Clusters → Create cluster**. We named the cluster `RakiBookery-cluster` and chose **Fargate only** under infrastructure. ECS showed a success message and added the cluster to the list. The new cluster had no running tasks when we took the screenshot.
 
 ![Open Create cluster in Amazon ECS](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/01-cluster-create.png)
 
-![Name the cluster RakiBookery-cluster and select Fargate only](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/02-cluster-fargate.png)
+![Name the cluster RakiBookery-cluster and choose Fargate only](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/02-cluster-fargate.png)
 
-![ECS confirms that the RakiBookery cluster was created](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/03-cluster-created.png)
+![ECS confirms that it created the RakiBookery cluster](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/03-cluster-created.png)
 
+## Step 2. Set up the task definition
 
-
-
-## Step 2. Configure the task definition
-
-1. Open **Task definitions → Create new task definition**. Set the family to `RakiBookery-task` and choose **AWS Fargate**.
-2. Choose **Linux/X86_64**, keep the `awsvpc` network mode, and set the task size to **0.25 vCPU and 1 GB of memory**. The architecture matches the `linux/amd64` image from section 5.3.5.
-3. Name the essential container `Main` and enter the image URI from the `rakibookery` ECR repository. The capture shows the `latest` tag used during setup. Set **Container port** to `80`, **Protocol** to `TCP`, and **App protocol** to `HTTP` to match Apache and the ALB setup in the following sections.
+1. Open **Task definitions → Create new task definition**. Name the family `RakiBookery-task` and choose **AWS Fargate**.
+2. Choose **Linux/X86_64**, keep the `awsvpc` network mode, and set **0.25 vCPU and 1 GB of memory**, as shown in our setup screenshot. The x86_64 architecture matches the `linux/amd64` image from section 5.3.5.
+3. Name the main container `Main`, select **Essential**, and enter the image URI from the `rakibookery` ECR repository. The screenshot shows that we used the `latest` tag for this setup. Set **Container port** to `80`, **Protocol** to `TCP`, and **App protocol** to `HTTP`. These settings match Apache and the ALB setup in the next sections.
 
 ![Open Create new task definition](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/04-task-create.png)
 
-![Select the RakiBookery-task family and AWS Fargate](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/05-task-family.png)
+![Choose the RakiBookery-task family and AWS Fargate](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/05-task-family.png)
 
-![Configure Linux X86_64 with 0.25 vCPU and 1 GB of memory](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/06-task-resources.png)
+![Linux X86_64 with 0.25 vCPU and 1 GB of memory](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/06-task-resources.png)
 
 ![The Main container uses an ECR image and port 80](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/07-task-container.png)
 
-
-After saving, the console showed `RakiBookery-task:1` as `ACTIVE` and listed `ecsTaskExecutionRole` as the execution role.
+After we saved the task definition, the Console showed `RakiBookery-task:1` as `ACTIVE`. This means ECS has registered the revision and can use it to start a task. We still need a running task and its logs to check the PHP application. The details also showed `ecsTaskExecutionRole` as the task execution role.
 
 ![RakiBookery-task:1 is ACTIVE after creation](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/08-task-created.png)
 
+> **Screenshot to add.** After saving the revision with the database variables, capture its revision number, image URI, port `80`, and task execution role. Capture the saved `DB_USER` and `DB_PASS` secret references and the `awslogs` log group and stream prefix. Use the revision details or JSON view and keep secret values hidden.
 
-## Step 3. Grant ECS access to the secret
+## Step 3. Give ECS permission to read the secret
 
-In **IAM → Roles → ecsTaskExecutionRole → Permissions**, check `AmazonECSTaskExecutionRolePolicy` for pulling the image and writing CloudWatch logs. Our team created the inline policy `ECSSecretsAccessPolicy` so ECS could retrieve the database credentials when the container starts.
+In **IAM → Roles → ecsTaskExecutionRole → Permissions**, we checked the `AmazonECSTaskExecutionRolePolicy` policy. It lets ECS pull the image and write logs to CloudWatch Logs. We added the inline policy `ECSSecretsAccessPolicy` so ECS could read the database login details from Secrets Manager when the container starts.
 
-The demo policy had broad resource scope. For the PHP deployment, grant `secretsmanager:GetSecretValue` on the specific RDS secret ARN. The source capture shows the default `aws/secretsmanager` key. If the secret uses a customer-managed KMS key, grant `kms:Decrypt` on that key's ARN. Add these permissions to the **task execution role** because ECS reads the secret during startup. [AWS ECS task execution role documentation](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html).
+The demo policy gave access to a wide range of resources. For the PHP setup, give `secretsmanager:GetSecretValue` permission on the ARN of the RDS secret. The screenshot shows the default `aws/secretsmanager` key. If we use a KMS key managed by the team, also give `kms:Decrypt` permission on that key's ARN. Add these permissions to the **task execution role** because ECS reads the secret when the task starts. [AWS ECS task execution role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html).
 
 ![The ecsTaskExecutionRole permissions page and the inline policy option](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/09-execution-role.png)
 
-![IAM confirms that ECSSecretsAccessPolicy was created](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/10-execution-policy-created.png)
+![IAM confirms that it added ECSSecretsAccessPolicy](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/10-execution-policy-created.png)
 
+## Step 4. Create a revision and set environment variables
 
-## Step 4. Create a revision and map environment variables
+Open **Secrets Manager → Secrets**. Open the RDS secret to find its **Secret ARN**. Then open the `RakiBookery-task` family, choose **Create new revision**, and go to **Environment variables** for the `Main` container.
 
-Open the RDS secret in **Secrets Manager → Secrets** to obtain the **Secret ARN**. In the `RakiBookery-task` family, choose **Create new revision** and open **Environment variables** for container `Main`.
-
-![Secret ARN field in Secrets Manager, with identifiers redacted](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/11-database-secret.png)
+![The Secret ARN field in Secrets Manager, with identifiers hidden](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/11-database-secret.png)
 
 ![Open Create new revision in the RakiBookery-task family](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/12-task-revision.png)
 
-![Container environment variables in the new revision form](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/13-environment-editor.png)
+![Container environment variables in the new revision](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/13-environment-editor.png)
 
-![Source capture showing ValueFrom for the two credential fields](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/14-secret-valuefrom.png)
+![ValueFrom for the two login fields](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/14-secret-valuefrom.png)
 
-The setup capture shows `username` and `password` fields with the `ValueFrom` type. For the PHP website, match the variable names to the application and select the individual JSON keys.
+The screenshot shows `username` and `password` with the `ValueFrom` type. For PHP, use the names that the application reads. In this project they are `DB_USER` and `DB_PASS`. Each one must point to its matching JSON key in the secret.
 
-- `DB_USER` reads `<SECRET_ARN>:username::`.
-- `DB_PASS` reads `<SECRET_ARN>:password::`.
-- `DB_HOST` is the RDS endpoint and `DB_NAME` is `bookstoredb`.
+- `DB_USER` gets its value from `<SECRET_ARN>:username::`.
+- `DB_PASS` gets its value from `<SECRET_ARN>:password::`.
+- `DB_HOST` uses the RDS endpoint, and `DB_NAME` uses `bookstoredb`.
 
-A full ARN without a JSON key suffix injects the entire secret into the variable. Selecting a JSON key requires Linux Fargate platform version **1.4.0 or later**. Save the revision and record its number so you can select it for the test run. [AWS documentation on injecting secrets into ECS environment variables](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
+When we enter the full secret ARN without a JSON key at the end, ECS puts the whole secret in the variable. To pick one JSON key, use Fargate platform version **1.4.0 or later** on Linux. Save the new revision and record its number for the test run. If the secret value changes later, start a new task so it receives the new value. [AWS guide to using secrets in ECS environment variables](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
 
-## Step 5. Run a test task and inspect the logs
+## Step 5. Run a test task and check the logs
 
-1. In `RakiBookery-cluster`, open **Tasks → Run new task** and select Fargate and the revision with the secret settings. Check the VPC, subnet, and security group. Our notes describe a trial using a public subnet and public IP. For private subnets, verify connectivity to ECR, S3, Secrets Manager, and CloudWatch Logs through NAT or the appropriate endpoints.
-2. Watch for the task to reach `RUNNING`, then open **Logs** to check container startup. If it reaches `STOPPED`, inspect the **Stopped reason** and container error to narrow down image pulls, secret retrieval, or application startup.
-3. To confirm PHP can connect to MySQL, perform a read through the website and inspect the corresponding PHP task log. See [section 5.4.5]({{< relref "/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/" >}}).
+1. In `RakiBookery-cluster`, open **Tasks → Run new task**. Choose Fargate and the revision with the secret settings. Check the VPC, subnet, and security group before starting the task. For the test run, use a public subnet and a public IP. For a private subnet, make sure the task can reach ECR, S3, Secrets Manager, and CloudWatch Logs through NAT or the right endpoints.
+2. Wait for the task to reach `RUNNING`, then open **Logs** to check if the container started. If the task reaches `STOPPED`, read **Stopped reason** and the container error. Check whether the task could pull the image, read the secret, and start the application.
+3. To check if PHP can connect to MySQL, open a page that reads data from the database. Check the PHP task log for that request. See [section 5.4.5]({{< relref "/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/" >}}).
+
+Before testing with the ALB, check that the task uses the expected revision. In the task details, record the image digest if the Console shows it. Check the Apache startup message in the log stream for container `Main`. After a test with a standalone task, stop that task when it is no longer needed.
+
+> **Screenshot to add.** Capture the PHP task with its task ID, revision, and `RUNNING` status. Then capture the startup log for container `Main` from that same task. If the task stops, capture **Stopped reason** and the last available container log.
 
 ## Conclusion
 
-The team report confirms that the cluster, first task definition revision, and inline policy were created. The final capture shows the `ValueFrom` form during revision setup. The source has no capture of a running PHP task or its Apache logs. The checks above describe how to verify that run before linking the ECS service to the ALB.
+We created the ECS cluster and the first task definition for the PHP container. We also added permission for the task execution role to read the database secret. The image, port, environment variables, and secret settings must match the PHP application. This setup provides the base for running tasks and creating the ECS service in the next sections.
