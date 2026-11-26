@@ -58,7 +58,7 @@ Trong **VPC → Security groups**, chọn đúng VPC và kiểm tra quy tắc l�
 
 - Đối chiếu VPC ID, CIDR, AZ và route table hiệu lực của từng subnet. Ghi lại hai subnet dùng cho DB subnet group và ID security group RDS.
 - Khi triển khai Fargate, xác nhận task kéo được image và đọc secret. Sau đó kiểm tra target của ALB báo **Healthy** và chạy truy vấn MySQL từ môi trường ứng dụng.
-- Ba ảnh minh chứng xác nhận cấu hình VPC, subnet và route table tại thời điểm chụp. Kết quả health check và kết nối MySQL được ghi riêng khi kiểm thử ứng dụng.
+- Ảnh minh chứng xác nhận cấu hình VPC, subnet và route table tại thời điểm chụp. Kết quả health check và kết nối MySQL được ghi riêng khi kiểm thử ứng dụng.
 
 Dùng ID của task để xác định network interface, subnet và security group thực tế. Kiểm tra đường từ ALB đến task qua TCP `80` và từ task đến RDS qua TCP `3306`. Cuối cùng, xác nhận task có thể khởi động với image từ ECR và giá trị từ Secrets Manager. Các bước này kiểm tra cả đường truyền của ứng dụng và khả năng truy cập dịch vụ AWS khi khởi động.
 ![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/04-inbound-rules-alb.png)
