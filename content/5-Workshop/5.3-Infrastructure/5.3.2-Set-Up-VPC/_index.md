@@ -60,11 +60,9 @@ In **VPC → Security groups**, choose the right VPC and check the traffic rules
 - The three screenshots show the VPC, subnet, and route table settings at the time we took them. We record the health check and MySQL connection results separately when we test the application.
 
 Use the task ID to find the task's network interface, subnet, and security group. Check the path from the ALB to the task on TCP `80`, and from the task to RDS on TCP `3306`. Finally, check that the task can start with its ECR image and Secrets Manager values. These checks show whether the application can connect and reach the AWS services it needs at startup.
-
 ![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/04-inbound-rules-alb.png)
 
 ![IB Rules ALB RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/05-inbound-rules-rds.png)
-
 ### Conclusion
 
 Subnets and route tables show where traffic can go. Security groups control which connections are allowed along the ALB → Fargate → RDS path. We use these network settings in the next steps to deploy the application and database.
