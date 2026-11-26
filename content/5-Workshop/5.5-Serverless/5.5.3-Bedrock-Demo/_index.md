@@ -98,7 +98,7 @@ We configured the Managed Knowledge Base `rakibookery-kb` in Singapore, Region `
 
 We ran **Sync** to add the content to the index. The Knowledge Base was `Available`. The sync was `COMPLETE` with **2 documents and 2 metadata files**. Sync updates the indexed content after changes to the source documents. [AWS S3 data source documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/s3-data-source-connector.html).
 
-![Bedrock-KB](../../../../images/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/Bedrock-KB.png)
+![Bedrock-KB](../../../images/5-Workshop/5.5-Serverless/5.5.3-Bedrock-Demo/Bedrock-KB.png)
 
 ### Retrieve document text
 
