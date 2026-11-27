@@ -6,13 +6,13 @@ chapter : false
 pre : " <b> 5.3. </b> "
 ---
 
-## Objectives
+## Objective
 
-In project, the RakiBookery team establishes the AWS foundation for its PHP application. The scope covers VPC networking, application data in RDS for MySQL, separate storage purposes in S3, and the Docker image in ECR. IAM and Secrets Manager manage access and deployment credentials.
+In this project, our team set up the AWS infrastructure for the RakiBookery PHP application. We used a VPC for the network and Amazon RDS for MySQL for application data. We prepared S3 buckets for static files, media, and logs. We built a Docker image for the application and pushed it to ECR. We used IAM for access and Secrets Manager for login details.
 
 ## Architecture overview
 
-The diagram shows the Sprint 1 infrastructure and how it connects to ECS Fargate, the Application Load Balancer, and CloudFront during service integration. The connections represent the system design.
+The diagram shows the basic RakiBookery infrastructure. It also shows how these resources connect to ECS Fargate, the Application Load Balancer, and CloudFront in the system design.
 
 {{< mermaid >}}
 graph TD
@@ -27,14 +27,20 @@ graph TD
     SM["AWS Secrets Manager<br/>MySQL credentials"] --> APP
 {{< /mermaid >}}
 
-- **Application traffic.** The Application Load Balancer receives requests in the public network layer and forwards them to PHP containers on ECS Fargate. The application connects to RDS for MySQL over the private network within the VPC.
-- **Deployment.** When a task starts, ECS pulls the Docker image from ECR and reads MySQL credentials from Secrets Manager according to the task definition.
-- **Storage.** S3 provides three buckets for Static Web, Media, and Logs. The Static Web bucket supplies content for CloudFront delivery. The other buckets hold media and logs according to the application and log delivery configuration.
+- **Application traffic.** The Application Load Balancer receives requests in the public network. It sends them to the PHP container on ECS Fargate. The application connects to RDS for MySQL through the private network in the VPC.
+- **Deployment.** When a task starts, ECS pulls the Docker image from ECR. It also gets the MySQL credentials from Secrets Manager based on the task definition.
+- **Storage.** We use three S3 buckets for Static Web, Media, and Logs. CloudFront serves files from the Static Web bucket. The other two buckets store media and logs based on the settings in the application and the services that send logs.
 
-## Infrastructure work items
+## Design choices and outputs
 
-{{% children sort="Weight" /%}}
+- **Network.** We place the internet-facing ALB in public subnets. The design keeps the application tasks and RDS in private subnets. The next step needs the VPC ID, each subnet ID, and the security groups for the ALB, tasks, and database.
+- **Access and data.** We give each service a role for its work. We prepare the database credentials in Secrets Manager and keep the S3 buckets private. The task definition needs the execution role and the secret ARN. CloudFront and Lambda use the matching buckets in sections 5.4 and 5.5.
+- **Application package.** A container image in ECR lets the team deploy the same PHP build to Fargate. Record the image URI and digest so we can identify the exact build.
+![Resource map with the four RakiBookery subnets](../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/01-vpc-resource-map.png)
 
 ## Conclusion
 
-The infrastructure defines how the PHP application is packaged, connects to its database, and receives permissions on AWS. The ECR image and the RDS connection settings in Secrets Manager are direct inputs to Fargate integration. Deployment validation covers container startup, MySQL connectivity from Fargate, and static content delivery through CloudFront.
+This setup shows how we build a container image for PHP, connect it to the database, and manage access on AWS. To run the application on Fargate, we need the Docker image in ECR and the RDS connection details in Secrets Manager. We check the setup by starting the container, connecting to MySQL from Fargate, and opening a static file through CloudFront.
+## Infrastructure resources
+
+{{% children sort="Weight" /%}}

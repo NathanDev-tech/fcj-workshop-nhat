@@ -8,25 +8,62 @@ pre : " <b> 5.3.5 </b> "
 
 ### Objective
 
-Packages RakiBookery’s PHP application as a Docker image and pushes it to an Amazon ECR private repository in Singapore (`ap-southeast-1`).
+Our goal is to build a Docker image for the RakiBookery PHP application and push it to a private Amazon ECR repository in Singapore (`ap-southeast-1`).
 
-### Prerequisites
+### What we need
 
-Prepare the backend source, Docker for Linux containers, AWS CLI, and an identity authorized to push to the repository. The team built the image for `linux/amd64`.
+Prepare the backend source code, Docker for Linux containers, the AWS CLI, and an identity with permission to push to the repository. We built the image for `linux/amd64`.
 
-### Deployment configuration
+The Dockerfile puts PHP, Apache, and the required extensions in the image. This gives the development machine and Fargate the same application package. The image contains the code and dependencies. At runtime, ECS supplies the database settings from Secrets Manager.
 
-1. Use `php:8.2-apache` as the base image, install `pdo_mysql` and `curl`, enable `mod_rewrite`, and configure Apache to serve the `public` directory on port `80`.
-2. Use `.dockerignore` to exclude `.env`, SQL data, and files outside the build scope. Build `rakibookery:local` and test with MySQL 8.0 on a dedicated Docker network.
-3. Create the `rakibookery` private repository. The deployment report records **Mutable** tags, scan on push enabled, and `AES256` encryption. Authenticate using a temporary ECR token over stdin, tag the image `latest`, push it, and pull it again for verification.
+### Deployment setup
 
-### Results and verification
 
-- Local tests returned HTTP `200` for the home page, `/shop`, and static assets. A missing route returned `404`. The report records a successful connection to the test MySQL container.
-- `aws ecr describe-images` confirmed the `latest` and `manual-test` tags. The report records an OCI index digest starting with `sha256:2364b729` and a successful image pull.
+1. Use `php:8.2-apache` as the base image. Install `pdo_mysql` and `curl` and turn on `mod_rewrite`. Set Apache to serve the `public` directory on port `80`.
+2. Add a `.dockerignore` file so Docker leaves out `.env`, SQL data, and files that the build does not need. Build `rakibookery:local` and test it with MySQL 8.0 on a separate Docker network.
+![Excerpt from PDF page 6 showing the build command and linux amd64 image result](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/01-ecr-build-result.png)
 
-![Deployment report excerpt showing describe-images and ECR digest verification](../../../images/5-Workshop/5.3-Infrastructure/ecr-image-report-p11.png)
+![Excerpt from PDF page 8 showing HTTP tests and the local MySQL connection result](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/02-local-http-test.png)
+
+3. Create the private repository `rakibookery`. Our report shows that we chose **Mutable** tags, turned on scanning on push, and used `AES256` encryption. Sign in to the registry with a temporary ECR token through standard input. Tag the image as `latest`, push it, and pull it back to check that the image can be downloaded from ECR.
+
+![Excerpt from PDF page 8 showing the private rakibookery repository settings in Singapore](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/03-ecr-repository-config.png)
+
+### Repeat the build and push
+
+Run the following from the directory with the Dockerfile, using the approved AWS identity and a Bash shell, such as Git Bash or WSL. Set `ECR_REGISTRY` to the registry shown in **ECR → View push commands**. The `rakibookery` repository must exist before pushing.
+
+```bash
+ECR_REGISTRY='<account-id>.dkr.ecr.ap-southeast-1.amazonaws.com'
+IMAGE_URI="$ECR_REGISTRY/rakibookery:latest"
+
+docker build --platform linux/amd64 -t rakibookery:local .
+aws ecr get-login-password --region ap-southeast-1 |
+  docker login --username AWS --password-stdin "$ECR_REGISTRY"
+docker tag rakibookery:local "$IMAGE_URI"
+docker push "$IMAGE_URI"
+docker pull "$IMAGE_URI"
+```
+
+![Excerpt from PDF page 10 showing Docker login to ECR and Login Succeeded](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/04-ecr-registry-login.png)
+
+![Excerpt from PDF page 10 showing the image tag, push command, and returned digest](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/05-ecr-push-result.png)
+
+Record the digest displayed by ECR. The `latest` tag shown in our setup can point to a different image after another push. Save the digest with the task revision used in a test so we can identify that build later. [AWS ECR push guide](https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html).
+
+### Results and checks
+
+- In local tests, the home page, `/shop`, and static files returned HTTP `200`. A route that did not exist returned `404`. The report shows that the application connected to the test MySQL instance.
+- The command `aws ecr describe-images` showed the `latest` and `manual-test` tags in the repository. Our report shows an OCI index digest that starts with `sha256:2364b729` and records a successful image pull from ECR.
+
+The report records the `describe-images` command, OCI index digest, platform manifest, and attestation manifest. We use these values to check which image was pushed to ECR.
+
+![Excerpt from PDF page 11 showing describe-images, manifests, and the ECR digest](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/06-ecr-digest-check.png)
+
+The pull test starts on page 11 and its result continues on page 12. The image below joins these two parts to show the full command and the result recorded in the report.
+
+![Excerpts of the pull test from PDF pages 11 and 12](../../../images/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/07-ecr-pull-result.png)
 
 ### Conclusion
 
-The deployment report records a successful build, local test, push, and pull. The image URI with its tag or digest is the input for the ECS task definition.
+Our report shows that we built the image, tested it locally, pushed it to ECR, and pulled it back. We use the image URI with its tag or digest in the ECS task definition.
