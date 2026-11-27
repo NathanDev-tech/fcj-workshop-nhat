@@ -22,7 +22,13 @@ Mở **AWS Billing and Cost Management Console** → chọn **Budgets** và ch�
 
 **Enter your budgeted amount ($):** Nhập `40.00` (đặt hạn mức ngân sách $40.00/tháng).
 
-![image045.jpg](/images/5-Workshop/5.5-Raki-Operations/image045.jpg)
+![image045.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045.jpg)
+
+![image045-2.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-2.jpg)
+
+![image045-3.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-3.jpg)
+
+![image045-4.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-4.jpg)
 
 ### 5.5.4.2. Cấu hình Phạm vi Ngân sách (Budget Scope) và Thẻ Tag
 
