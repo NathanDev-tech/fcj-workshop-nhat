@@ -25,7 +25,7 @@ CloudWatch mặc định lưu trữ Log vô thời hạn. Để tối ưu chi ph
 2. Truy cập dịch vụ **CloudWatch**.
 3. Chọn **Log groups**.
 
-![Hình 78.](/images/5-Workshop/5.5-Raki-Operations/image078.png)
+![Hình 78.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image078.png)
 
 4. Chọn Log Group cần cấu hình.
 5. Chọn **Actions → Edit retention setting**.
