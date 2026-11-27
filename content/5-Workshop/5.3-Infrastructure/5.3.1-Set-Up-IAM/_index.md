@@ -8,51 +8,53 @@ pre : " <b> 5.3.1 </b> "
 
 ### Objective
 
-Work organizes AWS access for the RakiBookery team and the services that run the PHP application. AWS Secrets Manager stores MySQL credentials for ECS to provide to the container at startup.
+Our goal is to set up AWS access for our team and the services that run the RakiBookery PHP application. AWS Secrets Manager stores the MySQL credentials. ECS passes these details to the container when it starts.
 
-### Prerequisites
+### What we need
 
-- **Account and deployment access.** Confirm the RakiBookery AWS account, the administrator-approved deployment identity, and the member list. IAM is account-wide. Use Singapore (`ap-southeast-1`) for ECS, ECR, RDS, and Secrets Manager.
-- **Responsibilities.** Review the actions in [section 5.2]({{< relref "/5-Workshop/5.2-Prerequiste/" >}}) against the team's tasks. Identify who manages IAM, deploys tasks, and manages application credentials.
-- **Test inputs.** Prepare the backend image URI and tag from [section 5.3.5]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/" >}}), the CloudWatch log group if the task uses `awslogs`, and the RDS endpoint, database name, and application account from [section 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). Identify the environment variables read by the PHP application.
+- **Account and deployment access.** Check that you are in the RakiBookery AWS account. Confirm the identity approved by the administrator and the list of team members. IAM applies to the whole account. For ECS, ECR, RDS, and Secrets Manager, use the Singapore Region (`ap-southeast-1`).
+- **Team responsibilities.** Compare the actions in [section 5.2]({{< relref "/5-Workshop/5.2-Prerequiste/" >}}) with the team's work. Decide who manages IAM, who deploys tasks, and who manages the login details.
+- **What we need for the test.** Prepare the backend image URI and tag from [section 5.3.5]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/" >}}). If the task uses `awslogs`, prepare the CloudWatch log group name. Get the RDS endpoint, database name, and MySQL user for the application from [section 5.3.4]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.4-Set-Up-RDS/" >}}). Check which environment variables the PHP code reads.
 
-Prepare the IAM group and execution role first. When RDS and ECR are ready, add the secret ARN and test with the actual image.
+We can prepare the IAM group and the execution role first. After RDS and ECR are ready, we can add the secret ARN.
 
-### Deployment configuration
+### Which identity performs each action?
 
-#### 1. Review the IAM group and team access
+The deployment identity registers the task definition and passes approved roles to ECS. The **task execution role** lets ECS pull the image, get secret values at startup, and send logs. The **task role** is used only if the PHP code calls an AWS API. MySQL access is checked separately using the database user and the security group rules. [AWS ECS execution role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html).
 
-1. Open **IAM → User groups → RakiBookery**. For a new environment, an administrator creates the group and adds the approved member accounts in **Users**.
-2. In **Permissions**, review the policies against team responsibilities. The screenshots show the project account's recorded configuration. Attaching a narrower policy does not reduce access for a user who still inherits `AdministratorAccess`.
-3. Check MFA under **Security credentials** for members who use IAM users to sign in to the AWS Console. Record the group and its approved access scope in the report.
+### Deployment setup
 
-![Permissions tab for the RakiBookery IAM group](../../../images/5-Workshop/5.3-Infrastructure/iam-group-permissions.png)
+#### 1. Check the IAM group and its users
 
-*Figure 5.3.1a. The RakiBookery group shows five IAM users and two attached policies.*
+1. In **IAM → User groups**, open the `RakiBookery` group. For a new environment, the administrator creates the group and adds each approved IAM user in **Users**.
+2. In **Permissions**, check if the policies match the team's work. The screenshot shows the setup in the project account. A policy with fewer permissions does not remove the permissions a user already gets from `AdministratorAccess`.
+3. For team members who sign in to the AWS Console with an IAM user, check MFA in **Security credentials**. Record the group and the permissions in the report.
+
+![Permissions tab for the RakiBookery group](../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/01-iam-group-permissions.png)
 
 #### 2. Prepare the ECS task execution role
 
-1. Open **IAM → Roles** and find `ecsTaskExecutionRole`. If it already exists, open it to review **Trust relationships** and **Permissions**.
+**1.** Open **IAM → Roles** and find `ecsTaskExecutionRole`. If the role already exists, open it and check **Trust relationships** and **Permissions**.
 
-   ![IAM Roles showing ecsTaskExecutionRole and the ecs-tasks trusted entity](../../../images/5-Workshop/5.3-Infrastructure/iam-ecs-execution-role-list.png)
+![IAM Roles showing ecsTaskExecutionRole and ecs-tasks as the trusted entity](../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/02-iam-ecs-execution-role-list.png)
 
-   *Figure 5.3.1b. The November 23, 2026 IAM role inventory shows ecsTaskExecutionRole with ECS tasks as its trusted entity.*
+**2.** To create the role, choose **Create role → AWS service → Elastic Container Service**. Under **Use case**, choose **Elastic Container Service Task**. Check that the trust policy allows `sts:AssumeRole` for `ecs-tasks.amazonaws.com`.
 
-2. To create the role, choose **Create role → AWS service → Elastic Container Service**. Select **Elastic Container Service Task** as the use case. Verify that its trust policy allows `sts:AssumeRole` for `ecs-tasks.amazonaws.com`.
-3. In **Add permissions**, attach `AmazonECSTaskExecutionRolePolicy` under **Permissions policies** so ECS can pull the ECR image and send logs through `awslogs`. A permissions boundary sets the maximum available permissions. If the account requires a boundary, use the administrator-approved boundary and verify that it permits the required operations. Create the log group first if the container uses `awslogs`.
+**3.** In **Add permissions**, attach `AmazonECSTaskExecutionRolePolicy` under **Permissions policies**. This lets ECS pull the image from ECR and send logs through `awslogs`. A permissions boundary limits the permissions a role can use. If the account requires a boundary, use one approved by the administrator and check that it allows the actions the role needs. Create the log group first if the container uses `awslogs`.
 
-   ![Permissions tab of ecsTaskExecutionRole showing AmazonECSTaskExecutionRolePolicy](../../../images/5-Workshop/5.3-Infrastructure/iam-ecs-execution-role-policy.png)
+![Permissions tab for ecsTaskExecutionRole showing AmazonECSTaskExecutionRolePolicy](../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/03-iam-ecs-execution-role-policy.png)
 
-   *Figure 5.3.1c. AmazonECSTaskExecutionRolePolicy is attached to the execution role in this screenshot.*
+**4.** Copy the ARN and select the role in **Task execution role** in the task definition. If PHP calls an AWS API directly, for example to upload an image to S3, use a separate role in **Task role**. Limit its permissions to the bucket or prefix that PHP needs.
 
-4. Copy the ARN and select this role as the task definition’s **Task execution role**. If PHP calls an AWS API directly, such as to upload media to S3, assign a separate **Task role** and scope its permissions to the required bucket or prefix.
-5. Scope the deployment identity’s `iam:PassRole` to the approved role ARNs with `iam:PassedToService` set to `ecs-tasks.amazonaws.com`. [AWS IAM PassRole](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html).
+**5.** Give the deployment identity `iam:PassRole` only for approved role ARNs. Set `iam:PassedToService` to `ecs-tasks.amazonaws.com`. [AWS IAM PassRole](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html).
 
-#### 3. Prepare the secret and reference it in the task definition
+![Tab Permissions](../../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/04-iam-role-ecs.png)
 
-After creating the MySQL application user, open **Secrets Manager → Store a new secret** in the project Region. The secret can use JSON keys such as `username` and `password`. Copy the full ARN from the secret details. If the application already has a secret, confirm the key names before reusing it.
+#### 3. Prepare the secret and add it to the task definition
 
-The policy in [section 5.2]({{< relref "/5-Workshop/5.2-Prerequiste/" >}}) documents workshop deployment permissions. The example execution role policy scopes secret retrieval to the application secret ARN. If the task receives MySQL credentials from Secrets Manager, use **Permissions → Add permissions → Create inline policy → JSON** on the execution role to grant the access below. Figure 5.3.1c records the baseline policy. Verify secret access after adding the inline policy.
+After you have a MySQL account for the application, open **Secrets Manager → Store a new secret** in the project Region. You can use the JSON keys `username` and `password`. Copy the full ARN from the secret details page. If the application already has a secret, check the key names before you use it.
+
+The policy in [section 5.2]({{< relref "/5-Workshop/5.2-Prerequiste/" >}}) lists the actions for deploying the workshop. The example policy below allows the execution role to read one secret, using the secret ARN. If the task gets the MySQL credentials from Secrets Manager, open **Permissions → Add permissions → Create inline policy → JSON** on the execution role and add the policy. The **Permissions** screenshot above shows the base policy. Check that the role can read the secret after you add the inline policy.
 
 ```json
 {
@@ -67,13 +69,6 @@ The policy in [section 5.2]({{< relref "/5-Workshop/5.2-Prerequiste/" >}}) docum
 }
 ```
 
-
-### Verify the configuration
-
-- Check group membership, the trust policy, role ARN, and the execution role's access to the exact secret. The role list shows that the role exists. Its **Permissions** tab shows the attached policies.
-- Run a test task. Confirm the image pull, log delivery when `awslogs` is enabled, and secret retrieval. If startup fails, use **Stopped reason** and logs to distinguish IAM failures from subnet connectivity to ECR, Secrets Manager, or CloudWatch Logs.
-- When the task starts, run a test query from the application environment. If MySQL times out, check the security groups from [section 5.3.2]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/" >}}). Record the result under **APP-001** and exclude secret values from screenshots.
-
 ### Conclusion
 
-The project has a dedicated IAM group and service roles. The broad scope of `AdministratorAccess` means the **IAM-001** least-privilege criterion needs to be assessed against each member’s responsibilities. Secret injection and MySQL connectivity are verified with the Fargate task.
+Our team has its own IAM group and roles for the services. The `AdministratorAccess` policy gives broad permissions. We need to review the actions each member needs to follow least privilege. To verify the setup, run a Fargate task and check that the container gets the values from Secrets Manager and connects to MySQL.
