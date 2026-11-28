@@ -56,6 +56,6 @@ The main results achieved include:
 
 If the environment is no longer required, cleanup can be performed in an appropriate order, including unused ECS Services, Task Definitions, ALB, Target Groups, CloudFront Distribution, CloudWatch Alarms/Dashboards, Log Groups, and ECR Repositories.
 
-Infrastructure resources
+### Infrastructure resources
 
 {{% children sort="Weight" /%}}
