@@ -30,12 +30,12 @@ CloudWatch mặc định lưu trữ Log vô thời hạn. Để tối ưu chi ph
 4. Chọn Log Group cần cấu hình.
 5. Chọn **Actions → Edit retention setting**.
 
-![Hình 79.](/images/5-Workshop/5.5-Raki-Operations/image079.png)
+![Hình 79.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image079.png)
 
 6. Trong mục **Retention setting**, chọn **30 Days**.
 7. Nhấn **Save** để lưu cấu hình.
 
-![Hình 80.](/images/5-Workshop/5.5-Raki-Operations/image080.png)
+![Hình 80.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image080.png)
 
 > **Lưu ý:** Thực hiện tương tự cho tất cả Log Group của hệ thống để đảm bảo chính sách lưu trữ được áp dụng thống nhất.
 
@@ -52,50 +52,47 @@ Log Group được sử dụng để lưu trữ và quản lý Log của các d�
 3. Nhập tên Log Group, ví dụ:
 
 ```
-/ecs/raki-task-be
+/ecs/rakibookery-prod
 ```
-
+<!-- 
 hoặc
 
 ```
 /ecs/raki-task-fe
-```
+``` -->
 
 4. Giữ nguyên các thiết lập mặc định.
 
-![alt text](image.png)
+![Hình 81.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image081.png)
 
 
 5. Nhấn **Create** để hoàn tất.
 
 6. Sau khi tạo thành công, Log Group sẽ xuất hiện trong danh sách.
 
-![alt text](image-1.png)
+![Hình 78.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image078.png)
 
 ---
 
 #### Bước 3. Cấu hình ECS ghi Log vào CloudWatch
 
-Để các container của ECS ghi Log trực tiếp lên CloudWatch, cần cấu hình **awslogs Log Driver** trong Task Definition.
+Để các container của ECS ghi Log trực tiếp lên CloudWatch, cần cấu hình tính năng **Log collection** trong Task Definition (`rakibookery-prod-app`).
 
 1. Truy cập **Amazon ECS**.
-2. Chọn **Task Definitions** và mở Task Definition của ứng dụng.
-3. Chọn **Create new revision**.
-4. Trong phần **Container Definitions**, cấu hình:
+2. Chọn **Task definitions** và mở Task Definition `rakibookery-prod-app`.
+3. Chọn **Create new revision** (không chọn *with JSON*).
+4. Trong cấu hình container, cuộn xuống mục **Logging - optional**, tích chọn **Use log collection** và thiết lập các thông số:
+   - **Destination:** `Amazon CloudWatch`
+   - **awslogs-group:** `/ecs/rakibookery-prod`
+   - **awslogs-region:** `ap-southeast-1`
+   - **awslogs-stream-prefix:** `app`
 
-- **Log driver:** `awslogs`
-- **Log group:** `/ecs/raki-backend`
-- **AWS Region:** `ap-southeast-1`
-- **Stream prefix:** `ecs`
-
-![alt text](image-3.png)
+![Hình 82.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.5-CloudWatch-Logs-Log-Insights/image082.png)
 
 
 5. Lưu Task Definition mới.
 6. Cập nhật ECS Service sử dụng Revision vừa tạo.
 7. Sau khi Deployment hoàn tất, Log sẽ tự động được ghi vào CloudWatch.
-
-![Hình 106.](/images/5-Workshop/5.5-Raki-Operations/image106.png)
 
 ---
 

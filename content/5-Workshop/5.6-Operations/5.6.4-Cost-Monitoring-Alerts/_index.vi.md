@@ -24,11 +24,11 @@ Mở **AWS Billing and Cost Management Console** → chọn **Budgets** và ch�
 
 ![image045.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045.jpg)
 
-![image045-2.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-2.jpg)
+![image046.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image046.jpg)
 
-![image045-3.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-3.jpg)
+![image047.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image047.jpg)
 
-![image045-4.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image045-4.jpg)
+![image048.jpg](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.4-Cost-Monitoring-Alerts/image049.jpg)
 
 ### 5.5.4.2. Cấu hình Phạm vi Ngân sách (Budget Scope) và Thẻ Tag
 

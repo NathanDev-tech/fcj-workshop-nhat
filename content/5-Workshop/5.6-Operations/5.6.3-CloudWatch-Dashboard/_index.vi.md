@@ -22,19 +22,19 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
 3. Chọn **Dashboards**.
 4. Nhấn **Create dashboard**.
 
-![Hình 66.](/images/5-Workshop/5.5-Raki-Operations/image066.png)
+![Hình 66.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image066.png)
 
 5. Nhập tên Dashboard (ví dụ: `raki-operational-dashboard`).
 
-![Hình 67.](/images/5-Workshop/5.5-Raki-Operations/image067.png)
+![Hình 67.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image067.png)
 
 6. Chọn tạo Dashboard mới.
 7. Nếu đã chuẩn bị sẵn Dashboard dạng JSON:
    - Chọn **Actions** → **View/Edit source**.
    - Dán nội dung JSON template.
    - Chọn **Save**.
-
-![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png)
+<!-- 
+![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png) -->
 
 ---
 
@@ -42,12 +42,12 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
 
 1. Truy cập Dashboard, chọn Dashboard `raki-operational-dashboard` vừa mới tạo, chọn **Add widget**.
 
-![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png)
+![Hình 69.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image069.png)
 
 2. Chọn Data type: **Metrics**, Preferred experience: **Metrics Console**
 
 3. Chọn Widget type: **Line**
-![Hình 68.](/images/5-Workshop/5.5-Raki-Operations/image068.png)
+![Hình 69.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image069.png)
 
 4. Nhấn **Next**, điều hướng đến **ECS → ClusterName, ServiceName**
 
@@ -55,19 +55,18 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
    - CPU Utilization
    - Memory Utilization
 
-![Hình 46.](/images/5-Workshop/5.5-Raki-Operations/image046.png)
+![Hình 70.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image070.png)
 
 6. Đặt tên Widget phù hợp, nhấn **Create widget**.
 
-![Hình 45.](/images/5-Workshop/5.5-Raki-Operations/image045.png)
-
+![Hình 76.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image076.png)
 
 ---
 
 #### Bước 3. Thêm Widget Metrics của Application Load Balancer (ALB)
 1. Truy cập Dashboard, chọn Dashboard `raki-operational-dashboard` vừa mới tạo, chọn **Add widget**.
 
-![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png)
+![Hình 71.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image071.png)
 
 2. Chọn Data type: **Metrics**, Preferred experience: **Metrics Console**
 
@@ -76,7 +75,8 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
 
 4. Chọn **CloudWatch Metrics**, nhấn **Next**.
 
-![Hình 70.](/images/5-Workshop/5.5-Raki-Operations/image070.png)
+
+![Hình 72.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image072.png)
 
 5. Chọn **Per AppELB, per AZ, per TG Metrics**, thêm các Metrics sau dựa vào cấu hình Targer Group ở giai đoạn trước:
    - Healthy Host Count
@@ -85,16 +85,12 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
    - Request Count
    - HTTPCode_Target_5XX_Count
 
+![Hình 72.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image072.png)
 
-![Hình 60.](/images/5-Workshop/5.5-Raki-Operations/image060.png)
-![Hình 110.](/images/5-Workshop/5.5-Raki-Operations/image110.png)
-![Hình 111.](/images/5-Workshop/5.5-Raki-Operations/image111.png)
-![Hình 112.](/images/5-Workshop/5.5-Raki-Operations/image112.png)
 
 6. Đặt tên Widget phù hợp, nhấn **Create widget**.
 
-
-![Hình 113.](/images/5-Workshop/5.5-Raki-Operations/image113.png)
+![Hình 74.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image074.png)
 
 ---
 
@@ -102,7 +98,7 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
 
 1. Truy cập Dashboard, chọn Dashboard `raki-operational-dashboard` vừa mới tạo, chọn **Add widget**.
 
-![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png)
+[Hình 71.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image071.png)
 
 2. Chọn Data type: **Metrics**, Preferred experience: **Metrics Console**
 
@@ -110,26 +106,25 @@ Sau khi hoàn thành phần này, hệ thống sẽ đáp ứng các yêu cầu 
 
 4. Chọn **CloudWatch Metrics**, nhấn **Next**
 
-![Hình 68.](/images/5-Workshop/5.5-Raki-Operations/image068.png)
+[Hình 68.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image068.png)
 
 5. Trong cửa sổ **Browse**, chọn namespace **S3**, sau đó chọn Bucket cần theo dõi.
 
-![Hình 114.](/images/5-Workshop/5.5-Raki-Operations/image114.png)
+[Hình 73.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image073.png)
 
 4. Chọn các Storage Metrics của Bucket `raki-frontend-dev` và `raki-logs`:
    - **BucketSizeBytes**
    - **NumberOfObjects**
 
-![Hình 115.](/images/5-Workshop/5.5-Raki-Operations/image115.png)
+[Hình 73.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image073.png)
 
 5. Đặt tên Widget phù hợp, nhấn **Create widget**.
 
-![Hình 116.](/images/5-Workshop/5.5-Raki-Operations/image116.png)
-
+[Hình 75.](/fcj-workshop-nhat/images/5-Workshop/5.6-Operations/5.6.3-CloudWatch-Dashboard/image075.png)
 
 ---
 
-#### Bước 5. Thêm Widget CloudWatch Log Insights
+<!-- #### Bước 5. Thêm Widget CloudWatch Log Insights
 1. Truy cập Dashboard, chọn Dashboard `raki-operational-dashboard` vừa mới tạo, chọn **Add widget**.
 
 ![Hình 69.](/images/5-Workshop/5.5-Raki-Operations/image069.png)
@@ -269,4 +264,4 @@ Có thể bổ sung mô tả để dễ dàng quản lý về sau.
 
 ![Hình 49.](/images/5-Workshop/5.5-Raki-Operations/image049.png)
 
----
+--- -->
