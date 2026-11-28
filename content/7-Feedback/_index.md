@@ -6,38 +6,42 @@ chapter: false
 pre: " <b> 7. </b> "
 ---
 
-### Overall Evaluation
+### Overall evaluation
 
-**1. Working Environment**  
-The working environment is very friendly and open. FCAJ members are always willing to help when I encounter difficulties, even outside working hours. The workspace is neat and comfortable, which helps me stay focused better. However, I think it would be helpful to add more networking or team-bonding activities so that everyone can understand each other better.
+#### 1. Working environment
 
-**2. Support from Mentor / Team Admin**  
-The mentor provided very detailed guidance, explained things clearly when I did not understand, and always encouraged me to ask questions. The admin team supported the procedures, documents, and conditions needed to help me work smoothly. I especially appreciated that the mentor let me try to solve problems myself instead of just giving me the answers.
+Everyone at FCAJ is friendly and easy to talk to. When I ran into difficulty, the members were always ready to help, even outside working hours. The workspace is tidy and comfortable, so I could concentrate better. One thing I would like to see more of is a few social sessions or team bonding events, so people can get to know each other better.
 
-**3. Relevance of the Work to My Academic Background**  
-The tasks assigned to me were consistent with what I had learned at university, while also introducing me to new areas that I had not previously explored. This helped me both strengthen my foundation and learn practical skills.
+#### 2. Support from mentors and the admin team
 
-**4. Learning and Skill Development Opportunities**  
-During the internship, I learned many new skills such as using project management tools, teamwork, and professional communication in a corporate environment. The mentor also shared many practical experiences that helped me better shape my career direction.
+The mentors gave detailed guidance. When I didn't understand something, they explained it again until it was clear, and I was encouraged to ask questions. I appreciate that the mentors let me try things and work through problems myself instead of just handing me the answer. The admin team took care of procedures and documents so that I could work without obstacles.
 
-**5. Company Culture and Team Spirit**  
-The company culture is very positive: everyone respects one another, works seriously, and still maintains a friendly atmosphere. When there is an urgent project, people work together and support each other regardless of role. This made me feel like I was part of the team, even as an intern.
+#### 3. How the work fits my field of study
 
-**6. Internship Policy and Benefits**  
-The company provides an internship allowance and offers flexible working hours when necessary. In addition, participating in internal training sessions was a great advantage.
+The work I was given was related to what I had learned at school, but it also included areas I had never touched. So I strengthened my foundation and learned practical skills at the same time.
 
----
+#### 4. Opportunities to learn and build skills
 
-### Personal Reflections After the Internship
+During the internship, I learned many new skills: using project management tools, working in a team, and communicating professionally in a company setting. The mentors also told me about a lot of their practical experience, and that helped me see more clearly which direction to take in my career.
 
-I feel that the program had a clear learning roadmap and dedicated support from the mentor team. There were many sharing sessions from Cloud Engineers and Solution Architects working in enterprises, which provided a great deal of knowledge and practical experience for students.
+#### 5. Culture and teamwork
 
-After participating in the FCAJ Bootcamp, I learned many valuable lessons — from technical knowledge to soft skills that are equally important, such as teamwork, progress management, searching for technical documentation, presenting ideas, and problem-solving. These experiences have made me more confident as I prepare to enter the workforce after graduation.
+Even though I was only an intern, I still felt I was part of the team. People respect one another and work seriously while still having fun. When a project was urgent, everyone made an effort together and supported each other, regardless of position. I think the company culture is very positive.
 
-I am happy to recommend the FCAJ Bootcamp to students interested in Cloud Computing, DevOps, or AI, because FCAJ is a high-quality learning environment with practical content and positive support from the community.
+#### 6. Policies and benefits for interns
 
-In the future, I hope to continue participating in FCAJ's in-depth programs on AWS Solution Architecture and DevOps on AWS to further enhance my knowledge and skills. I also hope to have the opportunity to contribute to the FCAJ community through academic activities and real-world projects.
+Interns receive an allowance and flexible hours when needed. Being able to attend internal training sessions is also a big plus.
 
-Finally, I would like to sincerely thank the mentors, the Admin Team, and the organizing committee of the First Cloud AI Journey Bootcamp for always guiding, supporting, and accompanying me throughout the internship. This experience has helped me grow in professional knowledge, work skills, and problem-solving mindset.
+### Personal reflections after the internship
 
-In particular, I would like to express my heartfelt gratitude to Mr. Nguyen Gia Hung — Head of Solutions Architecture / SA Director at AWS Vietnam — who built and led the FCAJ community, a place where I had the opportunity to learn, develop, and explore many new technologies. His guidance, practical experience, and support helped me see more clearly the areas where I needed to improve, inspiring me to keep learning and bettering myself every day.
+The program has a clear learning path, and the mentors supported me with real care. I also attended many sharing sessions by Cloud Engineers and Solution Architects working at companies. Those sessions gave students a lot of knowledge and experience to build on.
+
+After the FCAJ Bootcamp, I came away with both technical knowledge and soft skills: teamwork, managing progress, finding technical documents, presenting ideas, and solving problems. I feel more confident when I think about starting work after graduation.
+
+If a fellow student is interested in Cloud Computing, DevOps, or AI, I am ready to recommend the FCAJ Bootcamp, because its content is close to real practice, it is a quality learning environment, and it has an active, supportive community.
+
+I want to keep taking FCAJ's in-depth programs on AWS Solution Architecture and DevOps on AWS to improve my knowledge and skills. I also hope to work with the FCAJ community on academic activities and real projects.
+
+I sincerely thank the mentors, the Team Admin, and the organizers of the First Cloud AI Journey Bootcamp for guiding, supporting, and staying with me throughout the internship. Thanks to this experience, I have improved my professional knowledge, working skills, and problem-solving mindset.
+
+I would also like to thank Mr. Nguyen Gia Hung, Head of Solutions Architecture / SA Director at AWS Vietnam, in particular. He built and leads the FCAJ community, where I was able to learn, develop myself, and reach many new technologies. I have met him only once, but his guidance, practical experience, and support helped me see more clearly the areas where I need to improve. Because of that, I try every day to keep learning and improve myself.

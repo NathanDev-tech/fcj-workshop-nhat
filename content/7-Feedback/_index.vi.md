@@ -8,36 +8,40 @@ pre: " <b> 7. </b> "
 
 ### Đánh giá chung
 
-**1. Môi trường làm việc**  
-Môi trường làm việc rất thân thiện và cởi mở. Các thành viên trong FCAJ luôn sẵn sàng hỗ trợ khi mình gặp khó khăn, kể cả ngoài giờ làm việc. Không gian làm việc gọn gàng, thoải mái, giúp mình tập trung tốt hơn. Tuy nhiên, mình nghĩ có thể bổ sung thêm một số buổi giao lưu hoặc team bonding để mọi người hiểu nhau hơn.
+#### 1. Môi trường làm việc
 
-**2. Sự hỗ trợ của mentor / team admin**  
-Mentor hướng dẫn rất chi tiết, giải thích rõ ràng khi mình chưa hiểu và luôn khuyến khích mình đặt câu hỏi. Team admin hỗ trợ các thủ tục, tài liệu và tạo điều kiện để mình làm việc thuận lợi. Mình đánh giá cao việc mentor cho phép mình thử và tự xử lý vấn đề thay vì chỉ đưa đáp án.
+Mọi người ở FCAJ thân thiện, dễ nói chuyện. Lúc mình gặp khó khăn, các thành viên đều sẵn sàng giúp, kể cả ngoài giờ làm việc. Chỗ làm gọn gàng, thoải mái nên mình tập trung hơn. Điều mình mong có thêm là vài buổi giao lưu hoặc team bonding, để mọi người hiểu nhau hơn.
 
-**3. Sự phù hợp giữa công việc và chuyên ngành học**  
-Công việc mình được giao phù hợp với kiến thức mình đã học ở trường, đồng thời mở rộng thêm những mảng mới mà mình chưa từng được tiếp cận. Nhờ vậy, mình vừa củng cố kiến thức nền tảng, vừa học thêm kỹ năng thực tế.
+#### 2. Sự hỗ trợ của mentor và team admin
 
-**4. Cơ hội học hỏi & phát triển kỹ năng**  
-Trong quá trình thực tập, mình học được nhiều kỹ năng mới như sử dụng công cụ quản lý dự án, kỹ năng làm việc nhóm, và cả cách giao tiếp chuyên nghiệp trong môi trường công ty. Mentor cũng chia sẻ nhiều kinh nghiệm thực tế giúp mình định hướng tốt hơn cho sự nghiệp.
+Mentor hướng dẫn chi tiết. Chỗ nào mình chưa hiểu thì được giải thích lại cho rõ, và mình được khuyến khích đặt câu hỏi. Mình đánh giá cao việc mentor cho mình tự thử, tự xử lý vấn đề chứ không chỉ đưa đáp án. Team admin lo giúp thủ tục và tài liệu để mình làm việc thuận lợi.
 
-**5. Văn hóa & tinh thần đồng đội**  
-Văn hóa công ty rất tích cực: mọi người tôn trọng lẫn nhau, làm việc nghiêm túc nhưng vẫn vui vẻ. Khi có dự án gấp, mọi người cùng nhau cố gắng, hỗ trợ không phân biệt vị trí. Điều này giúp mình cảm thấy mình là một phần của tập thể, dù chỉ là thực tập sinh.
+#### 3. Sự phù hợp giữa công việc và chuyên ngành học
 
-**6. Chính sách / phúc lợi cho thực tập sinh**  
-Công ty có hỗ trợ phụ cấp thực tập và tạo điều kiện về thời gian linh hoạt khi cần thiết. Ngoài ra, việc được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
+Việc được giao liên quan đến kiến thức mình đã học ở trường, nhưng cũng có những mảng mình chưa từng đụng tới. Vì vậy mình vừa củng cố nền tảng, vừa học thêm kỹ năng thực tế.
 
+#### 4. Cơ hội học hỏi và phát triển kỹ năng
+
+Trong đợt thực tập, mình học được nhiều kỹ năng mới: dùng công cụ quản lý dự án, làm việc nhóm, giao tiếp chuyên nghiệp trong môi trường công ty. Mentor còn kể lại nhiều kinh nghiệm thực tế, nhờ đó mình biết rõ hơn nên đi theo hướng nào trong sự nghiệp.
+
+#### 5. Văn hóa và tinh thần đồng đội
+
+Dù chỉ là thực tập sinh, mình vẫn thấy mình là một phần của tập thể. Mọi người tôn trọng nhau, làm việc nghiêm túc mà vẫn vui. Khi có dự án gấp thì ai cũng cùng cố gắng và hỗ trợ nhau, không phân biệt vị trí. Mình thấy văn hóa công ty rất tích cực.
+
+#### 6. Chính sách và phúc lợi cho thực tập sinh
+
+Công ty có phụ cấp và được sắp xếp thời gian linh hoạt khi cần. Ngoài ra, được tham gia các buổi đào tạo nội bộ là một điểm cộng lớn.
 
 ### Cảm nhận cá nhân sau quá trình thực tập
 
-Em cảm thấy chương trình đã có lộ trình học rõ ràng và sự hỗ trợ tận tình từ đội ngũ mentor. Đã có rất nhiều các buổi chia sẻ từ Cloud Engineer, Solution Architect đang làm việc tại doanh nghiệp mang lại rất nhiều kiến thức, kinh nghiệm cho các bạn sinh viên trao dồi.
+Chương trình có lộ trình học rõ ràng, và các anh chị mentor hỗ trợ em tận tình. Em cũng được nghe nhiều buổi chia sẻ của Cloud Engineer và Solution Architect đang làm việc tại doanh nghiệp. Những buổi đó cho sinh viên nhiều kiến thức và kinh nghiệm để trau dồi.
 
-Sau thời gian tham gia Bootcamp FCAJ, em  đã học hỏi được nhiều bài học quý giá từ kiến thức chuyên môn cho đến những kỹ năng mềm không kém phần quan trọng như làm việc nhóm, quản lý tiến độ, tìm kiếm tài liệu kỹ thuật, trình bày ý tưởng và giải quyết vấn đề. Những trải nghiệm này giúp em tự tin hơn khi chuẩn bị bước vào môi trường làm việc sau khi tốt nghiệp.
+Sau Bootcamp FCAJ, em mang về cả kiến thức chuyên môn lẫn kỹ năng mềm: làm việc nhóm, quản lý tiến độ, tìm tài liệu kỹ thuật, trình bày ý tưởng, giải quyết vấn đề. Em thấy tự tin hơn khi nghĩ đến lúc đi làm sau khi tốt nghiệp.
 
+Bạn nào quan tâm đến Cloud Computing, DevOps hoặc AI thì em sẵn sàng giới thiệu Bootcamp FCAJ, vì nội dung sát thực tế, môi trường học tập chất lượng và có cộng đồng hỗ trợ tích cực.
 
-Em sẵn sàng giới thiệu Bootcamp FCAJ khi các bạn sinh viên quan tâm đến Cloud Computing, DevOps hoặc AI, vì FCAJ là môi trường học tập chất lượng, nội dung thực tiễn , và có sự hỗ trợ tích cực từ cộng đồng.
+Em muốn học tiếp các chương trình chuyên sâu của FCAJ về AWS Solution Architecture và DevOps trên AWS để nâng cao kiến thức và kỹ năng. Em cũng hy vọng được cùng cộng đồng FCAJ làm các hoạt động học thuật và dự án thực tế.
 
-Trong thời gian tới, em mong muốn tiếp tục tham gia các chương trình chuyên sâu của FCAJ về AWS Solution Architecture, DevOps trên AWS để nâng cao kiến thức và kỹ năng. Em cũng hy vọng có cơ hội đồng hành cùng cộng đồng FCAJ trong các hoạt động học thuật và dự án thực tế.
+Em xin chân thành cảm ơn các anh chị mentor, Team Admin và Ban tổ chức Bootcamp First Cloud AI Journey vì đã hướng dẫn, hỗ trợ và đồng hành cùng em suốt thời gian thực tập. Nhờ trải nghiệm này, em tiến bộ về kiến thức chuyên môn, kỹ năng làm việc và tư duy giải quyết vấn đề.
 
-Cuối cùng, em xin chân thành cảm ơn các anh chị mentor, Team Admin và Ban tổ chức Bootcamp First Cloud AI Journey đã luôn hướng dẫn, hỗ trợ và đồng hành cùng em trong suốt quá trình thực tập. Trải nghiệm này đã giúp em phát triển thêm về kiến thức chuyên môn, kỹ năng làm việc và tư duy giải quyết vấn đề.
-
-Đặc biệt, em xin gửi lời cảm ơn chân thành đến Anh Nguyễn Gia Hưng - Giám đốc Kiến trúc Giải pháp (Head of Solutions Architecture / SA Director) tại AWS Việt Nam, người đã xây dựng và dẫn dắt cộng đồng FCAJ, nơi em có cơ hội được học hỏi, phát triển bản thân và tiếp cận nhiều công nghệ mới. Những định hướng, kinh nghiệm thực tiễn và sự hỗ trợ của anh đã giúp em nhìn rõ hơn những điểm cần cải thiện của bản thân, từ đó nỗ lực học hỏi và hoàn thiện bản thân hơn mỗi ngày.
+Em xin gửi lời cảm ơn riêng đến anh Nguyễn Gia Hưng, Giám đốc Kiến trúc Giải pháp (Head of Solutions Architecture / SA Director) tại AWS Việt Nam. Anh là người xây dựng và dẫn dắt cộng đồng FCAJ, nơi em được học hỏi, phát triển bản thân và tiếp cận nhiều công nghệ mới. Em mới gặp anh một lần, nhưng những định hướng, kinh nghiệm thực tiễn và sự hỗ trợ của anh giúp em nhìn rõ hơn những điểm cần cải thiện ở bản thân. Từ đó, mỗi ngày em cố gắng học hỏi và hoàn thiện mình hơn.
