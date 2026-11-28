@@ -8,45 +8,58 @@ pre : " <b> 5.3.3 </b> "
 
 ### Mục tiêu
 
-Tổ chức lưu trữ trên Amazon S3 cho ba loại dữ liệu của RakiBookery tại Singapore (`ap-southeast-1`).
+Nhóm cấu hình Amazon S3 tại Singapore (`ap-southeast-1`) để lưu tệp tĩnh, ảnh và nhật ký của RakiBookery. Nhóm dùng ba bucket riêng để đặt quyền truy cập phù hợp với từng loại dữ liệu.
 
-### Cần chuẩn bị
+## Kiến trúc tổng quan
 
-Dùng danh tính triển khai đã được duyệt ở [mục 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}). Khi dựng lại môi trường, chọn tên bucket còn khả dụng tại thời điểm tạo.
+- **Media** (`rakibookery-prod-media-987989461846`) lưu ảnh của nhà sách. Bucket bật Versioning để giữ các phiên bản trước của object khi ghi đè.
+- **Static** (`rakibookery-prod-static-987989461846`) lưu tài nguyên tĩnh của website. CloudFront có thể đọc tệp qua Origin Access Control (OAC) và bucket policy. Phần cấu hình origin được trình bày ở [mục 5.4.4]({{< relref "/5-Workshop/5.4-Deployment/5.4.4-Cloudfont-and-R53/" >}}).
+- **Logs** (`rakibookery-prod-logs-987989461846`) dành cho tệp nhật ký. Tệp xuất hiện khi dịch vụ gửi log đã được cấu hình đích và cấp quyền ghi.
 
-Nhóm dùng bucket riêng vì mỗi loại tệp có mục đích và thành phần truy cập khác nhau. CloudFront đọc tệp tĩnh qua OAC. Hàm xử lý ảnh đọc ảnh tải lên và ghi ảnh thu nhỏ trong bucket Media. Bucket Logs nhận tệp từ các nguồn ghi log đã được bật. Trước khi tích hợp, nhóm đối chiếu tên bucket thực tế trong Console của dự án.
+## 1. Tạo các bucket
 
-### Cấu hình triển khai
+Dùng danh tính triển khai có quyền phù hợp ở [mục 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}). Trong **Amazon S3 → General purpose buckets → Create bucket**, chọn Region **Asia Pacific (Singapore)**, loại **General purpose** và **Global namespace** như trong ảnh. Nhập tên từng bucket. Khi dựng lại, dùng tên còn khả dụng trong namespace đã chọn. [Tài liệu AWS về cách đặt tên bucket](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html)
 
-1. Trong **S3 → General purpose buckets**, tạo `rakibookery-static-web-246111` cho tài nguyên tĩnh, `rakibookery-logs-246111` cho nhật ký và `rakibookery-media-246111` cho ảnh bìa sách, banner và tệp media.
-2. Chọn **General purpose**, giữ **ACLs disabled (Bucket owner enforced)** và **Block all public access** cho cả ba bucket.
+Ở **Object Ownership**, giữ **ACLs disabled (Bucket owner enforced)** để quản lý quyền bằng policy. Giữ **Block all public access** để chặn truy cập công khai trực tiếp. CloudFront có thể đọc bucket Static theo bucket policy ở bước tích hợp. [Tài liệu AWS về Object Ownership](https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html)
 
-![Tạo bucket Media ở Singapore](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/01-s3-media-creation.png)
+### Bucket Media
 
-![Tên bucket Static Web, Region Singapore và ACLs disabled trong báo cáo nguồn](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/02-s3-static-creation.png)
+Nhập `rakibookery-prod-media-987989461846`. Màn hình tạo bucket ghi nhận Region Singapore và **ACLs disabled**. Trước khi lưu cấu hình của Media, chọn thêm **Bucket Versioning → Enable** như ở bước 2.
 
-![Tên bucket Logs và ACLs disabled trong báo cáo nguồn](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/03-s3-logs-creation.png)
+![Tạo bucket Media ở Singapore với ACLs disabled](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/01-s3-media-creation.png)
 
-3. Bật **Bucket Versioning** cho Media để giữ các phiên bản object khi ghi đè.
+### Bucket Static
 
-![Block all public access và Versioning được chọn cho Media](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/04-s3-media-versioning.png)
+Nhập `rakibookery-prod-static-987989461846` và giữ **ACLs disabled**. Sau khi tạo, dùng tên bucket này khi kiểm tra S3 origin của CloudFront.
 
-Danh sách bucket trong phần triển khai CloudFront ghi nhận đủ ba bucket RakiBookery tại Singapore. Các tên này khớp với báo cáo S3 và bucket Media dùng cho hàm xử lý ảnh.
+![Tên bucket Static và Object Ownership trong màn hình Create bucket](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/02-s3-static-creation.png)
 
-![Danh sách đã lưu có ba bucket Static Web, Logs và Media tại Singapore](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/05-s3-project-bucket-list.png)
+### Bucket Logs
 
+Nhập `rakibookery-prod-logs-987989461846` và giữ **ACLs disabled** theo cấu hình trong ảnh. Bucket này là đích lưu trữ. Cấu hình gửi log được thực hiện ở dịch vụ tạo log.
 
-### Kết quả và kiểm tra
+![Tên bucket Logs và Object Ownership trong màn hình Create bucket](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/03-s3-logs-creation.png)
 
-Báo cáo S3 có các màn hình tạo ba bucket và thao tác chọn Versioning cho Media. Khi nghiệm thu, đối chiếu **Permissions** và **Properties**. Kiểm tra sau tích hợp bằng cách mở tệp tĩnh qua CloudFront, xác nhận ảnh tải lên Media và log xuất hiện trong Logs khi dịch vụ gửi log đã được cấu hình.
+## 2. Bật và xác nhận Versioning cho Media
 
-Tài liệu kiểm thử Lambda còn ghi nhận các tệp đã tải vào `images/` của bucket Media. Ảnh này xác nhận bucket đã lưu object tại thời điểm chạy thử.
+Trong màn hình **Create bucket** của Media, ảnh ghi nhận **Block all public access** đang được chọn và **Bucket Versioning** đặt thành **Enable**.
 
-![Các object ảnh đã được tải vào bucket Media của RakiBookery](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/06-s3-media-uploaded-objects.png)
+![Chọn Block all public access và Enable Versioning khi tạo bucket Media](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/04-s3-media-versioning.png)
 
-Dùng danh tính đã được duyệt để tải lần lượt hai tệp thử lên cùng object key trong bucket Media. Trong **Objects**, bật **Show versions** và kiểm tra S3 hiển thị hai version ID. Với tệp tĩnh, kiểm tra object có trong bucket rồi truy cập qua CloudFront sau mục 5.4.4. Với bucket Logs, kiểm tra tệp log thật sau khi cấu hình dịch vụ gửi log.
+## 3. Kiểm tra kết quả
 
+Danh sách **General purpose buckets** hiển thị đủ ba bucket Media, Static và Logs ở `ap-southeast-1`.
 
-### Kết luận
+![Danh sách ba bucket Media, Static và Logs ở Singapore](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/05-s3-project-bucket-list.png)
 
-Ba bucket đảm nhiệm ba luồng dữ liệu riêng. Cấu hình chặn truy cập công khai được duy trì, và Versioning hỗ trợ lấy lại phiên bản trước của tệp media.
+Sau khi tạo, nhóm mở **Media → Properties → Bucket Versioning**. Console hiển thị **Enabled**, xác nhận cấu hình đã được lưu. Khi tải nội dung mới lên cùng object key, S3 tạo một phiên bản mới và giữ phiên bản trước. [Tài liệu AWS về S3 Versioning](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html)
+
+![Trang Properties của bucket Media ghi Bucket Versioning Enabled](../../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/06-s3-media-versioning-enabled.png)
+
+- **Media.** Để kiểm tra Versioning, tải hai tệp có nội dung khác nhau lên cùng key thử, chẳng hạn `versioning-check/sample.txt`. Bật **Show versions** trong tab **Objects** và kiểm tra hai version ID. Kiểm tra trigger xử lý ảnh ở [mục 5.5.2]({{< relref "/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/" >}}).
+- **Static.** Sau khi gắn origin, mở một tệp tĩnh qua URL CloudFront để kiểm tra quyền đọc.
+- **Logs.** Sau khi cấu hình dịch vụ gửi log, mở bucket Logs và kiểm tra object ở prefix đã chọn.
+
+## Kết luận
+
+Nhóm đã tạo ba bucket S3 của RakiBookery tại Singapore. Màn hình **Properties** xác nhận bucket Media đã bật Versioning. Các bucket được dùng cho từng nhóm dữ liệu và là đầu vào khi cấu hình CloudFront, xử lý ảnh và chuyển nhật ký.

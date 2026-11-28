@@ -26,13 +26,15 @@ For each function, check the handler name, runtime, execution role, and log grou
 
 ![Execution role and log permissions for raki-image-processor](../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/03-image-permissions.png)
 
-**2. Add an S3 trigger.** In **Configuration → Triggers → Add trigger**, select the `rakibookery-media-246111` bucket, the `s3:ObjectCreated:Put` event, and the `images/` prefix. The function uses Pillow to make an image no larger than `300 × 300` pixels. It keeps the original proportions and saves the result in `thumbnails/`. The trigger only accepts keys under `images/`. Files written under `thumbnails/` are outside this filter. [AWS guide to the S3 trigger](https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html).
+**2. Add an S3 trigger.** Go to **Configuration → Triggers → Add trigger**. Select a Media bucket in the same Region as the function, the **PUT** event (`s3:ObjectCreated:Put`), and the `images/` prefix. The function uses Pillow to make an image no larger than `300 × 300` pixels. It keeps the original proportions and saves the result under `thumbnails/`. This output prefix is outside the trigger filter, so a thumbnail does not start the function again. [AWS guide to S3 triggers](https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html)
+
+The screenshots below show the setup with the `rakibookery-prod-media-987989461846` bucket. For the Media bucket in [section 5.3.3]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/" >}}), select `rakibookery-prod-media-987989461846`. Check that the bucket can invoke the function and that the execution role can read and write objects in the right bucket.
 
 ![Select the Media bucket and the PUT event for the S3 trigger](../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/04-s3-put-trigger.png)
 
 ![The S3 trigger is connected to raki-image-processor](../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/05-s3-trigger-attached.png)
 
-**3. Test with a book image.** We uploaded a JPG under `images/` and checked for the new object under `thumbnails/`. The screenshots also show log streams in `/aws/lambda/raki-image-processor`. We can use them to check when the function ran.
+**3. Test with a book image.** In the test shown below, we uploaded a JPG under `images/` in `rakibookery-prod-media-987989461846` and checked for the matching object under `thumbnails/`. We use a log stream in `/aws/lambda/raki-image-processor` to check when the function ran.
 
 ![Test image uploaded under images/](../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/06-s3-source-image.png)
 
@@ -42,7 +44,7 @@ For each function, check the handler name, runtime, execution role, and log grou
 
 ![CloudWatch log group for raki-image-processor from the Lambda source document](../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/14-image-log-group.png)
 
-Use an image with a new test key under `images/`. Make sure the upload uses PUT because the trigger is set to that event. Check the matching file in `thumbnails/` and confirm its dimensions fit the `300 × 300` limit. Use the key and the upload time to find the matching Lambda log.
+To test the Media bucket in section 5.3.3, use **PUT** to upload a JPG with a new key under `images/`. Check the matching object in `thumbnails/` and confirm that its dimensions fit the `300 × 300` limit. Use the upload time and the object key to find the matching Lambda log.
 
 
 ## Notification function `raki-sns-handler`

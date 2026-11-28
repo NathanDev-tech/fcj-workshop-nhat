@@ -48,7 +48,7 @@ The deployment identity registers the task definition and passes approved roles 
 
 **5.** Give the deployment identity `iam:PassRole` only for approved role ARNs. Set `iam:PassedToService` to `ecs-tasks.amazonaws.com`. [AWS IAM PassRole](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_passrole.html).
 
-![Tab Permissions](../../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/04-iam-role-ecs.png)
+![Tab Permissions](../../../images/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/04-iam-role-ecs.png)
 
 #### 3. Prepare the secret and add it to the task definition
 

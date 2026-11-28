@@ -8,44 +8,58 @@ pre : " <b> 5.3.3 </b> "
 
 ### Objective
 
-Our goal is to use Amazon S3 to store three types of RakiBookery data in Singapore (`ap-southeast-1`).
+We set up Amazon S3 in Singapore (`ap-southeast-1`) to store static files, images, and logs for RakiBookery. We use three separate buckets so each type of data can have the access it needs.
 
-### What we need
+## Architecture overview
 
-Use the approved deployment identity from [section 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}). When setting up a new environment, choose bucket names that are available when you create the buckets.
+- **Media** (`rakibookery-prod-media-987989461846`) stores bookstore images. The bucket uses Versioning to keep earlier versions when we replace an object.
+- **Static** (`rakibookery-prod-static-987989461846`) stores static files for the website. CloudFront can read the files through Origin Access Control (OAC) and a bucket policy. The origin setup is in [section 5.4.4]({{< relref "/5-Workshop/5.4-Deployment/5.4.4-Cloudfont-and-R53/" >}}).
+- **Logs** (`rakibookery-prod-logs-987989461846`) is for log files. Files appear after we configure the service that sends the logs and give it permission to write.
 
-We use separate buckets because each type of file has a different use and needs different access. CloudFront reads static files through OAC. The image function reads uploads and writes thumbnails in the Media bucket. The Logs bucket stores logs from the sources that we turn on. Check the real bucket names in the project's Console before connecting any of these services.
+## 1. Create the buckets
 
-### Deployment setup
+Use a deployment identity with the permissions described in [section 5.3.1]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.1-Set-Up-IAM/" >}}). In **Amazon S3 → General purpose buckets → Create bucket**, select **Asia Pacific (Singapore)**, **General purpose**, and **Global namespace** as shown in the screenshots. Enter each bucket name. If you repeat the setup, use a name that is available in the selected namespace. [AWS guide to bucket naming rules](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html)
 
-1. In **S3 → General purpose buckets**, create `rakibookery-static-web-246111` for static files, `rakibookery-logs-246111` for logs, and `rakibookery-media-246111` for book covers, banners, and other media files.
-2. Choose **General purpose**. Keep **ACLs disabled (Bucket owner enforced)** and **Block all public access** for all three buckets.
+Under **Object Ownership**, keep **ACLs disabled (Bucket owner enforced)** so access is managed through policies. Keep **Block all public access** on to block direct public access. CloudFront can read the Static bucket through the bucket policy after integration. [AWS guide to Object Ownership](https://docs.aws.amazon.com/AmazonS3/latest/userguide/about-object-ownership.html)
 
-![Creating the Media bucket in Singapore](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/01-s3-media-creation.png)
+### Media bucket
 
-![Static Web bucket name, Singapore Region, and ACLs disabled in the source report](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/02-s3-static-creation.png)
+Enter `rakibookery-prod-media-987989461846`. The creation screen shows the Singapore Region and **ACLs disabled**. Before saving the Media bucket, select **Bucket Versioning → Enable** as shown in step 2.
 
-![Logs bucket name and ACLs disabled in the source report](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/03-s3-logs-creation.png)
+![Creating the Media bucket in Singapore with ACLs disabled](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/01-s3-media-creation.png)
 
-3. Turn on **Bucket Versioning** for Media so earlier versions stay available when you replace an object.
+### Static bucket
 
-![Block all public access and Versioning for the Media bucket](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/04-s3-media-versioning.png)
+Enter `rakibookery-prod-static-987989461846` and keep **ACLs disabled**. After creating the bucket, use this name when checking the CloudFront S3 origin.
 
-The bucket list from the CloudFront setup shows all three RakiBookery buckets in Singapore. Their names match the S3 report and the Media bucket used by the image function.
+![Static bucket name and Object Ownership on the Create bucket screen](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/02-s3-static-creation.png)
 
-![The saved bucket list shows Static Web, Logs, and Media in Singapore](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/05-s3-project-bucket-list.png)
+### Logs bucket
 
-### Results and checks
+Enter `rakibookery-prod-logs-987989461846` and keep **ACLs disabled** as shown. This bucket is the storage destination. Set up log delivery in the service that creates the logs.
 
-The S3 report shows the creation forms for the three buckets and the Versioning option selected for Media. For the final check, review **Permissions** and **Properties**. After you connect the services, open a static file through CloudFront and check that uploaded images appear in Media. Check that logs appear in Logs after you set up the service that sends them.
+![Logs bucket name and Object Ownership on the Create bucket screen](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/03-s3-logs-creation.png)
 
-The Lambda test document also shows uploaded files under `images/` in the Media bucket. This confirms that the bucket had stored objects at the time of the test.
+## 2. Enable and check Versioning for Media
 
-![Uploaded image objects in the RakiBookery Media bucket](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/06-s3-media-uploaded-objects.png)
+On the Media bucket creation screen, **Block all public access** is selected and **Bucket Versioning** is set to **Enable**.
 
-Use an approved identity to upload two test files in sequence with the same object key in the Media bucket. In **Objects**, turn on **Show versions** and check that S3 shows two version IDs. For a static file, check first that it exists in the bucket. Then request it through CloudFront after section 5.4.4. For the Logs bucket, check for a real log object after setting up the service that sends logs.
+![Block all public access and Enable Versioning selected when creating the Media bucket](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/04-s3-media-versioning.png)
 
+## 3. Check the result
 
-### Conclusion
+The **General purpose buckets** list shows all three buckets, Media, Static, and Logs, in `ap-southeast-1`.
 
-We use each bucket for a different type of file. We keep public access blocked. With Versioning, we can recover an earlier version of a media file.
+![Media, Static, and Logs buckets listed in Singapore](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/05-s3-project-bucket-list.png)
+
+After creating the bucket, we open **Media → Properties → Bucket Versioning**. The console shows **Enabled**, which confirms the setting was saved. When we upload new content with the same object key, S3 creates a new version and keeps the earlier one. [AWS guide to S3 Versioning](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html)
+
+![Media bucket Properties showing Bucket Versioning as Enabled](../../../images/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/06-s3-media-versioning-enabled.png)
+
+- **Media.** To check Versioning, upload two files with different content to the same test key, such as `versioning-check/sample.txt`. Turn on **Show versions** in **Objects** and check for two version IDs. See [section 5.5.2]({{< relref "/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/" >}}) for the image processing trigger.
+- **Static.** After connecting the origin, open a static file through the CloudFront URL to check read access.
+- **Logs.** After setting up log delivery, open the Logs bucket and look for an object under the selected prefix.
+
+## Conclusion
+
+We created the three RakiBookery S3 buckets in Singapore. The **Properties** screen confirms that Versioning is on for Media. Each bucket stores a different type of data and supports the setup for CloudFront, image processing, or log delivery.

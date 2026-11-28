@@ -26,13 +26,15 @@ Với mỗi hàm, nhóm đối chiếu tên handler, runtime, execution role và
 
 ![Execution role và phần quyền ghi log của raki-image-processor](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/03-image-permissions.png)
 
-**2. Gắn trigger S3.** Trong **Configuration → Triggers → Add trigger**, chọn bucket `rakibookery-media-246111`, sự kiện `s3:ObjectCreated:Put` và prefix `images/`. Hàm dùng Pillow để thu nhỏ ảnh trong khung tối đa `300 × 300`, giữ tỷ lệ và ghi đầu ra vào `thumbnails/`. Trigger chỉ nhận key thuộc `images/`. Các tệp được ghi trong `thumbnails/` nằm ngoài bộ lọc này. [AWS về S3 trigger](https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html).
+**2. Gắn trigger S3.** Vào **Configuration → Triggers → Add trigger**. Chọn bucket Media cùng Region với hàm, sự kiện **PUT** (`s3:ObjectCreated:Put`) và prefix `images/`. Hàm dùng Pillow để thu nhỏ ảnh trong khung tối đa `300 × 300`, giữ tỷ lệ và ghi đầu ra vào `thumbnails/`. Prefix đầu ra nằm ngoài bộ lọc của trigger, nên ảnh thu nhỏ không kích hoạt lại hàm. [Tài liệu AWS về trigger S3](https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html)
+
+Các ảnh dưới đây ghi lại lần cấu hình với bucket `rakibookery-prod-media-987989461846`. Khi áp dụng cho bucket Media ở [mục 5.3.3]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.3-Set-Up-S3/" >}}), chọn `rakibookery-prod-media-987989461846`. Kiểm tra quyền gọi hàm của bucket và quyền đọc, ghi object của execution role trên đúng bucket.
 
 ![Chọn bucket Media và sự kiện PUT cho trigger S3](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/04-s3-put-trigger.png)
 
 ![Trigger S3 đã được gắn với raki-image-processor](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/05-s3-trigger-attached.png)
 
-**3. Thử với ảnh sách.** Nhóm em tải một ảnh JPG lên `images/` và kiểm tra object tương ứng trong `thumbnails/`. Các ảnh còn ghi nhận log stream tại `/aws/lambda/raki-image-processor`, nơi nhóm có thể đối chiếu lần gọi theo thời gian.
+**3. Thử với ảnh sách.** Trong lần thử ghi lại dưới đây, nhóm tải một ảnh JPG lên `images/` của `rakibookery-prod-media-987989461846` và kiểm tra object tương ứng trong `thumbnails/`. Nhóm dùng log stream tại `/aws/lambda/raki-image-processor` để đối chiếu thời gian gọi hàm.
 
 ![Ảnh thử nghiệm được tải lên prefix images/](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/06-s3-source-image.png)
 
@@ -41,6 +43,8 @@ Với mỗi hàm, nhóm đối chiếu tên handler, runtime, execution role và
 ![S3 hiển thị ảnh thu nhỏ trong prefix thumbnails/](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/08-s3-generated-thumbnail.png)
 
 ![Log group raki-image-processor trong CloudWatch trích từ tài liệu Lambda](../../../../images/5-Workshop/5.5-Serverless/5.5.2-Lambda-Functions/14-image-log-group.png)
+
+Để kiểm thử trên bucket Media ở mục 5.3.3, dùng thao tác **PUT** để tải ảnh JPG lên một key mới dưới `images/`. Kiểm tra object tương ứng trong `thumbnails/` và xác nhận kích thước ảnh nằm trong giới hạn `300 × 300`. Dùng thời điểm tải và object key để đối chiếu log của Lambda.
 
 ## Hàm nhận thông báo `raki-sns-handler`
 
