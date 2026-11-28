@@ -36,7 +36,7 @@ graph TD
 - **Network.** We place the internet-facing ALB in public subnets. The design keeps the application tasks and RDS in private subnets. The next step needs the VPC ID, each subnet ID, and the security groups for the ALB, tasks, and database.
 - **Access and data.** We give each service a role for its work. We prepare the database credentials in Secrets Manager and keep the S3 buckets private. The task definition needs the execution role and the secret ARN. CloudFront and Lambda use the matching buckets in sections 5.4 and 5.5.
 - **Application package.** A container image in ECR lets the team deploy the same PHP build to Fargate. Record the image URI and digest so we can identify the exact build.
-![Resource map with the four RakiBookery subnets](../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/01-vpc-resource-map.png)
+![Resource map with the four RakiBookery subnets](../../../../images/5-Workshop/5.3-Infrastructure/5.3.2-Set-Up-VPC/01-vpc-resource-map.png)
 
 ## Conclusion
 
