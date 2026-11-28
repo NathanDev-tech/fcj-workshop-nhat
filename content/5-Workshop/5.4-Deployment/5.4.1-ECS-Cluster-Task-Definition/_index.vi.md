@@ -8,76 +8,135 @@ pre : " <b> 5.4.1 </b> "
 
 ## Mục tiêu
 
-Sau khi đưa Docker image lên ECR, nhóm em cần khai báo cách chạy ứng dụng PHP trên AWS. **ECS Cluster** là nơi nhóm quản lý các task của RakiBookery. **Task Definition** lưu cấu hình chạy của container, gồm image, CPU, bộ nhớ, cổng, role và biến môi trường. Nhóm chọn Fargate để AWS quản lý hạ tầng chạy task.
+Nhóm dùng Amazon ECS Fargate để chạy ứng dụng PHP của RakiBookery tại Singapore (`ap-southeast-1`). Phần này ghi nhận cluster và service của ứng dụng, hướng dẫn kiểm tra task definition và điều chỉnh số task khi chạy thử.
 
-## Đầu vào trước khi tạo task
+## Kiến trúc tổng quan
 
-Chuẩn bị URI của image trên ECR, `ecsTaskExecutionRole` và ARN của secret cơ sở dữ liệu từ mục 5.3. Kiểm tra log group nếu task dùng `awslogs`. [Tài liệu triển khai ECS](https://docs.google.com/document/d/1_qk9uf_5MlByeEo4Yaxt8YJSsoqWjTnO/edit). Cluster là nơi chạy và theo dõi task. Task definition mô tả image, cổng, CPU, bộ nhớ và role. ECS Service sẽ dùng task definition này để duy trì các task của website.
+**Image PHP trên Amazon ECR → Task definition → Task chạy trên AWS Fargate**
 
-## Bước 1. Tạo ECS Cluster
+Task definition lưu cấu hình như image, cổng container, CPU và bộ nhớ. ECS Service dùng một revision của task definition để duy trì số task theo `desiredCount`. Cluster là nơi nhóm theo dõi service và task. AWS Fargate quản lý hạ tầng chạy task nên nhóm có thể triển khai container mà không cần quản lý máy EC2 cho cluster. [Tài liệu AWS về ECS Service](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html)
 
-Trong Region Singapore (`ap-southeast-1`), nhóm vào **Amazon ECS → Clusters → Create cluster**. Đặt tên `RakiBookery-cluster` và chọn **Fargate only** ở phần hạ tầng. Sau khi tạo, ECS hiển thị thông báo thành công và cluster xuất hiện trong danh sách. Tại thời điểm chụp ảnh, cluster vừa tạo chưa có task đang chạy.
+## 1. Xác nhận cluster và service
 
-![Mở chức năng Create cluster trong Amazon ECS](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/01-cluster-create.png)
+Trong **Amazon ECS → Clusters**, nhóm chọn `rakibookery-prod-cluster`. Danh sách cluster hiển thị phương thức chạy **Fargate**, một service và **No tasks running** tại thời điểm chụp.
 
-![Đặt tên RakiBookery-cluster và chọn Fargate only](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/02-cluster-fargate.png)
+![Danh sách ECS cluster ở Singapore hiển thị rakibookery-prod-cluster và một service](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ecs-cluster-list.png)
 
-![ECS xác nhận đã tạo cluster RakiBookery](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/03-cluster-created.png)
+Trong tab **Services**, nhóm dùng `rakibookery-prod-service` với kiểu lập lịch **Replica** để điều chỉnh số task của ứng dụng. Ảnh chi tiết của service nằm ở bước xác nhận task đã dừng.
 
+## 2. Kiểm tra Task Definition
 
-## Bước 2. Khai báo Task Definition
+Trong danh sách **Services**, mở liên kết ở cột **Task definition** để xem revision service đang dùng. Đối chiếu các thiết lập trước khi bật task.
 
-1. Vào **Task definitions → Create new task definition**. Đặt tên family `RakiBookery-task` và chọn **AWS Fargate**.
-2. Chọn **Linux/X86_64**, giữ network mode `awsvpc` và đặt tài nguyên ở mức **0,25 vCPU, 1 GB bộ nhớ** theo cấu hình trong ảnh của nhóm. Kiến trúc x86_64 phù hợp với image `linux/amd64` ở mục 5.3.5.
-3. Khai báo container chính là `Main`, chọn **Essential**, rồi nhập URI image của kho `rakibookery` trên ECR. Ảnh ghi lại lần dùng tag `latest`. Đặt **Container port** là `80`, **Protocol** là `TCP` và **App protocol** là `HTTP`, khớp với Apache và cấu hình ALB ở các mục tiếp theo.
+1. Trong **Container details**, kiểm tra URI image từ ECR, tên container và cổng ứng dụng. Đối chiếu URI của revision với image trong Amazon ECR. Cách kiểm tra tag và digest được trình bày ở [mục 5.3.5]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/" >}}). Khi service gắn với ALB, tên và cổng container phải khớp cấu hình gắn target group. Xem [mục 5.4.3]({{< relref "/5-Workshop/5.4-Deployment/5.4.3-Link-ECS-with-ALB/" >}}).
+2. Kiểm tra **Task size**, hệ điều hành và kiến trúc CPU. Kiến trúc của task phải khớp với image đã build. Fargate dùng network mode `awsvpc`.
+3. Kiểm tra **Task execution role** để ECS tải image và ghi CloudWatch Logs theo cấu hình. Nếu task lấy thông tin kết nối cơ sở dữ liệu từ Secrets Manager, đối chiếu tên biến với ứng dụng và quyền đọc secret của execution role.
 
-![Mở chức năng Create new task definition](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/04-task-create.png)
+Khi đổi image hoặc cấu hình container, đăng ký revision rồi dùng **Update service** để chọn revision đó. [Tài liệu AWS về task definition](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html)
 
-![Chọn family RakiBookery-task và AWS Fargate](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/05-task-family.png)
+![Danh sách ECS cluster ở Singapore hiển thị rakibookery-prod-cluster và một service](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ECS3.png)
 
-![Cấu hình Linux X86_64 với 0,25 vCPU và 1 GB bộ nhớ](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/06-task-resources.png)
+## 3. Bật task để chạy thử
 
-![Container Main dùng image từ ECR và cổng 80](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/07-task-container.png)
+Mở Bash trong AWS CloudShell và chạy các khối lệnh dưới đây trong cùng phiên.
 
+~~~bash
+REGION=ap-southeast-1
+CLUSTER=rakibookery-prod-cluster
+SERVICE=rakibookery-prod-service
+~~~
 
-Sau khi lưu task definition, Console ghi nhận `RakiBookery-task:1` ở trạng thái `ACTIVE`. Trạng thái này cho biết ECS đã đăng ký revision và có thể dùng nó để khởi chạy task. Nhóm cần kiểm tra thêm task đang chạy và log để xác nhận ứng dụng PHP khởi động được. Ảnh chi tiết cũng cho thấy task definition dùng execution role `ecsTaskExecutionRole`.
+Đặt `desiredCount=1` để ECS khởi động một task. Lệnh `wait services-stable` chờ service ổn định sau khi cập nhật.
 
-![RakiBookery-task:1 ở trạng thái ACTIVE sau khi tạo](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/08-task-created.png)
+~~~bash
+aws ecs update-service --region "$REGION" --cluster "$CLUSTER" \
+  --service "$SERVICE" --desired-count 1 \
+  --output json --no-cli-pager &&
+aws ecs wait services-stable --region "$REGION" --cluster "$CLUSTER" \
+  --services "$SERVICE" --no-cli-pager
+~~~
 
-## Bước 3. Cấp quyền đọc secret cho ECS
+**Trích kết quả từ `update-service`**
 
-Trong **IAM → Roles → ecsTaskExecutionRole → Permissions**, nhóm kiểm tra policy `AmazonECSTaskExecutionRolePolicy` dành cho việc tải image và ghi CloudWatch Logs. Nhóm tạo thêm inline policy `ECSSecretsAccessPolicy` để ECS lấy thông tin đăng nhập từ Secrets Manager lúc khởi động container.
+~~~text
+{
+  "service": {
+    "serviceName": "rakibookery-prod-service",
+    "status": "ACTIVE",
+    "desiredCount": 1,
+    "runningCount": 0,
+    "pendingCount": 0,
 
-Cấu hình demo đã cấp quyền trên phạm vi rộng. Để triển khai cấu hình PHP, cấp `secretsmanager:GetSecretValue` trên ARN của đúng secret RDS. Ảnh nguồn cho thấy secret dùng khóa mặc định `aws/secretsmanager`. Nếu secret dùng khóa KMS do nhóm quản lý, bổ sung `kms:Decrypt` trên ARN của khóa đó. Gắn quyền này vào **task execution role** vì ECS đọc secret trong lúc khởi động. [AWS về quyền của ECS task execution role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html).
+    ...
+    
+    "enableExecuteCommand": true,
+    "availabilityZoneRebalancing": "ENABLED",
+    "resourceManagementType": "CUSTOMER"
+  }
+}
+~~~
 
-![Trang quyền của ecsTaskExecutionRole và tùy chọn thêm inline policy](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/09-execution-role.png)
+Phản hồi lúc bật ghi nhận `desiredCount=1` và `runningCount=0`. ECS đã nhận yêu cầu chạy một task. Bộ đếm sẽ thay đổi khi task khởi động xong.
 
+## 4. Dừng task và xác nhận trạng thái
 
-![IAM xác nhận đã thêm ECSSecretsAccessPolicy](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/10-execution-policy-created.png)
+Sau khi chạy thử, đặt `desiredCount=0` và chờ service ổn định. Chạy lại `describe-services` ở bước 3 để xác nhận **0 desired / 0 running / 0 pending**.
 
+~~~bash
+aws ecs update-service --region "$REGION" --cluster "$CLUSTER" \
+  --service "$SERVICE" --desired-count 0 \
+  --output json --no-cli-pager &&
+aws ecs wait services-stable --region "$REGION" --cluster "$CLUSTER" \
+  --services "$SERVICE" --no-cli-pager
+~~~
 
-## Bước 4. Tạo revision và ánh xạ biến môi trường
+**Trích kết quả từ `update-service`**
 
-Vào **Secrets Manager → Secrets**, mở secret RDS để lấy **Secret ARN**. Sau đó vào family `RakiBookery-task`, chọn **Create new revision** và mở phần **Environment variables** của container `Main`.
+~~~text
+{
+  "service": {
+    "serviceName": "rakibookery-prod-service",
+    "status": "ACTIVE",
+    "desiredCount": 0,
+    "runningCount": 1,
+    "pendingCount": 0,
 
-![Vị trí trường Secret ARN trong Secrets Manager, với mã định danh được che](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/11-database-secret.png)
+    ...
 
-![Mở Create new revision trong family RakiBookery-task](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/12-task-revision.png)
+    "enableExecuteCommand": true,
+    "availabilityZoneRebalancing": "ENABLED",
+    "resourceManagementType": "CUSTOMER"
+  }
+}
+~~~
 
-![Phần Environment variables của container trong revision mới](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/13-environment-editor.png)
+Phản hồi lúc tắt ghi nhận `desiredCount=0` và `runningCount=1`. Chờ task dừng rồi kiểm tra lại số task của service.
 
-![Ảnh thao tác chọn ValueFrom cho hai trường thông tin đăng nhập](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/14-secret-valuefrom.png)
+Dùng `list-tasks` để kiểm tra riêng task thuộc service.
 
+~~~bash
+aws ecs list-tasks \
+  --cluster rakibookery-prod-cluster \
+  --service-name rakibookery-prod-service \
+  --region ap-southeast-1 \
+  --output json --no-cli-pager
+~~~
 
-Ảnh thao tác ghi lại hai trường `username` và `password` với kiểu `ValueFrom`. Với PHP, dùng tên biến mà ứng dụng đọc. Trong dự án này, hai biến là `DB_USER` và `DB_PASS`. Mỗi biến cần trỏ tới đúng khóa JSON tương ứng trong secret.
+Kết quả cần thấy sau khi đã giảm số task về `0`.
 
-- `DB_USER` lấy giá trị từ `<SECRET_ARN>:username::`.
-- `DB_PASS` lấy giá trị từ `<SECRET_ARN>:password::`.
-- `DB_HOST` dùng endpoint RDS và `DB_NAME` dùng `bookstoredb`.
+~~~json
+{
+  "taskArns": []
+}
+~~~
 
-Với ARN đầy đủ của secret mà thiếu hậu tố khóa JSON, ECS đưa toàn bộ nội dung secret vào biến. Khi chọn từng khóa JSON, dùng Fargate platform **1.4.0 trở lên** trên Linux. Lưu revision mới và ghi lại số revision để chọn đúng khi chạy task. Nếu giá trị secret thay đổi sau đó, khởi chạy task mới để nhận giá trị mới. [AWS về đưa secret vào biến môi trường ECS](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
+`list-tasks` mặc định lọc theo trạng thái mong muốn `RUNNING`. Đối chiếu danh sách rỗng với các bộ đếm trên service để xác nhận task đã dừng. [Tài liệu AWS CLI về list-tasks](https://docs.aws.amazon.com/cli/latest/reference/ecs/list-tasks.html)
+
+Trong Console, tab **Services** hiển thị `rakibookery-prod-service` ở trạng thái **Active** với **0/0 Tasks running**. Phần **Cluster overview** ghi nhận **0 running / 0 pending**.
+
+![Tab Services hiển thị rakibookery-prod-service Active và 0 trên 0 task đang chạy](../../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ecs-cluster-services.png)
 
 ## Kết luận
 
-Nhóm em đã tạo ECS Cluster và task definition đầu tiên cho container PHP, đồng thời bổ sung quyền đọc secret cơ sở dữ liệu cho task execution role. Image, cổng, biến môi trường và cấu hình secret cần khớp với ứng dụng PHP. Đây là cơ sở để chạy task và tạo ECS Service ở các mục tiếp theo.
+Console ghi nhận `rakibookery-prod-cluster` dùng Fargate và có một service là `rakibookery-prod-service`. Tại thời điểm chụp, service ở trạng thái **Active** với **0/0 Tasks running**. Nhóm dùng cùng service để chạy một task khi cần thử ứng dụng và giảm về `0` khi hoàn tất.
 

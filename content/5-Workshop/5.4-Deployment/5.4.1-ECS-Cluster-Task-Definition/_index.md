@@ -8,80 +8,134 @@ pre : " <b> 5.4.1 </b> "
 
 ## Objective
 
-After we pushed the Docker image to ECR, our team needed to set up the PHP application on AWS. We use an **ECS cluster** to manage the RakiBookery tasks. The **task definition** stores the settings for the container, including its image, CPU, memory, port, roles, and environment variables. We chose Fargate so AWS could manage the servers that run the tasks.
+We use Amazon ECS Fargate to run the RakiBookery PHP application in Singapore (`ap-southeast-1`). This section shows the application's cluster and service, how we check the task definition, and how we change the task count for a test.
 
-## What we need before creating the task
+## Architecture overview
 
-Prepare the image URI in ECR, `ecsTaskExecutionRole`, and the ARN of the database secret from section 5.3. Check that the log group is ready if the task uses `awslogs`. [ECS deployment document](https://docs.google.com/document/d/1_qk9uf_5MlByeEo4Yaxt8YJSsoqWjTnO/edit). The cluster is where we run and watch tasks. The task definition describes the image, port, CPU, memory, and role. An ECS service later uses that definition to keep tasks running.
+**PHP image in Amazon ECR → Task definition → Task on AWS Fargate**
 
-## Step 1. Create the ECS cluster
+The task definition stores settings such as the image, container port, CPU, and memory. The ECS service uses a task definition revision to keep the number of tasks set in `desiredCount`. We use the cluster to view services and tasks. AWS Fargate manages the infrastructure for the tasks, so we can run containers without managing EC2 instances for the cluster. [AWS guide to ECS services](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs_services.html)
 
-In the Singapore Region (`ap-southeast-1`), we opened **Amazon ECS → Clusters → Create cluster**. We named the cluster `RakiBookery-cluster` and chose **Fargate only** under infrastructure. ECS showed a success message and added the cluster to the list. The new cluster had no running tasks when we took the screenshot.
+## 1. Check the cluster and service
 
-![Open Create cluster in Amazon ECS](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/01-cluster-create.png)
+In **Amazon ECS → Clusters**, we select `rakibookery-prod-cluster`. The list shows **Fargate**, one service, and **No tasks running** at the time of the screenshot.
 
-![Name the cluster RakiBookery-cluster and choose Fargate only](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/02-cluster-fargate.png)
+![ECS cluster list in Singapore showing rakibookery-prod-cluster and one service](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ecs-cluster-list.png)
 
-![ECS confirms that it created the RakiBookery cluster](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/03-cluster-created.png)
+In the **Services** tab, we use `rakibookery-prod-service` with the **Replica** scheduling strategy to set the number of application tasks. The service screenshot is in the step that checks for stopped tasks.
 
-## Step 2. Set up the task definition
+## 2. Check the task definition
 
-1. Open **Task definitions → Create new task definition**. Name the family `RakiBookery-task` and choose **AWS Fargate**.
-2. Choose **Linux/X86_64**, keep the `awsvpc` network mode, and set **0.25 vCPU and 1 GB of memory**, as shown in our setup screenshot. The x86_64 architecture matches the `linux/amd64` image from section 5.3.5.
-3. Name the main container `Main`, select **Essential**, and enter the image URI from the `rakibookery` ECR repository. The screenshot shows that we used the `latest` tag for this setup. Set **Container port** to `80`, **Protocol** to `TCP`, and **App protocol** to `HTTP`. These settings match Apache and the ALB setup in the next sections.
+In the **Services** list, open the link in the **Task definition** column to see the revision used by the service. Check the settings before starting a task.
 
-![Open Create new task definition](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/04-task-create.png)
+1. In **Container details**, check the ECR image URI, container name, and application port. Compare the revision's URI with the image in Amazon ECR. [Section 5.3.5]({{< relref "/5-Workshop/5.3-Infrastructure/5.3.5-Set-Up-ECR/" >}}) shows how to check the tag and digest. If the service uses an ALB, the container name and port must match the target group settings for the service. See [section 5.4.3]({{< relref "/5-Workshop/5.4-Deployment/5.4.3-Link-ECS-with-ALB/" >}}).
+2. Check **Task size**, the operating system, and the CPU architecture. The task architecture must match the image build. Fargate uses the `awsvpc` network mode.
+3. Check the **task execution role** so ECS can pull the image and send logs to CloudWatch as configured. If the task uses Secrets Manager for database login details, check the variable names in the application and the role's access to the secret.
 
-![Choose the RakiBookery-task family and AWS Fargate](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/05-task-family.png)
+When you change the image or container settings, register a revision. Use **Update service** to select that revision. [AWS guide to task definitions](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definitions.html)
 
-![Linux X86_64 with 0.25 vCPU and 1 GB of memory](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/06-task-resources.png)
+![ECS service health page showing the app:80 container, its target group, and No targets](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ECS3.png)
 
-![The Main container uses an ECR image and port 80](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/07-task-container.png)
+## 3. Start a task for testing
 
-After we saved the task definition, the Console showed `RakiBookery-task:1` as `ACTIVE`. This means ECS has registered the revision and can use it to start a task. We still need a running task and its logs to check the PHP application. The details also showed `ecsTaskExecutionRole` as the task execution role.
+Open Bash in AWS CloudShell and run the following blocks in the same session.
 
-![RakiBookery-task:1 is ACTIVE after creation](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/08-task-created.png)
+~~~bash
+REGION=ap-southeast-1
+CLUSTER=rakibookery-prod-cluster
+SERVICE=rakibookery-prod-service
+~~~
 
+Set `desiredCount=1` to start one task. The `wait services-stable` command waits for the service to become stable after the update.
 
-## Step 3. Give ECS permission to read the secret
+~~~bash
+aws ecs update-service --region "$REGION" --cluster "$CLUSTER" \
+  --service "$SERVICE" --desired-count 1 \
+  --output json --no-cli-pager &&
+aws ecs wait services-stable --region "$REGION" --cluster "$CLUSTER" \
+  --services "$SERVICE" --no-cli-pager
+~~~
 
-In **IAM → Roles → ecsTaskExecutionRole → Permissions**, we checked the `AmazonECSTaskExecutionRolePolicy` policy. It lets ECS pull the image and write logs to CloudWatch Logs. We added the inline policy `ECSSecretsAccessPolicy` so ECS could read the database login details from Secrets Manager when the container starts.
+**Excerpt from the `update-service` response**
 
-The demo policy gave access to a wide range of resources. For the PHP setup, give `secretsmanager:GetSecretValue` permission on the ARN of the RDS secret. The screenshot shows the default `aws/secretsmanager` key. If we use a KMS key managed by the team, also give `kms:Decrypt` permission on that key's ARN. Add these permissions to the **task execution role** because ECS reads the secret when the task starts. [AWS ECS task execution role](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html).
+~~~text
+{
+  "service": {
+    "serviceName": "rakibookery-prod-service",
+    "status": "ACTIVE",
+    "desiredCount": 1,
+    "runningCount": 0,
+    "pendingCount": 0,
 
-![The ecsTaskExecutionRole permissions page and the inline policy option](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/09-execution-role.png)
+    ...
 
-![IAM confirms that it added ECSSecretsAccessPolicy](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/10-execution-policy-created.png)
+    "enableExecuteCommand": true,
+    "availabilityZoneRebalancing": "ENABLED",
+    "resourceManagementType": "CUSTOMER"
+  }
+}
+~~~
 
-## Step 4. Create a revision and set environment variables
+The start response shows `desiredCount=1` and `runningCount=0`. ECS accepted the request to run one task. The count changes when the task starts.
 
-Open **Secrets Manager → Secrets**. Open the RDS secret to find its **Secret ARN**. Then open the `RakiBookery-task` family, choose **Create new revision**, and go to **Environment variables** for the `Main` container.
+## 4. Stop the task and check the result
 
-![The Secret ARN field in Secrets Manager, with identifiers hidden](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/11-database-secret.png)
+After testing, set `desiredCount=0` and wait for the service to become stable. Use `describe-services` to confirm **0 desired / 0 running / 0 pending**.
 
-![Open Create new revision in the RakiBookery-task family](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/12-task-revision.png)
+~~~bash
+aws ecs update-service --region "$REGION" --cluster "$CLUSTER" \
+  --service "$SERVICE" --desired-count 0 \
+  --output json --no-cli-pager &&
+aws ecs wait services-stable --region "$REGION" --cluster "$CLUSTER" \
+  --services "$SERVICE" --no-cli-pager
+~~~
 
-![Container environment variables in the new revision](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/13-environment-editor.png)
+**Excerpt from the `update-service` response**
 
-![ValueFrom for the two login fields](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/14-secret-valuefrom.png)
+~~~text
+{
+  "service": {
+    "serviceName": "rakibookery-prod-service",
+    "status": "ACTIVE",
+    "desiredCount": 0,
+    "runningCount": 1,
+    "pendingCount": 0,
 
-The screenshot shows `username` and `password` with the `ValueFrom` type. For PHP, use the names that the application reads. In this project they are `DB_USER` and `DB_PASS`. Each one must point to its matching JSON key in the secret.
+    ...
 
-- `DB_USER` gets its value from `<SECRET_ARN>:username::`.
-- `DB_PASS` gets its value from `<SECRET_ARN>:password::`.
-- `DB_HOST` uses the RDS endpoint, and `DB_NAME` uses `bookstoredb`.
+    "enableExecuteCommand": true,
+    "availabilityZoneRebalancing": "ENABLED",
+    "resourceManagementType": "CUSTOMER"
+  }
+}
+~~~
 
-When we enter the full secret ARN without a JSON key at the end, ECS puts the whole secret in the variable. To pick one JSON key, use Fargate platform version **1.4.0 or later** on Linux. Save the new revision and record its number for the test run. If the secret value changes later, start a new task so it receives the new value. [AWS guide to using secrets in ECS environment variables](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html).
+The stop response shows `desiredCount=0` and `runningCount=1`. Wait for the task to stop, then check the service counts again.
 
-## Step 5. Run a test task and check the logs
+Use `list-tasks` to check the tasks for this service.
 
-1. In `RakiBookery-cluster`, open **Tasks → Run new task**. Choose Fargate and the revision with the secret settings. Check the VPC, subnet, and security group before starting the task. For the test run, use a public subnet and a public IP. For a private subnet, make sure the task can reach ECR, S3, Secrets Manager, and CloudWatch Logs through NAT or the right endpoints.
-2. Wait for the task to reach `RUNNING`, then open **Logs** to check if the container started. If the task reaches `STOPPED`, read **Stopped reason** and the container error. Check whether the task could pull the image, read the secret, and start the application.
-3. To check if PHP can connect to MySQL, open a page that reads data from the database. Check the PHP task log for that request. See [section 5.4.5]({{< relref "/5-Workshop/5.4-Deployment/5.4.5-Connect-PHP-App-To-RDS/" >}}).
+~~~bash
+aws ecs list-tasks \
+  --cluster rakibookery-prod-cluster \
+  --service-name rakibookery-prod-service \
+  --region ap-southeast-1 \
+  --output json --no-cli-pager
+~~~
 
-Before testing with the ALB, check that the task uses the expected revision. In the task details, record the image digest if the Console shows it. Check the Apache startup message in the log stream for container `Main`. After a test with a standalone task, stop that task when it is no longer needed.
+This is the expected output after scaling to `0` tasks.
 
+~~~json
+{
+  "taskArns": []
+}
+~~~
+
+By default, `list-tasks` filters for a desired status of `RUNNING`. Check the empty list and the service counts to confirm the task has stopped. [AWS CLI guide to list-tasks](https://docs.aws.amazon.com/cli/latest/reference/ecs/list-tasks.html)
+
+In the console, the **Services** tab shows `rakibookery-prod-service` as **Active** with **0/0 Tasks running**. **Cluster overview** shows **0 running / 0 pending**.
+
+![Services tab showing rakibookery-prod-service as Active with zero out of zero tasks running](../../../images/5-Workshop/5.4-Deployment/5.4.1-ECS-Cluster-Task-Definition/ecs-cluster-services.png)
 
 ## Conclusion
 
-We created the ECS cluster and the first task definition for the PHP container. We also added permission for the task execution role to read the database secret. The image, port, environment variables, and secret settings must match the PHP application. This setup provides the base for running tasks and creating the ECS service in the next sections.
+The console shows that `rakibookery-prod-cluster` uses Fargate and has one service, `rakibookery-prod-service`. At the time of the screenshot, the service was **Active** with **0/0 Tasks running**. We use the same service to run one task when we test the application and scale to `0` when we finish.
